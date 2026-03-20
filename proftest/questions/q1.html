@@ -84,6 +84,25 @@
     /* Успешный стейт */
     .total-badge.ok { border-color: var(--color-success); background: #ecfdf5; box-shadow: 0 0 0 4px rgba(16,185,129,0.1); }
     .total-badge.ok span { color: var(--color-success); }
+    .limit-warning {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: #fff7ed;
+        border: 1px solid rgba(234, 88, 12, 0.18);
+        color: #c2410c;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.45;
+        opacity: 0;
+        transform: translateY(-4px);
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .limit-warning.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
     .slider-wrapper { display: flex; flex-direction: column; gap: 24px; }
     .slider-item { display: flex; flex-direction: column; gap: 8px; }
@@ -102,6 +121,58 @@
     input[type=range] { position: absolute; inset: -10px 0; opacity: 0; cursor: grab; margin: 0; height: calc(100% + 20px); width: 100%; z-index: 2; }
     input[type=range]:active { cursor: grabbing; }
     .item-track:focus-within::after { content: ""; position: absolute; inset: -6px; border-radius: 99px; border: 2px solid rgba(37,99,235,0.2); pointer-events: none; }
+    .mobile-slider-wrap { display: none; }
+    input.mobile-slider[type=range] {
+        width: 100%;
+        margin: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        height: 32px;
+        cursor: pointer;
+        position: static;
+        inset: auto;
+        opacity: 1;
+        z-index: auto;
+        pointer-events: auto;
+    }
+    input.mobile-slider[type=range]::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+    }
+    input.mobile-slider[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 3px solid var(--accent);
+        box-shadow: 0 4px 12px rgba(37,99,235,0.18);
+        margin-top: -7px;
+    }
+    input.mobile-slider[type=range]::-moz-range-track {
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+    }
+    input.mobile-slider[type=range]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 3px solid var(--accent);
+        box-shadow: 0 4px 12px rgba(37,99,235,0.18);
+    }
+
+    @media (max-width: 768px) {
+        .page { margin: 24px auto; }
+        .item-head { gap: 12px; align-items: center; }
+        .item-label { font-size: 14px; line-height: 1.35; max-width: 22ch; }
+        .item-track { height: 10px; }
+        .mobile-slider-wrap { display: block; }
+        .item-track input[type=range] { opacity: 0; pointer-events: none; }
+    }
 
     /* ================= КНОПКИ ================= */
     .q-nav { display: flex; gap: 16px; margin-top: 16px; padding-top: 32px; border-top: 1px solid var(--border); }
@@ -186,6 +257,7 @@
                     <div style="font-size:14px; font-weight:600; color:var(--text-soft);">Остаток: <span id="rem-val">100</span></div>
                     <div class="total-badge" id="total-badge">Использовано: <span id="total-val">0</span> / 100</div>
                 </div>
+                <div class="limit-warning" id="limit-warning">Все 100 уже распределены. Чтобы добавить сюда больше, сначала уменьшите другой ползунок.</div>
                 
                 <div class="slider-wrapper" id="sliders"></div>
             </div>
@@ -211,27 +283,85 @@ const ITEMS =[
     { key: 'design',         label: 'Визуальные и проектные решения',            color: '#7c3aed', val: SAVED_Q1?.design ?? 0 },
 ];
 
+function normalizeAllocations(items) {
+    const total = items.reduce((sum, item) => sum + Math.max(0, Number(item.val) || 0), 0);
+    if (total <= 100) {
+        items.forEach((item) => {
+            item.val = Math.max(0, Math.min(100, Number(item.val) || 0));
+        });
+        return;
+    }
+
+    const scaled = items.map((item) => ((Math.max(0, Number(item.val) || 0) / total) * 100));
+    const floors = scaled.map((value) => Math.floor(value));
+    let remainder = 100 - floors.reduce((sum, value) => sum + value, 0);
+    const order = scaled
+        .map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+        .sort((a, b) => b.fraction - a.fraction);
+
+    order.forEach(({ index }) => {
+        if (remainder > 0) {
+            floors[index] += 1;
+            remainder -= 1;
+        }
+    });
+
+    items.forEach((item, index) => {
+        item.val = floors[index];
+    });
+}
+
+normalizeAllocations(ITEMS);
+let warningTimer = null;
+
+function showLimitWarning() {
+    const warning = document.getElementById('limit-warning');
+    if (!warning) return;
+
+    warning.classList.add('show');
+    if (warningTimer) {
+        clearTimeout(warningTimer);
+    }
+    warningTimer = setTimeout(() => {
+        warning.classList.remove('show');
+    }, 2200);
+}
+
 // Взаимодействие в правой панели
 window.onSlide = function(key, val) {
     const item = ITEMS.find(i => i.key === key);
     if(item) {
-        item.val = parseInt(val);
-        document.getElementById('val-' + key).textContent = val;
-        document.getElementById('fill-' + key).style.width = val + '%';
+        const requestedValue = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+        const totalWithoutCurrent = ITEMS.reduce((sum, current) => sum + (current.key === key ? 0 : current.val), 0);
+        const maxAllowed = Math.max(0, 100 - totalWithoutCurrent);
+        const nextValue = Math.min(requestedValue, maxAllowed);
+
+        if (requestedValue > maxAllowed) {
+            showLimitWarning();
+        }
+
+        item.val = nextValue;
+        document.getElementById('val-' + key).textContent = nextValue;
+        document.getElementById('fill-' + key).style.width = nextValue + '%';
+        document.querySelectorAll(`[data-slider-key="${key}"]`).forEach((input) => {
+            if (parseInt(input.value, 10) !== nextValue) {
+                input.value = nextValue;
+            }
+        });
         updateTotal();
     }
 };
 
 function updateTotal() {
     const total = ITEMS.reduce((s, i) => s + i.val, 0);
-    const rem = 100 - total;
+    const rem = Math.max(0, 100 - total);
     
     document.getElementById('total-val').textContent = total;
-    document.getElementById('rem-val').textContent = rem > 0 ? rem : 0;
-    document.getElementById('rem-val').style.color = rem < 0 ? 'var(--color-error)' : 'var(--text-soft)';
+    document.getElementById('rem-val').textContent = rem;
+    document.getElementById('rem-val').style.color = 'var(--text-soft)';
     
     const badge = document.getElementById('total-badge');
-    badge.className = 'total-badge' + (total > 100 ? ' over' : total === 100 ? ' ok' : '');
+    badge.className = 'total-badge' + (total === 100 ? ' ok' : '');
     
     const nextBtn = document.getElementById('next-btn');
     nextBtn.disabled = total !== 100;
@@ -254,7 +384,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="item-track">
                 <div class="item-fill interactive-fill" id="fill-${item.key}" style="width:${item.val}%; background:${item.color}"></div>
-                <input type="range" min="0" max="100" value="${item.val}" oninput="window.onSlide('${item.key}', this.value)">
+                <input type="range" min="0" max="100" value="${item.val}" data-slider-key="${item.key}" oninput="window.onSlide('${item.key}', this.value)">
+            </div>
+            <div class="mobile-slider-wrap">
+                <input class="mobile-slider" type="range" min="0" max="100" value="${item.val}" data-slider-key="${item.key}" oninput="window.onSlide('${item.key}', this.value)">
             </div>
         </div>`;
     });

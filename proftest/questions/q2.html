@@ -109,6 +109,8 @@
 
     /* Отключаем события мыши у внутренних элементов, чтобы не дергался dragover */
     .crisis-item > * { pointer-events: none; }
+    .crisis-reorder-controls,
+    .crisis-reorder-controls * { pointer-events: auto; }
 
     .crisis-rank {
         width: 32px; height: 32px; border-radius: 10px; background: var(--accent-soft);
@@ -132,6 +134,68 @@
     
     .crisis-handle { color: var(--text-soft); display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; opacity: 0.5; }
     .crisis-handle span { display: block; width: 16px; height: 2px; background: currentColor; border-radius: 1px; }
+    .crisis-reorder-controls {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+    .crisis-move-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-main);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-sm);
+    }
+    .crisis-move-btn:disabled {
+        opacity: 0.4;
+        box-shadow: none;
+    }
+    .mobile-hint {
+        display: none;
+        margin-top: 8px;
+        color: var(--text-soft);
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+        .page { margin: 24px auto; }
+        .test-question { gap: 24px; }
+        .q-desc { font-size: 15px; }
+        .mobile-hint { display: block; }
+        .crisis-item {
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 14px 14px 16px;
+            cursor: default;
+        }
+        .crisis-item:active { cursor: default; }
+        .crisis-text {
+            font-size: 14px;
+            line-height: 1.45;
+        }
+        .crisis-emoji {
+            min-width: 44px;
+            padding: 8px 8px;
+            font-size: 11px;
+        }
+        .crisis-handle {
+            display: none;
+        }
+        .crisis-reorder-controls {
+            display: flex;
+        }
+        .q-nav {
+            flex-direction: column;
+        }
+    }
 
     /* ================= КНОПКИ ================= */
     .q-nav { display: flex; gap: 16px; margin-top: 16px; padding-top: 32px; border-top: 1px solid var(--border); }
@@ -202,6 +266,7 @@
                 <div class="q-eyebrow"><div class="q-num">2</div> Приоритизация</div>
                 <h1 class="q-title">Пять срочных ситуаций. Что ты возьмёшь первым?</h1>
                 <p class="q-desc">Перетащи карточки и расставь ситуации в том порядке, в котором тебе хотелось бы включаться в решение — от самой притягательной сверху до наименее интересной снизу.</p>
+                <div class="mobile-hint">На телефоне удобнее менять порядок кнопками справа у карточки.</div>
             </div>
 
             <div class="crisis-list" id="crisis-list">
@@ -237,6 +302,21 @@ let order = SAVED_Q2 && SAVED_Q2.length
     : [...CRISES].sort(() => Math.random() - 0.5);
 let draggedItemIndex = null;
 
+function isMobileViewport() {
+    return window.matchMedia('(max-width: 768px)').matches;
+}
+
+function moveCrisis(fromIndex, direction) {
+    const toIndex = fromIndex + direction;
+    if (toIndex < 0 || toIndex >= order.length) {
+        return;
+    }
+
+    const moved = order.splice(fromIndex, 1)[0];
+    order.splice(toIndex, 0, moved);
+    renderList();
+}
+
 function renderList() {
     const list = document.getElementById('crisis-list');
     list.innerHTML = '';
@@ -244,13 +324,26 @@ function renderList() {
     order.forEach((item, idx) => {
         const el = document.createElement('div');
         el.className = 'crisis-item';
-        el.draggable = true;
+        el.draggable = !isMobileViewport();
         el.dataset.index = idx;
         el.innerHTML = `
             <div class="crisis-rank">${idx + 1}</div>
             <div class="crisis-emoji">${item.emoji}</div>
             <div class="crisis-text">${item.text}</div>
-            <div class="crisis-handle"><span></span><span></span><span></span></div>`;
+            <div class="crisis-handle"><span></span><span></span><span></span></div>
+            <div class="crisis-reorder-controls">
+                <button type="button" class="crisis-move-btn" data-move="up" ${idx === 0 ? 'disabled' : ''} aria-label="Поднять выше">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </button>
+                <button type="button" class="crisis-move-btn" data-move="down" ${idx === order.length - 1 ? 'disabled' : ''} aria-label="Опустить ниже">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+            </div>`;
+
+        const upButton = el.querySelector('[data-move="up"]');
+        const downButton = el.querySelector('[data-move="down"]');
+        upButton.addEventListener('click', () => moveCrisis(idx, -1));
+        downButton.addEventListener('click', () => moveCrisis(idx, 1));
         
         // События Drag & Drop
         el.addEventListener('dragstart', (e) => {
@@ -421,6 +514,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderList();
     setTimeout(startAnimationScript, 500);
 });
+
+window.addEventListener('resize', renderList);
 
 </script>
 </body>
