@@ -7,6 +7,9 @@ const rootDir = path.join(__dirname, '..');
 const port = Number(process.env.PORT || 4310);
 
 app.use(express.json());
+app.get('/favicon.ico', (_req, res) => {
+    res.redirect(302, '/favicon.svg');
+});
 app.use(express.static(rootDir, {
     extensions: ['html'],
     etag: true,

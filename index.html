@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Главная — Система выбора направления</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
@@ -122,6 +123,17 @@
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
             overflow-x: hidden;
+        }
+
+        button,
+        .btn,
+        .btn-sm,
+        .btn-soft,
+        .mobile-nav-toggle,
+        .mobile-nav-button {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         img,
@@ -593,7 +605,7 @@
         }
 
         .hero {
-            padding: 4px 0 16px;
+            padding: 76px 0 24px;
             min-height: auto;
             display: flex;
             align-items: center;
@@ -1188,7 +1200,7 @@
             }
 
             .hero {
-                padding-top: 2px;
+                padding-top: 52px;
             }
 
             .hero p {
@@ -1197,11 +1209,14 @@
             }
 
             .hero-visual {
-                min-height: 420px;
+                min-height: 320px;
+                margin-top: 8px;
+                overflow: hidden;
             }
 
             .visual-shell {
-                transform: scale(1.05);
+                transform: scale(0.84);
+                transform-origin: top center;
             }
 
             .card,
@@ -1234,6 +1249,67 @@
             .scenario-chip {
                 width: 100%;
                 justify-content: center;
+            }
+
+            #features .section-header {
+                margin-bottom: 28px;
+            }
+
+            #features .section-header h2 {
+                font-size: clamp(30px, 9vw, 40px);
+            }
+
+            #features .section-header p {
+                max-width: 24ch;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            #features .card {
+                grid-column: 1 / -1 !important;
+                min-height: auto !important;
+                padding: 24px 20px !important;
+            }
+
+            #features .icon-box {
+                width: 52px !important;
+                height: 52px !important;
+                margin-bottom: 18px !important;
+            }
+
+            #features .icon-box svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            #features .card-title {
+                font-size: 20px !important;
+                line-height: 1.18 !important;
+                margin-bottom: 10px !important;
+            }
+
+            #features .card-text {
+                font-size: 15px !important;
+                line-height: 1.58 !important;
+                max-width: 24ch;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 42px 0 56px;
+            }
+
+            .hero-layout {
+                gap: 22px;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(38px, 14vw, 58px);
+            }
+
+            .hero-visual {
+                display: none;
             }
         }
     </style>

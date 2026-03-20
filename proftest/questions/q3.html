@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Вопрос 3 — Профтест</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
     :root {
         --bg-main: #f8fafc;
@@ -22,6 +23,7 @@
 
     * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
     body { background-color: var(--bg-main); margin: 0; padding: 0; color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    button, .btn, .top-nav a, .topbar-brand, .option-card { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 
     .ambient { position: fixed; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
     .blob { position: absolute; filter: blur(80px); opacity: 0.4; border-radius: 50%; animation: float 10s infinite ease-in-out alternate; }

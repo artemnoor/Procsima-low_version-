@@ -48,6 +48,18 @@ body {
     overflow-x: hidden;
 }
 
+button,
+.btn,
+.btn-sm,
+.top-nav a,
+.topbar-brand,
+.option-card,
+.crisis-item {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
 /* ─── Ambient Background ─── */
 .ambient {
     position: fixed;

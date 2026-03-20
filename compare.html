@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Сравнение направлений — Система выбора направления</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -125,6 +126,21 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        button,
+        .btn,
+        .btn-sm,
+        .btn-soft,
+        .mobile-nav-toggle,
+        .mobile-nav-button,
+        .compare-remove,
+        .compare-status-chip-remove,
+        .compare-card-expand,
+        .compare-close {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         img,
@@ -1077,6 +1093,13 @@
             line-height: 1.7;
         }
 
+        .compare-status-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
         .compare-status-chips {
             display: flex;
             flex-wrap: wrap;
@@ -1154,6 +1177,39 @@
             color: var(--text-muted);
             font-size: 13px;
             line-height: 1.55;
+        }
+
+        .compare-empty-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+            min-height: 280px;
+            padding: 32px 30px;
+            border-radius: var(--radius-xl);
+            border: 1px dashed rgba(0, 108, 220, 0.22);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 0.92));
+            box-shadow: var(--shadow-sm);
+        }
+
+        .compare-empty-card .card-title {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.08;
+        }
+
+        .compare-empty-copy {
+            margin: 0;
+            max-width: 38ch;
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .compare-empty-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .soft-note {
@@ -1325,12 +1381,30 @@
             .career-pill-wrap {
                 grid-template-columns: 1fr;
             }
+            .compare-status-actions,
+            .compare-empty-actions {
+                flex-direction: column;
+            }
+            .compare-status-actions .btn,
+            .compare-status-actions .btn-sm,
+            .compare-empty-actions .btn,
+            .compare-empty-actions .btn-sm {
+                width: 100%;
+                justify-content: center;
+            }
             .compare-status-recommendation {
                 flex-direction: column;
                 align-items: stretch;
             }
             .compare-status-recommendation .btn-sm {
                 justify-content: center;
+            }
+            .compare-empty-card {
+                min-height: 0;
+                padding: 24px 22px;
+            }
+            .compare-empty-card .card-title {
+                font-size: 24px;
             }
             .compare-card-description {
                 -webkit-line-clamp: unset;
@@ -2088,9 +2162,31 @@
         function renderCompareStatus(selection, programs, missingCount) {
             const status = document.getElementById('compareStatus');
             if (!selection.length) {
+                const starter = getRecommendedPrograms(allProgramsCache, [], 1)[0] || null;
                 status.hidden = false;
                 status.innerHTML = `
                     <p class="compare-status-copy">Пока в сравнении нет выбранных направлений. Добавьте до трёх карточек из каталога или начните с рекомендаций ниже.</p>
+                    <div class="compare-status-actions">
+                        ${starter
+                            ? `<button type="button" class="btn btn-primary" onclick="addProgramToCompare('${starter.код}')">Добавить первое направление</button>`
+                            : ''
+                        }
+                        <a href="catalog.html" class="btn-sm">Открыть каталог</a>
+                    </div>
+                    ${starter
+                        ? `
+                            <div class="compare-status-recommendations">
+                                <div class="compare-status-recommendation">
+                                    <div>
+                                        <strong>Можно начать с направления: ${starter.наименование_специальности}</strong>
+                                        <p>${typeof starter.количество_бюджетных_мест === 'number' ? `Бюджетных мест: ${starter.количество_бюджетных_мест}. ` : ''}После добавления можно будет сразу сравнить его со следующими вариантами.</p>
+                                    </div>
+                                    <button type="button" class="btn-sm" onclick="addProgramToCompare('${starter.код}')">Добавить</button>
+                                </div>
+                            </div>
+                        `
+                        : ''
+                    }
                 `;
                 return;
             }
@@ -2199,7 +2295,21 @@
             const candidates = allPrograms.filter((program) => !selectedCodes.includes(program.код));
 
             if (!selectedCodes.length) {
-                return candidates.slice(0, count);
+                return candidates
+                    .slice()
+                    .sort((a, b) => {
+                        const budgetA = typeof a.количество_бюджетных_мест === 'number' ? a.количество_бюджетных_мест : -1;
+                        const budgetB = typeof b.количество_бюджетных_мест === 'number' ? b.количество_бюджетных_мест : -1;
+                        if (budgetB !== budgetA) {
+                            return budgetB - budgetA;
+                        }
+
+                        return String(a.наименование_специальности || '').localeCompare(
+                            String(b.наименование_специальности || ''),
+                            'ru'
+                        );
+                    })
+                    .slice(0, count);
             }
 
             return candidates
@@ -2382,6 +2492,26 @@
             const container = document.getElementById('compareContainer');
             let html = '';
             currentRenderedPrograms = programs;
+
+            if (!programs.length) {
+                const starter = getRecommendedPrograms(allProgramsCache, [], 1)[0] || null;
+                container.innerHTML = `
+                    <article class="compare-empty-card">
+                        <h3 class="card-title">Пока здесь пусто</h3>
+                        <p class="compare-empty-copy">Добавьте первое направление из каталога, и здесь сразу появится карточка с метриками, учебными блоками и всем, что потом можно сопоставить с другими вариантами.</p>
+                        <div class="compare-empty-actions">
+                            ${starter
+                                ? `<button type="button" class="btn btn-primary" onclick="addProgramToCompare('${starter.код}')">Добавить первое направление</button>`
+                                : ''
+                            }
+                            <a href="catalog.html" class="btn-sm">Перейти в каталог</a>
+                        </div>
+                    </article>
+                `;
+                syncCompareGridColumns(container, 1);
+                renderMatrix(programs);
+                return;
+            }
 
             programs.forEach((prog, index) => {
                 const cardId = `prog-${index}`;
