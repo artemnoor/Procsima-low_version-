@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Результаты — Профтест</title>
+<link rel="stylesheet" href="assets/test-shared.css">
+<style>
+.results-shell {
+    padding: 32px 20px 56px;
+}
+.results-wrap {
+    width: min(1220px, 100%);
+    margin: 0 auto;
+    display: grid;
+    gap: 24px;
+}
+.hero-card,
+.result-card,
+.mini-card,
+.loading-card {
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+}
+.loading-card,
+.result-card,
+.mini-card {
+    padding: 24px;
+}
+.hero-card {
+    padding: 34px;
+    background:
+        radial-gradient(circle at top right, rgba(37,99,235,0.16), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(140,197,244,0.12), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.99), rgba(244,248,255,0.95));
+}
+.hero-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 24px;
+    align-items: stretch;
+}
+.hero-main {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: start;
+}
+.hero-main > div:last-child {
+    min-width: 0;
+}
+.hero-score {
+    width: 92px;
+    height: 92px;
+    border-radius: 28px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--accent), #60a5fa);
+    color: white;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    flex-shrink: 0;
+}
+.hero-score small {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.78;
+}
+.hero-meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(37,99,235,0.08);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.hero-title {
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 1.04;
+    margin-bottom: 14px;
+}
+.hero-copy {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 68ch;
+}
+.hero-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+}
+.hero-stat-card {
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.82);
+    border: 1px solid rgba(15,23,42,0.06);
+    box-shadow: 0 12px 26px rgba(15,23,42,0.04);
+}
+.hero-stat-label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    margin-bottom: 8px;
+}
+.hero-stat-value {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+.hero-stat-copy {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+.hero-panel {
+    padding: 22px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.78);
+    border: 1px solid rgba(15,23,42,0.06);
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    box-shadow: 0 18px 36px rgba(15,23,42,0.04);
+}
+.hero-panel-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+.hero-panel-copy {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+.reason-stack {
+    display: grid;
+    gap: 10px;
+}
+.reason-card {
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(15,23,42,0.06);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-main);
+}
+.hero-subjects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.profile-bars {
+    display: grid;
+    gap: 12px;
+}
+.profile-bar {
+    display: grid;
+    gap: 8px;
+}
+.profile-bar-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+}
+.profile-bar-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.profile-bar-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+.profile-bar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.08);
+    overflow: hidden;
+}
+.profile-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-dark), var(--accent));
+}
+.tag-row,
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.tag-row {
+    margin-top: 18px;
+}
+.tag,
+.block-chip,
+.subject-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(15,23,42,0.08);
+    background: rgba(15,23,42,0.03);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.45;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+}
+.actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+.section-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+.results-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+    gap: 22px;
+}
+.pool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+.pool-card {
+    padding: 22px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,249,255,0.92));
+    border: 1px solid rgba(15,23,42,0.06);
+    box-shadow: 0 18px 36px rgba(15,23,42,0.05);
+    display: grid;
+    gap: 14px;
+}
+.pool-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+}
+.pool-top > div:first-child {
+    min-width: 0;
+}
+.pool-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(37,99,235,0.1);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 900;
+}
+.pool-code {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.pool-title {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--text-main);
+    overflow-wrap: anywhere;
+}
+.pool-department {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 6px;
+    overflow-wrap: anywhere;
+}
+.pool-fit {
+    padding: 10px 12px;
+    border-radius: 18px;
+    background: rgba(37,99,235,0.1);
+    color: var(--accent);
+    font-size: 15px;
+    font-weight: 900;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.pool-progress {
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.08);
+    overflow: hidden;
+}
+.pool-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), #60a5fa);
+}
+.pool-copy,
+.pool-list,
+.dimension-copy,
+.loading-copy {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+}
+.pool-list,
+.mini-list {
+    display: grid;
+    gap: 10px;
+}
+.pool-list-item,
+.mini-item {
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(15,23,42,0.03);
+    border: 1px solid rgba(15,23,42,0.06);
+}
+.reason-list {
+    display: grid;
+    gap: 12px;
+}
+.reason-list-card {
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.82);
+    border: 1px solid rgba(15,23,42,0.06);
+}
+.reason-list-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+.reason-list-copy {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+}
+.mini-item-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+.mini-item-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.mini-item-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+.mini-item-copy {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+}
+.link-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.inline-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+}
+.inline-link:hover {
+    text-decoration: underline;
+}
+.loading-card {
+    text-align: center;
+    padding: 40px 28px;
+}
+.loading-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 12px;
+}
+.loading-copy {
+    max-width: 46ch;
+    margin: 0 auto;
+}
+.support-card {
+    padding: 22px;
+    border-radius: var(--radius-lg);
+    background: rgba(15,23,42,0.03);
+    border: 1px solid rgba(15,23,42,0.06);
+    display: grid;
+    gap: 14px;
+}
+.support-copy {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-muted);
+}
+.next-steps {
+    display: grid;
+    gap: 10px;
+}
+.next-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.84);
+    border: 1px solid rgba(15,23,42,0.06);
+}
+.next-step-index {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(37,99,235,0.1);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 900;
+}
+.next-step-copy {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-main);
+}
+@media (max-width: 980px) {
+    .results-grid,
+    .pool-grid,
+    .hero-top,
+    .hero-main {
+        grid-template-columns: 1fr;
+    }
+    .hero-stat-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-score {
+        width: 78px;
+        height: 78px;
+        border-radius: 24px;
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
+<header>
+    <div class="topbar">
+        <a href="../index.html" class="topbar-brand">
+            <div class="topbar-brand-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            Проксима
+        </a>
+        <nav class="top-nav" aria-label="Главная навигация">
+            <a href="../index.html">Главная</a>
+            <a href="../compare.html">Сравнение</a>
+            <a href="../catalog.html">Каталог</a>
+            <a href="index.html" aria-current="page">Профтест</a>
+        </nav>
+    </div>
+</header>
+
+<div class="results-shell">
+    <div class="results-wrap" id="results-wrap">
+        <div class="loading-card">
+            <div class="loading-title">Собираем рекомендации</div>
+            <div class="loading-copy">Сопоставляем твои ответы с реальными учебными блоками, предметами и содержанием направлений.</div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/test-engine.js"></script>
+<script>
+const engine = window.ProftestEngine;
+const root = document.getElementById('results-wrap');
+
+function escapeHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function formatBlockName(value) {
+    const normalized = String(value || '').trim();
+    const labels = {
+        'Программирование и разработка ПО': 'Программирование и ПО',
+        'Системы, сети, БД и информационная безопасность': 'Сети, системы и ИБ',
+        'Электроника, схемотехника и embedded': 'Электроника и embedded-системы',
+        'Автоматизация, мехатроника и робототехника': 'Автоматизация и робототехника',
+        'Связь, радиосистемы и телеком': 'Связь и телеком',
+        'Дизайн и художественно-проектный блок': 'Дизайн и проектирование',
+        'Математика и аналитическая база': 'Математика и аналитика',
+        'Общая инженерная подготовка': 'Инженерная база',
+        'Практика, производственные модули и выпуск': 'Практика и производственные модули',
+        'Управление, экономика, право и качество': 'Управление и качество',
+        'Общеобразовательная база': 'Общая подготовка',
+        'Языки и гуманитарный контекст': 'Языки и гуманитарный блок'
+    };
+    return labels[normalized] || normalized;
+}
+
+function resolveProgramHref(url) {
+    if (!url) return '../catalog.html';
+    if (/^https?:\/\//i.test(url)) return url;
+    if (url.startsWith('/')) return url;
+    return `../${url.replace(/^\.\//, '')}`;
+}
+
+function renderError() {
+    root.innerHTML = `
+        <div class="loading-card">
+            <div class="loading-title">Не удалось собрать рекомендации</div>
+            <div class="loading-copy">Проверь, что локальный сервер запущен, и попробуй обновить страницу.</div>
+        </div>
+    `;
+}
+
+function renderResults(data) {
+    const primary = data.primary;
+    const profileBars = data.topDimensions.map((item) => `
+        <div class="profile-bar">
+            <div class="profile-bar-head">
+                <div class="profile-bar-title">${escapeHtml(item.label)}</div>
+                <div class="profile-bar-value">${Math.round(item.value)}</div>
+            </div>
+            <div class="profile-bar-track">
+                <div class="profile-bar-fill" style="width:${Math.min(100, Math.max(8, Math.round(item.value * 10)))}%"></div>
+            </div>
+        </div>
+    `).join('');
+
+    const topDimensions = data.topDimensions.map((item) => `
+        <div class="mini-item">
+            <div class="mini-item-head">
+                <div class="mini-item-title">${escapeHtml(item.short)}</div>
+                <div class="mini-item-value">${Math.round(item.value)}</div>
+            </div>
+            <div class="mini-item-copy">${escapeHtml(item.label)}</div>
+        </div>
+    `).join('');
+
+    const poolCards = data.pool.map((item, index) => `
+        <article class="pool-card">
+            <div class="pool-top">
+                <div>
+                    <div class="pool-rank">${index + 1}</div>
+                    <div class="pool-code" style="margin-top: 10px;">${escapeHtml(item.code)}</div>
+                    <div class="pool-title">${escapeHtml(item.title)}</div>
+                    <div class="pool-department">${escapeHtml(item.department)}</div>
+                </div>
+                <div class="pool-fit">${item.fitPercent}%</div>
+            </div>
+            <div class="pool-progress">
+                <div class="pool-progress-fill" style="width:${item.fitPercent}%"></div>
+            </div>
+            <div class="pool-copy">${escapeHtml(item.summary)}</div>
+            <div class="pool-list">
+                ${item.reasons.slice(0, 2).map((reason) => `<div class="pool-list-item">${escapeHtml(reason)}</div>`).join('')}
+            </div>
+            <div>
+                <div class="section-title" style="margin-bottom:10px;">Сильные блоки</div>
+                <div class="chip-row">
+                    ${item.blockHighlights.map((block) => `<div class="block-chip">${escapeHtml(formatBlockName(block.name))} · ${block.hours} ч.</div>`).join('')}
+                </div>
+            </div>
+            <div>
+                <div class="section-title" style="margin-bottom:10px;">Предметы</div>
+                <div class="chip-row">
+                    ${item.subjects.map((subject) => `<div class="subject-chip">${escapeHtml(subject)}</div>`).join('')}
+                </div>
+            </div>
+            <div class="link-row">
+                <a class="inline-link" href="${escapeHtml(resolveProgramHref(item.detailUrl))}">Открыть направление</a>
+            </div>
+        </article>
+    `).join('');
+
+    const primaryReasons = primary.reasons.map((reason, index) => `
+        <div class="reason-list-card">
+            <div class="reason-list-title">Причина ${index + 1}</div>
+            <div class="reason-list-copy">${escapeHtml(reason)}</div>
+        </div>
+    `).join('');
+
+    root.innerHTML = `
+        <div class="hero-card">
+            <div class="hero-top">
+                <div class="hero-main">
+                    <div class="hero-score"><div>${primary.fitPercent}%</div><small>матч</small></div>
+                    <div>
+                        <div class="hero-meta">
+                            <div class="meta-pill">Твой результат</div>
+                            <div class="meta-pill">Уверенность: ${escapeHtml(data.confidence)}</div>
+                            <div class="meta-pill">${escapeHtml(primary.code)}</div>
+                        </div>
+                        <h1 class="hero-title">${escapeHtml(primary.title)}</h1>
+                        <div class="hero-copy">${escapeHtml(primary.summary)}</div>
+                        <div class="tag-row">
+                            ${primary.blockHighlights.map((block) => `<div class="tag">${escapeHtml(formatBlockName(block.name))}</div>`).join('')}
+                        </div>
+                        <div class="actions">
+                            <a class="btn btn-primary" href="${escapeHtml(resolveProgramHref(primary.detailUrl))}">Открыть направление</a>
+                            <button class="btn btn-secondary" type="button" id="compare-btn">Сравнить рекомендации</button>
+                            <button class="btn btn-secondary" type="button" id="restart-btn">Пройти заново</button>
+                        </div>
+                        <div class="hero-stat-grid">
+                            <div class="hero-stat-card">
+                                <div class="hero-stat-label">Лучший формат задач</div>
+                                <div class="hero-stat-value">${escapeHtml(formatBlockName(primary.blockHighlights[0]?.name || 'Определяется'))}</div>
+                                <div class="hero-stat-copy">Блок, который сильнее всего совпал с твоими ответами.</div>
+                            </div>
+                            <div class="hero-stat-card">
+                                <div class="hero-stat-label">Подходящих альтернатив</div>
+                                <div class="hero-stat-value">${data.pool.length}</div>
+                                <div class="hero-stat-copy">Мы показали несколько близких направлений, а не один жёсткий выбор.</div>
+                            </div>
+                            <div class="hero-stat-card">
+                                <div class="hero-stat-label">Следующий шаг</div>
+                                <div class="hero-stat-value">Сравнение</div>
+                                <div class="hero-stat-copy">Лучше всего теперь открыть сравнение и посмотреть похожие варианты рядом.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-panel">
+                    <div class="hero-panel-title">Твой профиль интересов</div>
+                    <div class="hero-panel-copy">Это не оценка способностей, а карта того, какие типы задач и учебных блоков у тебя вышли сильнее всего.</div>
+                    <div class="profile-bars">${profileBars}</div>
+                    <div>
+                        <div class="section-title" style="margin-bottom: 10px;">Предметы, которые совпали</div>
+                        <div class="hero-subjects">
+                            ${primary.subjects.slice(0, 6).map((subject) => `<div class="subject-chip">${escapeHtml(subject)}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-grid">
+            <section class="result-card">
+                <div class="section-title">Почему это направление оказалось первым</div>
+                <div class="reason-list">${primaryReasons}</div>
+                <div style="margin-top: 24px;">
+                    <div class="section-title">Сильные блоки</div>
+                    <div class="chip-row">
+                        ${primary.blockHighlights.map((block) => `<div class="block-chip">${escapeHtml(formatBlockName(block.name))} · ${block.hours} ч.</div>`).join('')}
+                    </div>
+                </div>
+                <div style="margin-top: 24px;">
+                    <div class="section-title">Ещё подходят</div>
+                    <div class="pool-grid">${poolCards}</div>
+                </div>
+            </section>
+
+            <aside class="mini-card">
+                <div class="section-title">Как читать результат</div>
+                <div class="support-copy">Процент совпадения не выбирает за тебя профессию. Он показывает, насколько направление близко по предметам, типу задач и учебной среде, которые ты выбрал в тесте.</div>
+                <div class="section-title" style="margin-top: 10px;">Что повлияло сильнее всего</div>
+                <div class="mini-list">${topDimensions}</div>
+                <div class="support-card">
+                    <div class="section-title" style="margin-bottom: 0;">Что делать дальше</div>
+                    <div class="next-steps">
+                        <div class="next-step">
+                            <div class="next-step-index">1</div>
+                            <div class="next-step-copy">Открой основное направление и посмотри, насколько тебе подходит его учебный план и формат задач.</div>
+                        </div>
+                        <div class="next-step">
+                            <div class="next-step-index">2</div>
+                            <div class="next-step-copy">Сравни рекомендации между собой, чтобы увидеть разницу по блокам, предметам и карьерным ролям.</div>
+                        </div>
+                        <div class="next-step">
+                            <div class="next-step-index">3</div>
+                            <div class="next-step-copy">Если результат кажется слишком узким или слишком широким, пройди тест ещё раз и отвечай только по реальному интересу.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="support-card">
+                    <div class="section-title" style="margin-bottom: 0;">Пул рекомендаций</div>
+                    <div class="support-copy">Результат лучше читать как короткий список подходящих направлений: первое показывает самый близкий вариант, остальные помогают не упустить соседние траектории.</div>
+                </div>
+            </aside>
+        </div>
+    `;
+
+    document.getElementById('restart-btn').addEventListener('click', () => {
+        engine.resetSession();
+        window.location.href = 'questions/q1.html';
+    });
+
+    document.getElementById('compare-btn').addEventListener('click', () => {
+        engine.writePoolToCompare(data.pool);
+        window.location.href = '../compare.html';
+    });
+}
+
+(async function init() {
+    if (!engine) {
+        renderError();
+        return;
+    }
+
+    try {
+        const data = await engine.getResultsData();
+        if (!data || !data.primary) {
+            window.location.replace('questions/q1.html');
+            return;
+        }
+        renderResults(data);
+    } catch (_error) {
+        renderError();
+    }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вопрос 2 — Профтест</title>
+<style>
+    /* ================= СОВРЕМЕННЫЙ СБРОС И ПЕРЕМЕННЫЕ ================= */
+    :root {
+        --bg-main: #f8fafc;
+        --surface-solid: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --text-soft: #94a3b8;
+        --border: #e2e8f0;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --accent-soft: #eff6ff;
+        --color-success: #10b981;
+        --color-info-bg: #f0fdfa;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --radius-lg: 16px;
+    }
+
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-main); margin: 0; padding: 0; color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* ================= ФОНОВЫЕ ЭФФЕКТЫ ================= */
+    .ambient { position: fixed; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
+    .blob { position: absolute; filter: blur(80px); opacity: 0.4; border-radius: 50%; animation: float 10s infinite ease-in-out alternate; }
+    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(37, 99, 235, 0.2); }
+    .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(16, 185, 129, 0.15); animation-delay: -5s; }
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
+
+    /* ================= ШАПКА ================= */
+    header { background: var(--surface-solid); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 16px 24px; }
+    .topbar-brand { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--text-main); text-decoration: none; font-size: 16px; letter-spacing: -0.02em; text-transform: uppercase; }
+    .topbar-brand-icon { background: var(--accent); color: white; border-radius: 8px; padding: 6px; display: flex; }
+    .top-nav { display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-inline: auto; padding: 6px; border-radius: 999px; background: rgba(244,247,252,0.94); border: 1px solid rgba(15,23,42,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.92); }
+    .top-nav a { text-decoration: none; color: var(--text-muted); font-weight: 700; font-size: 14px; padding: 10px 14px; border-radius: 999px; transition: all 0.2s; }
+    .top-nav a:hover, .top-nav a[aria-current="page"] { color: var(--text-main); background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.06); transform: translateY(-1px); }
+    .step-indicator { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+    .step-num { color: var(--text-main); font-weight: 800; }
+    .progress-track { height: 4px; background: var(--bg-main); width: 100%; }
+    .progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+    @media(max-width: 900px) { .topbar { flex-wrap: wrap; } .top-nav { order: 3; width: 100%; flex-wrap: wrap; margin-inline: 0; } }
+
+    /* ================= ЛЕЙАУТ ================= */
+    .page { max-width: 1200px; margin: 40px auto; padding: 0 24px; flex: 1; display: flex; flex-direction: column; width: 100%; }
+    .test-layout { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
+    @media(min-width: 900px) { .test-layout { grid-template-columns: 1fr 1fr; gap: 64px; } }
+
+    /* ================= ЛЕВАЯ ПАНЕЛЬ (АНИМАЦИЯ) ================= */
+    .demo-pane { background: var(--surface-solid); border: 1px solid var(--border); border-radius: 24px; padding: 32px; position: relative; box-shadow: var(--shadow-lg); overflow: hidden; pointer-events: none; user-select: none; }
+    .demo-badge { position: absolute; top: 16px; right: 16px; background: #f1f5f9; color: var(--text-muted); padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .demo-pane-title { font-size: 18px; font-weight: 800; margin-bottom: 24px; color: var(--text-muted); opacity: 0.5; }
+    
+    .demo-board { position: relative; min-height: 380px; }
+    .demo-cursor {
+        position: absolute; width: 32px; height: 32px; z-index: 50;
+        transform-origin: top left; top: 0; left: 0;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+    .demo-cursor svg { width: 100%; height: 100%; }
+    .demo-cursor.clicking { transform: scale(0.85); transition: transform 0.15s ease !important; }
+    
+    /* Фейковые элементы для демо */
+    .demo-list { display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .demo-item {
+        display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+        background: var(--surface-solid); border: 1.5px solid var(--border);
+        border-radius: 12px; position: absolute; width: 100%; left: 0;
+    }
+    .demo-item.dragging { z-index: 10; border-color: var(--accent); box-shadow: var(--shadow-md); background: #f8fafc; }
+    
+    /* ================= ПРАВАЯ ПАНЕЛЬ (ИНТЕРАКТИВ) ================= */
+    .test-question { display: flex; flex-direction: column; gap: 32px; }
+    .q-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; }
+    .q-num { background: rgba(37,99,235,0.1); padding: 2px 8px; border-radius: 6px; }
+    .q-title { font-size: 32px; font-weight: 900; margin: 0 0 12px 0; line-height: 1.2; letter-spacing: -0.03em; }
+    .q-desc { font-size: 16px; line-height: 1.6; color: var(--text-muted); margin: 0; }
+    
+    /* ================= DRAG AND DROP СПИСОК ================= */
+    .crisis-list { display: flex; flex-direction: column; gap: 12px; }
+    .crisis-item {
+        display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+        background: var(--surface-solid); border: 2px solid var(--border);
+        border-radius: var(--radius-lg); cursor: grab;
+        transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
+        user-select: none; -webkit-user-select: none;
+    }
+    .crisis-item:active { cursor: grabbing; }
+    .crisis-item:hover { border-color: rgba(37,99,235,0.3); box-shadow: var(--shadow-sm); }
+    
+    /* Состояние элемента, который мы тащим */
+    .crisis-item.dragging { opacity: 0.4; background: #f8fafc; border-color: var(--border); box-shadow: none; }
+    
+    /* Состояние элемента, НАД которым мы проносим мышку */
+    .crisis-item.drag-over {
+        border-color: var(--accent); 
+        background: var(--color-info-bg);
+        border-style: dashed;
+    }
+
+    /* Отключаем события мыши у внутренних элементов, чтобы не дергался dragover */
+    .crisis-item > * { pointer-events: none; }
+
+    .crisis-rank {
+        width: 32px; height: 32px; border-radius: 10px; background: var(--accent-soft);
+        color: var(--accent); font-size: 15px; font-weight: 800; display: grid;
+        place-items: center; flex-shrink: 0;
+    }
+    .crisis-emoji {
+        min-width: 52px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: rgba(37, 99, 235, 0.08);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .crisis-text { flex: 1; font-size: 15px; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+    
+    .crisis-handle { color: var(--text-soft); display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; opacity: 0.5; }
+    .crisis-handle span { display: block; width: 16px; height: 2px; background: currentColor; border-radius: 1px; }
+
+    /* ================= КНОПКИ ================= */
+    .q-nav { display: flex; gap: 16px; margin-top: 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .btn { padding: 14px 28px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; justify-content: center; align-items: center; border: none; }
+    .btn:active { transform: scale(0.98); }
+    .btn-secondary { background: var(--surface-solid); color: var(--text-main); border: 2px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg-main); }
+    .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); flex: 1; box-shadow: var(--shadow-md); }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); box-shadow: var(--shadow-lg); }
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+    <div class="blob blob-1"></div><div class="blob blob-2"></div>
+</div>
+
+<header>
+    <div class="topbar">
+        <a href="../index.html" class="topbar-brand">
+            <div class="topbar-brand-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            Проксима
+        </a>
+        <nav class="top-nav" aria-label="Главная навигация">
+            <a href="../../index.html">Главная</a>
+            <a href="../../compare.html">Сравнение</a>
+            <a href="../../catalog.html">Каталог</a>
+            <a href="../index.html" aria-current="page">Профтест</a>
+        </nav>
+        <div class="step-indicator">Вопрос <span class="step-num">2</span> из 7</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:28.6%"></div></div>
+</header>
+
+<div class="page">
+    <div class="test-layout">
+        
+        <!-- ЛЕВАЯ ПАНЕЛЬ: АНИМАЦИЯ-ДЕМОНСТРАЦИЯ -->
+        <div class="demo-pane">
+            <div class="demo-badge">Анимация</div>
+            <div class="demo-pane-title">Как это работает</div>
+            
+            <div class="demo-board" id="demo-board">
+                <!-- SVG Курсор -->
+                <div class="demo-cursor" id="demo-cursor" style="transform: translate(20px, 20px);">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.64c.45 0 .67-.54.35-.85L6.35 3.06a.5.5 0 0 0-.85.15z" fill="#000" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <!-- Контейнер для фейковых карточек -->
+                <div class="demo-list" id="demo-list" style="height: 240px;">
+                    <!-- Карточки будут сгенерированы и анимированы через JS -->
+                </div>
+
+                <!-- Фейковая кнопка "Далее" для анимации -->
+                <div class="q-nav" style="margin-top: 16px; padding-top: 24px; position:absolute; bottom:0; width:100%;">
+                    <button class="btn btn-primary" id="demo-next-btn" style="width: 100%; font-size: 14px; padding: 12px; transition: transform 0.1s;">Подтвердить и продолжить →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ ПАНЕЛЬ: НАСТОЯЩИЙ ИНТЕРАКТИВНЫЙ ТЕСТ -->
+        <div class="test-question">
+            <div>
+                <div class="q-eyebrow"><div class="q-num">2</div> Приоритизация</div>
+                <h1 class="q-title">Пять срочных ситуаций. Что ты возьмёшь первым?</h1>
+                <p class="q-desc">Перетащи карточки и расставь ситуации в том порядке, в котором тебе хотелось бы включаться в решение — от самой притягательной сверху до наименее интересной снизу.</p>
+            </div>
+
+            <div class="crisis-list" id="crisis-list">
+                <!-- Генерируется через JS -->
+            </div>
+
+            <div class="q-nav">
+                <button class="btn btn-secondary" onclick="window.history.back()">← Назад</button>
+                <button class="btn btn-primary" onclick="saveAndNext()">Далее →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/test-engine.js"></script>
+<script>
+// ==========================================
+// 1. ЛОГИКА ИНТЕРАКТИВНОГО СПИСКА (ПРАВЫЙ БЛОК)
+// ==========================================
+const CRISES =[
+    { key: 'app_release',    emoji: 'ПО', text: 'Приложение падает прямо перед запуском для пользователей.' },
+    { key: 'network_access', emoji: 'Сеть', text: 'На предприятии пропала сеть и у сотрудников не работают доступы.' },
+    { key: 'device_fault',   emoji: 'HW', text: 'Электронный модуль не запускается: нужно быстро найти неисправность.' },
+    { key: 'line_stop',      emoji: 'АСУ', text: 'Линия или роботизированный узел встал из-за датчика и логики управления.' },
+    { key: 'visual_deadline',emoji: 'Диз', text: 'Нужно срочно собрать и согласовать визуальную концепцию проекта.' },
+];
+
+const SAVED_Q2 = window.ProftestEngine ? window.ProftestEngine.getSavedQ2() : null;
+
+// Перемешиваем карточки один раз при загрузке
+let order = SAVED_Q2 && SAVED_Q2.length
+    ? SAVED_Q2.map((key) => CRISES.find((item) => item.key === key)).filter(Boolean)
+    : [...CRISES].sort(() => Math.random() - 0.5);
+let draggedItemIndex = null;
+
+function renderList() {
+    const list = document.getElementById('crisis-list');
+    list.innerHTML = '';
+    
+    order.forEach((item, idx) => {
+        const el = document.createElement('div');
+        el.className = 'crisis-item';
+        el.draggable = true;
+        el.dataset.index = idx;
+        el.innerHTML = `
+            <div class="crisis-rank">${idx + 1}</div>
+            <div class="crisis-emoji">${item.emoji}</div>
+            <div class="crisis-text">${item.text}</div>
+            <div class="crisis-handle"><span></span><span></span><span></span></div>`;
+        
+        // События Drag & Drop
+        el.addEventListener('dragstart', (e) => {
+            draggedItemIndex = idx;
+            setTimeout(() => el.classList.add('dragging'), 0); // Таймаут нужен для красивого ghost-эффекта
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        el.addEventListener('dragend', () => {
+            el.classList.remove('dragging');
+            draggedItemIndex = null;
+            document.querySelectorAll('.crisis-item').forEach(i => i.classList.remove('drag-over'));
+        });
+        
+        el.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Необходимо для разрешения drop
+            if (draggedItemIndex !== idx) {
+                el.classList.add('drag-over');
+            }
+        });
+        
+        el.addEventListener('dragleave', () => {
+            el.classList.remove('drag-over');
+        });
+        
+        el.addEventListener('drop', (e) => {
+            e.preventDefault();
+            el.classList.remove('drag-over');
+            if (draggedItemIndex === null || draggedItemIndex === idx) return;
+            
+            // Логика перестановки: вырезаем элемент и вставляем на новое место
+            const draggedObj = order.splice(draggedItemIndex, 1)[0];
+            order.splice(idx, 0, draggedObj);
+            
+            renderList(); // Перерисовываем список
+        });
+        
+        list.appendChild(el);
+    });
+}
+
+
+// ==========================================
+// 2. ЛОГИКА АНИМАЦИИ-ДЕМОНСТРАЦИИ (ЛЕВЫЙ БЛОК)
+// ==========================================
+const DEMO_ITEMS =[
+    { emoji: 'ПО', text: 'Падает приложение' },
+    { emoji: 'Сеть', text: 'Пропала сеть' },
+    { emoji: 'HW', text: 'Не работает модуль' },
+];
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Инициализация HTML для левого блока
+function resetDemoHTML() {
+    const container = document.getElementById('demo-list');
+    container.innerHTML = '';
+    DEMO_ITEMS.forEach((item, idx) => {
+        // Карточки спозиционированы абсолютно, мы будем управлять ими через transform (top: 0, left: 0)
+        // Высота карточки ~ 54px + gap 10px = шаг 64px
+        container.innerHTML += `
+        <div class="demo-item" id="demo-item-${idx}" style="transform: translateY(${idx * 64}px); transition: transform 0.5s ease, box-shadow 0.2s, border-color 0.2s;">
+            <div class="crisis-rank" id="demo-rank-${idx}">${idx + 1}</div>
+            <div class="crisis-emoji" style="font-size:20px;">${item.emoji}</div>
+            <div class="crisis-text" style="font-size:13px;">${item.text}</div>
+            <div class="crisis-handle" style="margin-left:auto;"><span></span><span></span><span></span></div>
+        </div>`;
+    });
+}
+
+// Главный цикл анимации
+async function startAnimationScript() {
+    const cursor = document.getElementById('demo-cursor');
+    const board = document.getElementById('demo-board');
+    const btn = document.getElementById('demo-next-btn');
+
+    if(!cursor || !board) return;
+
+    while(true) {
+        // 1. Сброс стейта
+        resetDemoHTML();
+        cursor.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        cursor.style.transform = `translate(20px, -20px)`;
+        cursor.classList.remove('clicking');
+        await sleep(1000);
+
+        const item0 = document.getElementById('demo-item-0');
+        const item1 = document.getElementById('demo-item-1');
+        const item2 = document.getElementById('demo-item-2');
+
+        const rank0 = document.getElementById('demo-rank-0');
+        const rank1 = document.getElementById('demo-rank-1');
+        const rank2 = document.getElementById('demo-rank-2');
+
+        // Координаты хэндла (ручки справа) первой карточки
+        const startX = 260; 
+        const startY = 24; 
+
+        // 2. Курсор едет к первой карточке
+        cursor.style.transform = `translate(${startX}px, ${startY}px)`;
+        await sleep(600); 
+
+        // 3. Захват карточки
+        cursor.classList.add('clicking');
+        item0.classList.add('dragging');
+        await sleep(300);
+
+        // 4. Тащим карточку вниз на место 3-й (сдвиг на +128px по Y)
+        cursor.style.transition = 'transform 1s ease-in-out';
+        cursor.style.transform = `translate(${startX}px, ${startY + 128}px)`;
+        
+        item0.style.transition = 'transform 1s ease-in-out';
+        item0.style.transform = `translateY(128px)`; // Едет вниз
+
+        // Параллельно другие карточки ползут вверх (освобождая место)
+        setTimeout(() => {
+            item1.style.transform = `translateY(0px)`; // На место первой
+            rank1.textContent = "1"; // Сразу меняем циферку для красоты
+        }, 300);
+
+        setTimeout(() => {
+            item2.style.transform = `translateY(64px)`; // На место второй
+            rank2.textContent = "2";
+        }, 600);
+
+        // Ждем пока доедет
+        await sleep(1000);
+
+        // 5. Отпускаем
+        cursor.classList.remove('clicking');
+        item0.classList.remove('dragging');
+        rank0.textContent = "3"; // Упавший сервер стал третьим приоритетом
+        await sleep(600);
+
+        // 6. Курсор едет к кнопке "Далее"
+        const btnRect = btn.getBoundingClientRect();
+        const boardRect = board.getBoundingClientRect();
+        const btnX = btnRect.width / 2;
+        const btnY = btnRect.top - boardRect.top + (btnRect.height / 2);
+
+        cursor.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        cursor.style.transform = `translate(${btnX}px, ${btnY}px)`;
+        await sleep(600);
+        
+        // Клик по кнопке
+        cursor.classList.add('clicking');
+        btn.style.transform = 'scale(0.97)';
+        await sleep(200);
+        cursor.classList.remove('clicking');
+        btn.style.transform = 'none';
+        
+        // Пауза перед новым циклом
+        await sleep(2000); 
+    }
+}
+
+function saveAndNext() {
+    if (!window.ProftestEngine) {
+        return;
+    }
+
+    window.ProftestEngine.saveQ2(order.map((item) => item.key));
+    window.location.href = 'q3.html';
+}
+
+// Запуск после загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+    renderList();
+    setTimeout(startAnimationScript, 500);
+});
+
+</script>
+</body>
+</html>
+

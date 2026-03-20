@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вопрос 3 — Профтест</title>
+<style>
+    :root {
+        --bg-main: #f8fafc;
+        --surface-solid: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --accent-soft: #eff6ff;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --radius-lg: 16px;
+    }
+
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-main); margin: 0; padding: 0; color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .ambient { position: fixed; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
+    .blob { position: absolute; filter: blur(80px); opacity: 0.4; border-radius: 50%; animation: float 10s infinite ease-in-out alternate; }
+    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(37, 99, 235, 0.2); }
+    .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(139, 92, 246, 0.15); animation-delay: -5s; }
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
+
+    header { background: var(--surface-solid); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 16px 24px; }
+    .topbar-brand { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--text-main); text-decoration: none; font-size: 16px; letter-spacing: -0.02em; text-transform: uppercase; }
+    .topbar-brand-icon { background: var(--accent); color: white; border-radius: 8px; padding: 6px; display: flex; }
+    .top-nav { display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-inline: auto; padding: 6px; border-radius: 999px; background: rgba(244,247,252,0.94); border: 1px solid rgba(15,23,42,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.92); }
+    .top-nav a { text-decoration: none; color: var(--text-muted); font-weight: 700; font-size: 14px; padding: 10px 14px; border-radius: 999px; transition: all 0.2s; }
+    .top-nav a:hover, .top-nav a[aria-current="page"] { color: var(--text-main); background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.06); transform: translateY(-1px); }
+    .step-indicator { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+    .step-num { color: var(--text-main); font-weight: 800; }
+    .progress-track { height: 4px; background: var(--bg-main); width: 100%; }
+    .progress-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+    @media(max-width: 900px) { .topbar { flex-wrap: wrap; } .top-nav { order: 3; width: 100%; flex-wrap: wrap; margin-inline: 0; } }
+
+    .page { max-width: 1200px; margin: 40px auto; padding: 0 24px; flex: 1; display: flex; flex-direction: column; width: 100%; }
+    .test-layout { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
+    @media(min-width: 900px) { .test-layout { grid-template-columns: 1fr 1.2fr; gap: 64px; } }
+
+    .demo-pane { background: var(--surface-solid); border: 1px solid var(--border); border-radius: 24px; padding: 32px; position: relative; box-shadow: var(--shadow-lg); overflow: hidden; display: flex; flex-direction: column; }
+    .demo-badge { position: absolute; top: 16px; right: 16px; background: #f1f5f9; color: var(--text-muted); padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .demo-pane-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--text-main); }
+    .demo-pane-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+
+    .svg-window {
+        background: #f8fafc; border: 1px solid var(--border); border-radius: 12px;
+        overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+    }
+    .svg-window-header {
+        height: 28px; background: #ffffff; border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; padding: 0 12px; gap: 6px;
+    }
+    .svg-dot { width: 10px; height: 10px; border-radius: 50%; background: #e2e8f0; }
+    .svg-dot:nth-child(1) { background: #ef4444; }
+    .svg-dot:nth-child(2) { background: #f59e0b; }
+    .svg-dot:nth-child(3) { background: #10b981; }
+    .svg-content { width: 100%; display: flex; pointer-events: none; user-select: none; }
+
+    .test-question { display: flex; flex-direction: column; gap: 24px; }
+    .q-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .q-num { background: rgba(37,99,235,0.1); padding: 2px 8px; border-radius: 6px; }
+    .q-title { font-size: 32px; font-weight: 900; margin: 0 0 12px 0; line-height: 1.2; letter-spacing: -0.03em; }
+    .q-desc { font-size: 16px; line-height: 1.6; color: var(--text-muted); margin: 0; }
+
+    .options-grid { display: flex; flex-direction: column; gap: 12px; }
+    .option-card {
+        display: flex; align-items: center; gap: 16px; padding: 16px 20px;
+        background: var(--surface-solid); border: 2px solid var(--border);
+        border-radius: var(--radius-lg); cursor: pointer; text-align: left;
+        transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        width: 100%; box-shadow: var(--shadow-sm); outline: none;
+    }
+    .option-card:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .option-card.selected {
+        border-color: var(--accent); background: var(--accent-soft);
+        box-shadow: 0 0 0 4px rgba(37,99,235,0.15); transform: translateY(-2px);
+    }
+
+    .option-icon {
+        width: 44px; height: 44px; border-radius: 12px; background: #f8fafc;
+        display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; flex-shrink: 0;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .option-card.selected .option-icon { background: white; transform: scale(1.1); box-shadow: 0 4px 6px rgba(37,99,235,0.1); }
+
+    .option-content { display: flex; flex-direction: column; gap: 4px; }
+    .option-title { font-size: 16px; font-weight: 800; color: var(--text-main); line-height: 1.3; }
+    .option-desc { font-size: 14px; font-weight: 500; color: var(--text-muted); line-height: 1.4; }
+    .option-card.selected .option-title { color: var(--accent); }
+
+    .option-radio {
+        width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border);
+        margin-left: auto; display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s; flex-shrink: 0; background: white;
+    }
+    .option-card.selected .option-radio { border-color: var(--accent); background: var(--accent); }
+    .option-radio::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0; transition: opacity 0.2s; }
+    .option-card.selected .option-radio::after { opacity: 1; }
+
+    .q-nav { display: flex; gap: 16px; margin-top: 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .btn { padding: 14px 28px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; justify-content: center; align-items: center; border: none; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--surface-solid); color: var(--text-main); border: 2px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg-main); }
+    .btn-primary { background: var(--accent); color: white; border: 2px solid var(--accent); flex: 1; box-shadow: var(--shadow-md); }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); box-shadow: var(--shadow-lg); }
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true">
+    <div class="blob blob-1"></div><div class="blob blob-2"></div>
+</div>
+
+<header>
+    <div class="topbar">
+        <a href="../index.html" class="topbar-brand">
+            <div class="topbar-brand-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            Проксима
+        </a>
+        <nav class="top-nav" aria-label="Главная навигация">
+            <a href="../../index.html">Главная</a>
+            <a href="../../compare.html">Сравнение</a>
+            <a href="../../catalog.html">Каталог</a>
+            <a href="../index.html" aria-current="page">Профтест</a>
+        </nav>
+        <div class="step-indicator">Вопрос <span class="step-num">3</span> из 7</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:42.9%"></div></div>
+</header>
+
+<div class="page">
+    <div class="test-layout">
+        <div class="demo-pane">
+            <div class="demo-badge">Пример</div>
+            <div class="demo-pane-title">Выбор ответа</div>
+            <div class="demo-pane-desc">Просто кликни на карточку, которая описывает тебя точнее всего.</div>
+
+            <div class="svg-window">
+                <div class="svg-window-header">
+                    <div class="svg-dot"></div><div class="svg-dot"></div><div class="svg-dot"></div>
+                </div>
+                <div class="svg-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 860" width="100%" height="auto">
+                        <defs>
+                            <filter id="svg-shadow-sm" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.04" />
+                            </filter>
+                            <filter id="svg-shadow-md" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.08" />
+                                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.04" />
+                            </filter>
+                            <filter id="svg-cursor-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3" />
+                            </filter>
+                        </defs>
+
+                        <style>
+                            .svg-txt-main { fill: #0f172a; font-family: system-ui, -apple-system, sans-serif; }
+                            .svg-txt-muted { fill: #64748b; font-family: system-ui, -apple-system, sans-serif; }
+                            .svg-accent { fill: #2563eb; font-family: system-ui, -apple-system, sans-serif; }
+                            .svg-card-bg { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; filter: url(#svg-shadow-sm); }
+                            .svg-card-icon-bg { fill: #f8fafc; }
+                            .svg-card-title { font-weight: 800; font-size: 18px; }
+                            .svg-card-desc { font-weight: 500; font-size: 15px; }
+                            .svg-radio-out { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+                            .svg-card-anim { animation: svgCardBounce 7s infinite; transform-origin: center; }
+                            .svg-card-anim-bg { animation: svgCardFill 7s infinite; }
+                            .svg-icon-anim-bg { animation: svgIconFill 7s infinite; }
+                            .svg-title-anim { animation: svgTitleColor 7s infinite; }
+                            .svg-radio-out-anim { animation: svgRadioOutFill 7s infinite; }
+                            .svg-radio-in-anim { animation: svgRadioInShow 7s infinite; fill: #ffffff; opacity: 0; }
+                            @keyframes svgCardBounce {
+                                0%, 38% { transform: translateY(0); }
+                                39%, 85% { transform: translateY(-2px); }
+                                100% { transform: translateY(0); }
+                            }
+                            @keyframes svgCardFill {
+                                0%, 38% { fill: #ffffff; stroke: #e2e8f0; filter: url(#svg-shadow-sm); }
+                                39%, 85% { fill: #eff6ff; stroke: #2563eb; filter: url(#svg-shadow-md); }
+                                100% { fill: #ffffff; stroke: #e2e8f0; filter: url(#svg-shadow-sm); }
+                            }
+                            @keyframes svgIconFill {
+                                0%, 38% { fill: #f8fafc; }
+                                39%, 85% { fill: #ffffff; }
+                                100% { fill: #f8fafc; }
+                            }
+                            @keyframes svgTitleColor {
+                                0%, 38% { fill: #0f172a; }
+                                39%, 85% { fill: #2563eb; }
+                                100% { fill: #0f172a; }
+                            }
+                            @keyframes svgRadioOutFill {
+                                0%, 38% { fill: #ffffff; stroke: #e2e8f0; }
+                                39%, 85% { fill: #2563eb; stroke: #2563eb; }
+                                100% { fill: #ffffff; stroke: #e2e8f0; }
+                            }
+                            @keyframes svgRadioInShow {
+                                0%, 38% { opacity: 0; }
+                                39%, 85% { opacity: 1; }
+                                100% { opacity: 0; }
+                            }
+                            .svg-btn-anim { animation: svgBtnScale 7s infinite; transform-origin: 468px 792px; }
+                            .svg-btn-bg { fill: #2563eb; animation: svgBtnOpacity 7s infinite; }
+                            @keyframes svgBtnOpacity {
+                                0%, 38% { opacity: 0.5; filter: none; }
+                                39%, 100% { opacity: 1; filter: url(#svg-shadow-md); }
+                            }
+                            @keyframes svgBtnScale {
+                                0%, 82% { transform: scale(1); }
+                                83%, 86% { transform: scale(0.96); }
+                                87%, 100% { transform: scale(1); }
+                            }
+                            .svg-cursor { transform-origin: top left; animation: svgMoveCursor 7s infinite cubic-bezier(0.25, 1, 0.5, 1); filter: url(#svg-cursor-shadow); }
+                            @keyframes svgMoveCursor {
+                                0%, 10% { transform: translate(700px, 800px) scale(1); }
+                                20%, 35% { transform: translate(400px, 457px) scale(1); }
+                                38% { transform: translate(400px, 457px) scale(0.85); }
+                                42%, 55% { transform: translate(400px, 457px) scale(1); }
+                                65%, 80% { transform: translate(468px, 792px) scale(1); }
+                                83% { transform: translate(468px, 792px) scale(0.85); }
+                                88%, 100% { transform: translate(468px, 792px) scale(1); }
+                            }
+                        </style>
+
+                        <rect width="100%" height="100%" fill="#f8fafc" />
+                        <g transform="translate(40, 40)">
+                            <rect x="0" y="0" width="28" height="28" rx="6" fill="#ebf2ff" />
+                            <text x="14" y="19" class="svg-accent" font-size="14" font-weight="900" text-anchor="middle">3</text>
+                            <text x="38" y="19" class="svg-accent" font-size="14" font-weight="800" letter-spacing="0.5">ФОРМИРОВАНИЕ ПРОФИЛЯ</text>
+                            <text x="0" y="65" class="svg-txt-main" font-size="32" font-weight="900" letter-spacing="-0.5">Что для тебя выглядит</text>
+                            <text x="0" y="100" class="svg-txt-main" font-size="32" font-weight="900" letter-spacing="-0.5">как сильный результат?</text>
+                            <text x="0" y="136" class="svg-txt-muted" font-size="16">Выбери тот итог работы, который ощущается</text>
+                            <text x="0" y="162" class="svg-txt-muted" font-size="16">для тебя самым ценным.</text>
+                        </g>
+
+                        <g transform="translate(40, 200)">
+                            <rect width="720" height="90" rx="16" class="svg-card-bg" />
+                            <rect x="20" y="20" width="50" height="50" rx="12" class="svg-card-icon-bg" />
+                            <text x="45" y="50" font-size="12" font-weight="800" text-anchor="middle">ПО</text>
+                            <text x="86" y="43" class="svg-txt-main svg-card-title">Запуск в релиз</text>
+                            <text x="86" y="67" class="svg-txt-muted svg-card-desc">Запустившаяся функция, сервис или приложение.</text>
+                            <circle cx="680" cy="45" r="11" class="svg-radio-out" />
+                        </g>
+
+                        <g transform="translate(40, 306)">
+                            <rect width="720" height="90" rx="16" class="svg-card-bg" />
+                            <rect x="20" y="20" width="50" height="50" rx="12" class="svg-card-icon-bg" />
+                            <text x="45" y="50" font-size="12" font-weight="800" text-anchor="middle">СЕТЬ</text>
+                            <text x="86" y="43" class="svg-txt-main svg-card-title">Абсолютная стабильность</text>
+                            <text x="86" y="67" class="svg-txt-muted svg-card-desc">Сеть, сервер или цифровая среда, работающая без сбоев.</text>
+                            <circle cx="680" cy="45" r="11" class="svg-radio-out" />
+                        </g>
+
+                        <g transform="translate(40, 412)">
+                            <g class="svg-card-anim">
+                                <rect width="720" height="90" rx="16" class="svg-card-bg svg-card-anim-bg" />
+                                <rect x="20" y="20" width="50" height="50" rx="12" class="svg-card-icon-bg svg-icon-anim-bg" />
+                                <text x="45" y="50" font-size="12" font-weight="800" text-anchor="middle">HW</text>
+                                <text x="86" y="43" class="svg-txt-main svg-card-title svg-title-anim">Ожившее железо</text>
+                                <text x="86" y="67" class="svg-txt-muted svg-card-desc">Собранное устройство, которое можно потрогать и оно работает.</text>
+                                <circle cx="680" cy="45" r="11" class="svg-radio-out svg-radio-out-anim" />
+                                <circle cx="680" cy="45" r="4" class="svg-radio-in-anim" />
+                            </g>
+                        </g>
+
+                        <g transform="translate(40, 518)">
+                            <rect width="720" height="90" rx="16" class="svg-card-bg" />
+                            <rect x="20" y="20" width="50" height="50" rx="12" class="svg-card-icon-bg" />
+                            <text x="45" y="50" font-size="12" font-weight="800" text-anchor="middle">АСУ</text>
+                            <text x="86" y="43" class="svg-txt-main svg-card-title">Идеальный процесс</text>
+                            <text x="86" y="67" class="svg-txt-muted svg-card-desc">Система управления или пайплайн, которые идут ровно и без отклонений.</text>
+                            <circle cx="680" cy="45" r="11" class="svg-radio-out" />
+                        </g>
+
+                        <g transform="translate(40, 624)">
+                            <rect width="720" height="90" rx="16" class="svg-card-bg" />
+                            <rect x="20" y="20" width="50" height="50" rx="12" class="svg-card-icon-bg" />
+                            <text x="45" y="50" font-size="12" font-weight="800" text-anchor="middle">ВИЗ</text>
+                            <text x="86" y="43" class="svg-txt-main svg-card-title">Удобство и красота</text>
+                            <text x="86" y="67" class="svg-txt-muted svg-card-desc">Визуально сильный проект, который понятен и приятен людям.</text>
+                            <circle cx="680" cy="45" r="11" class="svg-radio-out" />
+                        </g>
+
+                        <g transform="translate(0, 744)">
+                            <line x1="40" y1="0" x2="760" y2="0" stroke="#e2e8f0" stroke-width="2" />
+                            <rect x="40" y="24" width="120" height="48" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" />
+                            <text x="100" y="53" class="svg-txt-main" font-size="16" font-weight="bold" text-anchor="middle">← Назад</text>
+                            <g class="svg-btn-anim">
+                                <rect x="176" y="24" width="584" height="48" rx="12" class="svg-btn-bg" />
+                                <text x="468" y="53" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">Подтвердить выбор →</text>
+                            </g>
+                        </g>
+
+                        <g class="svg-cursor">
+                            <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.64c.45 0 .67-.54.35-.85L6.35 3.06a.5.5 0 0 0-.85.15z" fill="#000000" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-question">
+            <div>
+                <div class="q-eyebrow"><div class="q-num">3</div> Формирование профиля</div>
+                <h1 class="q-title">Что для тебя выглядит как сильный результат работы?</h1>
+                <p class="q-desc">Выбери тот итог, который действительно ощущается для тебя самым ценным.</p>
+            </div>
+
+            <div class="options-grid" id="options-grid">
+                <button class="option-card" data-id="ship" type="button">
+                    <div class="option-icon">ПО</div>
+                    <div class="option-content">
+                        <div class="option-title">Запуск в релиз</div>
+                        <div class="option-desc">Запустившаяся функция, сервис или приложение.</div>
+                    </div>
+                    <div class="option-radio"></div>
+                </button>
+
+                <button class="option-card" data-id="stable" type="button">
+                    <div class="option-icon">Сеть</div>
+                    <div class="option-content">
+                        <div class="option-title">Абсолютная стабильность</div>
+                        <div class="option-desc">Сеть, сервер или цифровая среда, работающая без сбоев.</div>
+                    </div>
+                    <div class="option-radio"></div>
+                </button>
+
+                <button class="option-card" data-id="device" type="button">
+                    <div class="option-icon">HW</div>
+                    <div class="option-content">
+                        <div class="option-title">Ожившее железо</div>
+                        <div class="option-desc">Собранное устройство, которое можно потрогать и оно работает.</div>
+                    </div>
+                    <div class="option-radio"></div>
+                </button>
+
+                <button class="option-card" data-id="process" type="button">
+                    <div class="option-icon">АСУ</div>
+                    <div class="option-content">
+                        <div class="option-title">Идеальный процесс</div>
+                        <div class="option-desc">Система управления или пайплайн, которые идут ровно и без отклонений.</div>
+                    </div>
+                    <div class="option-radio"></div>
+                </button>
+
+                <button class="option-card" data-id="visual" type="button">
+                    <div class="option-icon">Виз</div>
+                    <div class="option-content">
+                        <div class="option-title">Удобство и красота</div>
+                        <div class="option-desc">Визуально сильный проект, который понятен и приятен людям.</div>
+                    </div>
+                    <div class="option-radio"></div>
+                </button>
+            </div>
+
+            <div class="q-nav">
+                <button class="btn btn-secondary" id="back-btn" type="button">← Назад</button>
+                <button class="btn btn-primary" id="next-btn" type="button" disabled>Подтвердить выбор →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/test-engine.js"></script>
+<script>
+const engine = window.ProftestEngine;
+const state = engine ? engine.getQuestionPageState('q3') : null;
+let selectedOption = state && state.answer ? state.answer.optionId : null;
+const cards = document.querySelectorAll('.option-card');
+const nextBtn = document.getElementById('next-btn');
+const backBtn = document.getElementById('back-btn');
+
+if (!state || !state.question) {
+    window.location.replace('q1.html');
+    throw new Error('Q3_STATE_MISSING');
+}
+
+if (state.redirect) {
+    window.location.replace(state.redirect);
+    throw new Error('Q3_REDIRECT');
+}
+
+function syncSelection() {
+    cards.forEach((card) => {
+        card.classList.toggle('selected', card.dataset.id === selectedOption);
+    });
+    nextBtn.disabled = !selectedOption;
+}
+
+cards.forEach((card) => {
+    card.addEventListener('click', () => {
+        selectedOption = card.dataset.id;
+        syncSelection();
+        nextBtn.style.transform = 'scale(1.02)';
+        setTimeout(() => {
+            nextBtn.style.transform = 'none';
+        }, 150);
+    });
+});
+
+backBtn.addEventListener('click', () => {
+    window.location.href = state.previousRoute;
+});
+
+nextBtn.addEventListener('click', () => {
+    if (!selectedOption) {
+        return;
+    }
+    const session = engine.saveSingleChoice('q3', selectedOption);
+    window.location.href = engine.getNextQuestionRoute(session);
+});
+
+syncSelection();
+</script>
+</body>
+</html>
+
