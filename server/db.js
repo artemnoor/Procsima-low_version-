@@ -34,6 +34,12 @@ let cache = null;
 let imageIndexCache = null;
 
 function resolveSchemaPath() {
+    const explicitName = process.env.BMSTU_SCHEMA_FILE || 'bmstu_final_schema_20260320_005704.json';
+    const explicitPath = path.join(rootDir, explicitName);
+    if (fs.existsSync(explicitPath)) {
+        return explicitPath;
+    }
+
     const files = fs.readdirSync(rootDir)
         .filter((name) => /^bmstu_final_schema.*\.json$/i.test(name))
         .map((name) => {
