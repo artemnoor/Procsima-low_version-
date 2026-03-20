@@ -13,7 +13,14 @@ app.get('/favicon.ico', (_req, res) => {
 app.use(express.static(rootDir, {
     extensions: ['html'],
     etag: true,
-    maxAge: '7d'
+    maxAge: '7d',
+    setHeaders: (res, filePath) => {
+        if (path.extname(filePath).toLowerCase() === '.html') {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
 }));
 
 app.get('/api/health', (_req, res) => {
@@ -48,6 +55,9 @@ app.get('/api/programs/:slug', (req, res) => {
 });
 
 app.get('/', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.sendFile(path.join(rootDir, 'index.html'));
 });
 

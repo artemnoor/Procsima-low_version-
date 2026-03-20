@@ -376,6 +376,83 @@
             gap: 10px;
         }
 
+        .compare-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 8px 7px 10px;
+            border-radius: 999px;
+            text-decoration: none;
+            color: var(--brand-dark);
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(0, 44, 91, 0.08);
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+        }
+
+        .compare-pill:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 108, 220, 0.18);
+            box-shadow: 0 12px 24px rgba(0, 44, 91, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .compare-pill.is-active {
+            border-color: rgba(0, 108, 220, 0.22);
+            box-shadow: 0 14px 28px rgba(0, 108, 220, 0.12);
+        }
+
+        .compare-pill-icon {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(225, 239, 251, 0.96), rgba(255, 255, 255, 0.92));
+            color: var(--accent);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            flex-shrink: 0;
+        }
+
+        .compare-pill-copy {
+            display: grid;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .compare-pill-label {
+            font-size: 10px;
+            line-height: 1.1;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            font-weight: 800;
+        }
+
+        .compare-pill-value {
+            font-size: 14px;
+            line-height: 1.15;
+            font-weight: 800;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .compare-pill-count {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--brand-dark), var(--brand-mid));
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 10px 18px rgba(0, 44, 91, 0.18);
+            flex-shrink: 0;
+        }
+
         .mobile-nav {
             display: none;
             position: relative;
@@ -1208,6 +1285,21 @@
                 display: none;
             }
 
+            .compare-pill-copy {
+                display: none;
+            }
+
+            .compare-pill {
+                padding: 6px 6px 6px 8px;
+                gap: 8px;
+            }
+
+            .compare-pill-count {
+                min-width: 30px;
+                height: 30px;
+                padding: 0 8px;
+            }
+
             .mobile-nav {
                 display: block;
             }
@@ -1349,12 +1441,27 @@
 
             <nav class="top-nav" aria-label="Главная навигация">
                 <a href="index.html" aria-current="page">Главная</a>
-                <a href="compare.html">Сравнение</a>
                 <a href="catalog.html">Каталог</a>
                 <a href="proftest/">Профтест</a>
             </nav>
 
             <div class="top-actions">
+                <a href="compare.html" class="compare-pill" id="headerCompareLink" aria-label="Сравнение, пока пусто">
+                    <span class="compare-pill-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 7h11"></path>
+                            <path d="M9 12h11"></path>
+                            <path d="M9 17h11"></path>
+                            <path d="M4 7h.01"></path>
+                            <path d="M4 12h.01"></path>
+                            <path d="M4 17h.01"></path>
+                        </svg>
+                    </span>
+                    <span class="compare-pill-copy">
+                        <span class="compare-pill-label">Сравнение</span>
+                        <span class="compare-pill-value" id="headerCompareText">0 из 3</span>
+                    </span>
+                </a>
                 <details class="mobile-nav">
                     <summary aria-label="Открыть меню">
                         <span class="mobile-nav-icon" aria-hidden="true">
@@ -1365,7 +1472,6 @@
                     </summary>
                     <nav class="mobile-nav-panel" aria-label="Мобильная навигация">
                         <a href="index.html" aria-current="page">Главная</a>
-                        <a href="compare.html">Сравнение</a>
                         <a href="catalog.html">Каталог</a>
                         <a href="proftest/">Профтест</a>
                     </nav>
@@ -1452,8 +1558,8 @@
                                             <div style="font-size: 24px; font-weight: 800; color: var(--text-main); line-height:1;">98%</div>
                                         </div>
                                     </div>
-                                    <div style="font-size: 14px; font-weight: 800; color: var(--text-main); line-height: 1.3;">Программная<br>инженерия</div>
-                                    <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(15,23,42,0.06);font-size:11px;color:var(--text-muted);">09.03.04 · Бюджет: 120 мест</div>
+                                    <div style="font-size: 14px; font-weight: 800; color: var(--text-main); line-height: 1.3;">ТСР</div>
+                                    <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(15,23,42,0.06);font-size:11px;color:var(--text-muted);">11.02.18 · Бюджет: 40 мест</div>
                                 </div>
 
                                 <!-- Study Blocks Compare -->
@@ -1779,7 +1885,34 @@
 
     <script src="how-platform-flow.js"></script>
     <script>
+        const COMPARE_STORAGE_KEY = 'nps-compare-programs';
+        const MAX_COMPARE_ITEMS = 3;
         const topbar = document.getElementById('topbar');
+
+        function getHeaderCompareCount() {
+            try {
+                const raw = localStorage.getItem(COMPARE_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? Math.min(parsed.length, MAX_COMPARE_ITEMS) : 0;
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        function updateHeaderComparePill() {
+            const count = getHeaderCompareCount();
+            const link = document.getElementById('headerCompareLink');
+            const textEl = document.getElementById('headerCompareText');
+            if (!link || !textEl) {
+                return;
+            }
+
+            textEl.textContent = `${count} из ${MAX_COMPARE_ITEMS}`;
+            link.classList.toggle('is-active', count > 0);
+            link.setAttribute('aria-label', count > 0
+                ? `Сравнение, добавлено ${count} из ${MAX_COMPARE_ITEMS}`
+                : 'Сравнение, пока пусто');
+        }
 
         const io = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -1802,6 +1935,15 @@
 
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
+        updateHeaderComparePill();
+        window.addEventListener('storage', updateHeaderComparePill);
+        window.addEventListener('pageshow', updateHeaderComparePill);
+        window.addEventListener('focus', updateHeaderComparePill);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                updateHeaderComparePill();
+            }
+        });
 
         // --- Scroll Reveal Logic ---
         const revealObserver = new IntersectionObserver((entries) => {

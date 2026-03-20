@@ -269,6 +269,170 @@
             line-height: 1.7;
         }
 
+        .compare-tools {
+            position: relative;
+            display: grid;
+            gap: 14px;
+            margin: -18px 0 14px;
+            padding: 20px 22px;
+            border-radius: 28px;
+            border: 1px solid rgba(0, 108, 220, 0.12);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(225, 239, 251, 0.84));
+            box-shadow: 0 20px 40px rgba(0, 44, 91, 0.08);
+            overflow: hidden;
+        }
+
+        .compare-tools::before {
+            content: "";
+            position: absolute;
+            inset: -20% auto auto -10%;
+            width: 220px;
+            height: 220px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(36, 153, 236, 0.16), transparent 68%);
+            pointer-events: none;
+        }
+
+        .search-lead {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 6px;
+        }
+
+        .search-kicker {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 108, 220, 0.12);
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            box-shadow: 0 10px 22px rgba(0, 44, 91, 0.06);
+        }
+
+        .search-title {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        .search-field {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px 14px 14px;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 108, 220, 0.14);
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 14px 28px rgba(0, 44, 91, 0.08);
+            backdrop-filter: blur(18px);
+            transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+        }
+
+        .search-field:focus-within {
+            border-color: rgba(0, 108, 220, 0.36);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.96),
+                0 18px 34px rgba(0, 78, 159, 0.14),
+                0 0 0 4px rgba(0, 108, 220, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .search-field svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .search-icon-shell {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            color: var(--accent);
+            background: linear-gradient(135deg, rgba(225, 239, 251, 0.96), rgba(255, 255, 255, 0.92));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 10px 20px rgba(0, 44, 91, 0.08);
+        }
+
+        .search-copy {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: grid;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .search-label {
+            color: var(--text-soft);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .search-field input {
+            width: 100%;
+            min-width: 0;
+            border: none;
+            background: transparent;
+            padding: 0;
+            font: inherit;
+            font-size: 17px;
+            line-height: 1.35;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .search-field input::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        .search-field input:focus {
+            outline: none;
+        }
+
+        .search-field input[type="search"] {
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+
+        .search-field input[type="search"]::-webkit-search-decoration,
+        .search-field input[type="search"]::-webkit-search-cancel-button,
+        .search-field input[type="search"]::-webkit-search-results-button,
+        .search-field input[type="search"]::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+            appearance: none;
+            display: none;
+        }
+
+        .search-meta {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 108, 220, 0.12);
+            background: rgba(255, 255, 255, 0.82);
+            box-shadow: 0 10px 22px rgba(0, 44, 91, 0.06);
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
         .topbar {
             position: sticky;
             top: 0;
@@ -373,6 +537,83 @@
             align-items: center;
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        .compare-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 8px 7px 10px;
+            border-radius: 999px;
+            text-decoration: none;
+            color: var(--brand-dark);
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(0, 44, 91, 0.08);
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+        }
+
+        .compare-pill:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 108, 220, 0.18);
+            box-shadow: 0 12px 24px rgba(0, 44, 91, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .compare-pill.is-active {
+            border-color: rgba(0, 108, 220, 0.22);
+            box-shadow: 0 14px 28px rgba(0, 108, 220, 0.12);
+        }
+
+        .compare-pill-icon {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(225, 239, 251, 0.96), rgba(255, 255, 255, 0.92));
+            color: var(--accent);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            flex-shrink: 0;
+        }
+
+        .compare-pill-copy {
+            display: grid;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .compare-pill-label {
+            font-size: 10px;
+            line-height: 1.1;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            font-weight: 800;
+        }
+
+        .compare-pill-value {
+            font-size: 14px;
+            line-height: 1.15;
+            font-weight: 800;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .compare-pill-count {
+            min-width: 32px;
+            height: 32px;
+            padding: 0 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--brand-dark), var(--brand-mid));
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 10px 18px rgba(0, 44, 91, 0.18);
+            flex-shrink: 0;
         }
 
         .mobile-nav {
@@ -573,11 +814,11 @@
             align-items: flex-start;
             gap: 16px;
             margin-bottom: 24px;
-            min-height: 96px;
+            min-height: 108px;
         }
 
         .compare-card-title {
-            min-height: 2.5em;
+            min-height: 3.45em;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -1077,7 +1318,7 @@
         }
 
         .compare-status {
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             padding: 26px 28px;
             border-radius: var(--radius-xl);
             background: rgba(255, 255, 255, 0.82);
@@ -1181,6 +1422,17 @@
             color: var(--text-muted);
             font-size: 13px;
             line-height: 1.55;
+        }
+
+        .compare-search-empty {
+            margin-top: 16px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            border: 1px dashed rgba(0, 108, 220, 0.2);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .compare-empty-card {
@@ -1464,6 +1716,22 @@
             .top-nav {
                 display: none;
             }
+
+            .compare-pill-copy {
+                display: none;
+            }
+
+            .compare-pill {
+                padding: 6px 6px 6px 8px;
+                gap: 8px;
+            }
+
+            .compare-pill-count {
+                min-width: 30px;
+                height: 30px;
+                padding: 0 8px;
+            }
+
             .mobile-nav {
                 display: block;
             }
@@ -1764,13 +2032,6 @@
             white-space: nowrap;
         }
 
-        .matrix-unique-more {
-            margin-top: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
         .matrix-unique-empty {
             font-size: 13px;
             color: var(--text-muted);
@@ -1888,7 +2149,6 @@
             }
 
             .matrix-unique-item-hours,
-            .matrix-unique-more,
             .matrix-unique-empty {
                 font-size: 11px;
             }
@@ -1922,12 +2182,27 @@
 
             <nav class="top-nav" aria-label="Главная навигация">
                 <a href="index.html">Главная</a>
-                <a href="compare.html" aria-current="page">Сравнение</a>
                 <a href="catalog.html">Каталог</a>
                 <a href="proftest/">Профтест</a>
             </nav>
 
             <div class="top-actions">
+                <a href="compare.html" class="compare-pill is-active" id="headerCompareLink" aria-label="Сравнение, пока пусто">
+                    <span class="compare-pill-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 7h11"></path>
+                            <path d="M9 12h11"></path>
+                            <path d="M9 17h11"></path>
+                            <path d="M4 7h.01"></path>
+                            <path d="M4 12h.01"></path>
+                            <path d="M4 17h.01"></path>
+                        </svg>
+                    </span>
+                    <span class="compare-pill-copy">
+                        <span class="compare-pill-label">Сравнение</span>
+                        <span class="compare-pill-value" id="headerCompareText">0 из 3</span>
+                    </span>
+                </a>
                 <details class="mobile-nav">
                     <summary aria-label="Открыть меню">
                         <span class="mobile-nav-icon" aria-hidden="true">
@@ -1938,7 +2213,6 @@
                     </summary>
                     <nav class="mobile-nav-panel" aria-label="Мобильная навигация">
                         <a href="index.html">Главная</a>
-                        <a href="compare.html" aria-current="page">Сравнение</a>
                         <a href="catalog.html">Каталог</a>
                         <a href="proftest/">Профтест</a>
                     </nav>
@@ -1952,6 +2226,26 @@
             <div class="section-header">
                 <h2>Наглядное сравнение направлений</h2>
                 <p>Изучите график проходных баллов за прошлые года, а также раскройте карточку, чтобы посмотреть распределение часов и подробный список предметов по учебным блокам.</p>
+            </div>
+
+            <div class="compare-tools">
+                <div class="search-lead">
+                    <div class="search-kicker">Быстрый поиск</div>
+                    <div class="search-title">Найдите направление по названию или кафедре и сразу добавьте его в текущее сравнение.</div>
+                </div>
+                <label class="search-field" for="compareSearchInput" aria-label="Поиск направления для сравнения">
+                    <span class="search-icon-shell" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="M20 20l-3.5-3.5"></path>
+                        </svg>
+                    </span>
+                    <span class="search-copy">
+                        <span class="search-label">Направление или кафедра</span>
+                        <input id="compareSearchInput" type="search" placeholder="Например: электроника или кафедра ТУС" autocomplete="off" oninput="handleCompareSearchInput(event)">
+                    </span>
+                </label>
+                <div class="search-meta" id="compareSearchMeta">Ищите направление или кафедру и добавляйте нужный вариант в сравнение прямо отсюда.</div>
             </div>
 
             <div class="compare-status" id="compareStatus" hidden></div>
@@ -2030,9 +2324,35 @@
         let PROGRAM_PROFILES = {};
         let TRAIT_LABELS = {};
         let currentRenderedPrograms = [];
+        let compareSearchQuery = '';
 
         let activeCharts = {}; // pie charts
         let allProgramsCache = [];
+
+        function getHeaderCompareCount() {
+            try {
+                const raw = localStorage.getItem(COMPARE_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? Math.min(parsed.length, MAX_COMPARE_ITEMS) : 0;
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        function updateHeaderComparePill() {
+            const count = getHeaderCompareCount();
+            const link = document.getElementById('headerCompareLink');
+            const textEl = document.getElementById('headerCompareText');
+            if (!link || !textEl) {
+                return;
+            }
+
+            textEl.textContent = `${count} из ${MAX_COMPARE_ITEMS}`;
+            link.classList.toggle('is-active', count > 0);
+            link.setAttribute('aria-label', count > 0
+                ? `Сравнение, добавлено ${count} из ${MAX_COMPARE_ITEMS}`
+                : 'Сравнение, пока пусто');
+        }
 
         function getBlockColor(blockName) {
             const key = String(blockName || '');
@@ -2046,6 +2366,81 @@
 
         function normalizeProgramsForComparison(programs) {
             return programs;
+        }
+
+        function normalizeSearchValue(value) {
+            return String(value || '')
+                .toLowerCase()
+                .replace(/ё/g, 'е')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function matchesProgramSearch(program, query) {
+            const title = program?.наименование_специальности || program?.title || '';
+            const department = program?.кафедра || program?.department || '';
+            if (!query) {
+                return true;
+            }
+            return normalizeSearchValue(title).includes(query) || normalizeSearchValue(department).includes(query);
+        }
+
+        function getCompareSearchMatches(selection, limit = 8) {
+            const query = normalizeSearchValue(compareSearchQuery);
+            if (!query) {
+                return [];
+            }
+
+            const selectedCodes = new Set(selection.map((item) => item.code));
+            return allProgramsCache
+                .filter((program) => !selectedCodes.has(program.код))
+                .filter((program) => matchesProgramSearch(program, query))
+                .slice(0, limit);
+        }
+
+        function updateCompareSearchMeta(selection) {
+            const meta = document.getElementById('compareSearchMeta');
+            if (!meta) {
+                return;
+            }
+
+            const query = normalizeSearchValue(compareSearchQuery);
+            if (!query) {
+                meta.textContent = selection.length
+                    ? 'Ищите направление или кафедру, чтобы быстро добавить его в текущее сравнение.'
+                    : 'Ищите направление или кафедру и добавляйте его в сравнение прямо отсюда.';
+                return;
+            }
+
+            const totalMatches = getCompareSearchMatches(selection, allProgramsCache.length || 100).length;
+            meta.textContent = totalMatches
+                ? `Найдено ${totalMatches} направлений по запросу.`
+                : 'По этому запросу ничего не найдено.';
+        }
+
+        function renderCompareSearchResults(programs, emptyText) {
+            if (!programs.length) {
+                return `<div class="compare-search-empty">${emptyText}</div>`;
+            }
+
+            return `
+                <div class="compare-status-recommendations">
+                    ${programs.map((program) => `
+                        <div class="compare-status-recommendation">
+                            <div>
+                                <strong>${program.наименование_специальности}</strong>
+                                <p>${program.кафедра || 'Кафедра уточняется'}</p>
+                            </div>
+                            <button type="button" class="btn-sm" onclick="addProgramToCompare('${program.код}')">Добавить</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function handleCompareSearchInput(event) {
+            compareSearchQuery = event.target.value || '';
+            renderComparison();
         }
 
         function getPayloadByCode(code) {
@@ -2174,20 +2569,20 @@
 
         function renderCompareStatus(selection, programs, missingCount) {
             const status = document.getElementById('compareStatus');
+            const searchMatches = getCompareSearchMatches(selection);
+            const searchQuery = normalizeSearchValue(compareSearchQuery);
             if (!selection.length) {
                 const starter = getRecommendedPrograms(allProgramsCache, [], 1)[0] || null;
                 status.hidden = false;
                 status.innerHTML = `
                     <p class="compare-status-copy">Пока в сравнении нет выбранных направлений. Добавьте до трёх карточек из каталога или начните с рекомендаций ниже.</p>
                     <div class="compare-status-actions">
-                        ${starter
-                            ? `<button type="button" class="btn btn-primary" onclick="addProgramToCompare('${starter.код}')">Добавить первое направление</button>`
-                            : ''
-                        }
                         <a href="catalog.html" class="btn-sm">Открыть каталог</a>
                     </div>
-                    ${starter
-                        ? `
+                    ${searchQuery
+                        ? renderCompareSearchResults(searchMatches, 'Попробуйте изменить запрос и поискать направление по другому фрагменту названия.')
+                        : starter
+                            ? `
                             <div class="compare-status-recommendations">
                                 <div class="compare-status-recommendation">
                                     <div>
@@ -2198,7 +2593,7 @@
                                 </div>
                             </div>
                         `
-                        : ''
+                            : ''
                     }
                 `;
                 return;
@@ -2214,21 +2609,27 @@
             const recommendations = selection.length < MAX_COMPARE_ITEMS
                 ? getRecommendedPrograms(allProgramsCache, selection, MAX_COMPARE_ITEMS - selection.length)
                 : [];
-            const recommendationsHtml = recommendations.length
-                ? `
-                    <div class="compare-status-recommendations">
-                        ${recommendations.map((program) => `
-                            <div class="compare-status-recommendation">
-                                <div>
-                                    <strong>Можно добавить: ${program.наименование_специальности}</strong>
-                                    <p>${getRecommendationReason(program.код, selection.map((item) => item.code))}</p>
+            const recommendationsHtml = searchQuery
+                ? (
+                    selection.length >= MAX_COMPARE_ITEMS
+                        ? '<div class="compare-search-empty">В сравнении уже три направления. Уберите одно из карточек, чтобы добавить другое по поиску.</div>'
+                        : renderCompareSearchResults(searchMatches, 'По этому запросу не нашлось направлений для добавления.')
+                )
+                : recommendations.length
+                    ? `
+                        <div class="compare-status-recommendations">
+                            ${recommendations.map((program) => `
+                                <div class="compare-status-recommendation">
+                                    <div>
+                                        <strong>Можно добавить: ${program.наименование_специальности}</strong>
+                                        <p>${getRecommendationReason(program.код, selection.map((item) => item.code))}</p>
+                                    </div>
+                                    <button type="button" class="btn-sm" onclick="addProgramToCompare('${program.код}')">Добавить</button>
                                 </div>
-                                <button type="button" class="btn-sm" onclick="addProgramToCompare('${program.код}')">Добавить</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `
-                : '';
+                            `).join('')}
+                        </div>
+                    `
+                    : '';
 
             status.hidden = false;
             status.innerHTML = `
@@ -2252,6 +2653,30 @@
                 return formatter(value);
             }
             return '<div class="data-empty">Данные уточняются</div>';
+        }
+
+        function getLatestScoreValue(scoresData, key) {
+            if (!Array.isArray(scoresData)) {
+                return null;
+            }
+
+            for (let index = scoresData.length - 1; index >= 0; index -= 1) {
+                const value = scoresData[index]?.[key];
+                if (typeof value === 'number' && Number.isFinite(value)) {
+                    return value;
+                }
+            }
+
+            return null;
+        }
+
+        function formatScoreValue(value) {
+            if (typeof value !== 'number' || !Number.isFinite(value)) {
+                return '<span class="compare-metric-empty">Данные уточняются</span>';
+            }
+
+            const formatted = value.toFixed(2).replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
+            return `<span class="compare-metric-number">${formatted}</span>`;
         }
 
         function getAverageProfile(codes) {
@@ -2357,6 +2782,8 @@
 
         function renderComparison() {
             const prepared = buildProgramsForRender(allProgramsCache);
+            updateHeaderComparePill();
+            updateCompareSearchMeta(prepared.selection);
             renderCompareStatus(prepared.selection, prepared.programs, prepared.missingCount);
             renderCards(prepared.programs, allProgramsCache, prepared.selection);
         }
@@ -2507,18 +2934,10 @@
             currentRenderedPrograms = programs;
 
             if (!programs.length) {
-                const starter = getRecommendedPrograms(allProgramsCache, [], 1)[0] || null;
                 container.innerHTML = `
                     <article class="compare-empty-card">
                         <h3 class="card-title">Пока здесь пусто</h3>
                         <p class="compare-empty-copy">Добавьте первое направление из каталога, и здесь сразу появится карточка с метриками, учебными блоками и всем, что потом можно сопоставить с другими вариантами.</p>
-                        <div class="compare-empty-actions">
-                            ${starter
-                                ? `<button type="button" class="btn btn-primary" onclick="addProgramToCompare('${starter.код}')">Добавить первое направление</button>`
-                                : ''
-                            }
-                            <a href="catalog.html" class="btn-sm">Перейти в каталог</a>
-                        </div>
                     </article>
                 `;
                 syncCompareGridColumns(container, 1);
@@ -2557,27 +2976,27 @@
                 const metricRowsHtml = [
                     {
                         label: 'Бюджетных мест',
-                        value: typeof prog.количество_бюджетных_мест === 'number'
-                            ? `<span class="compare-metric-number compare-metric-number-accent">${prog.количество_бюджетных_мест}</span>`
+                        value: typeof prog["количество_бюджетных_мест"] === 'number'
+                            ? `<span class="compare-metric-number compare-metric-number-accent">${prog["количество_бюджетных_мест"]}</span>`
                             : '<span class="compare-metric-empty">Данные уточняются</span>',
                         featured: true
                     },
                     {
                         label: 'Платных мест',
-                        value: typeof prog.количество_платных_мест === 'number'
-                            ? `<span class="compare-metric-number">${prog.количество_платных_мест}</span>`
+                        value: typeof prog["количество_платных_мест"] === 'number'
+                            ? `<span class="compare-metric-number">${prog["количество_платных_мест"]}</span>`
                             : '<span class="compare-metric-empty">Данные уточняются</span>'
                     },
                     {
                         label: 'Стоимость (в год)',
-                        value: typeof prog.стоимость_обучения_в_год_руб === 'number'
-                            ? `<span class="compare-metric-text">${new Intl.NumberFormat('ru-RU').format(prog.стоимость_обучения_в_год_руб)} ₽</span>`
+                        value: typeof prog["стоимость_обучения_в_год_руб"] === 'number'
+                            ? `<span class="compare-metric-text">${new Intl.NumberFormat('ru-RU').format(prog["стоимость_обучения_в_год_руб"])} ₽</span>`
                             : '<span class="compare-metric-empty">Данные уточняются</span>'
                     },
                     {
                         label: 'Срок обучения',
-                        value: prog.нормативный_срок_обучения
-                            ? `<span class="compare-metric-text">${prog.нормативный_срок_обучения}</span>`
+                        value: prog["нормативный_срок_обучения"]
+                            ? `<span class="compare-metric-text">${prog["нормативный_срок_обучения"]}</span>`
                             : '<span class="compare-metric-empty">Данные уточняются</span>'
                     }
                 ].map((metric) => `
@@ -2676,13 +3095,13 @@
 
                         <div class="compare-card-score">
                             <div class="compare-card-section-head">
-                                <div style="font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em;">Динамика проходного балла на бюджет</div>
+                                <div style="font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em;">Динамика проходного балла</div>
                             </div>
                             ${hasScoreData
                                 ? `<div class="score-chart-container" style="background: transparent; border: none; padding: 0; box-shadow: none; margin: 0; min-height: 160px;">
                                         <canvas id="score-chart-${cardId}"></canvas>
                                    </div>`
-                                : '<div class="chart-empty">Для этого направления отсутствует информация по проходному баллу на бюджет.</div>'
+                                : '<div class="chart-empty">Для этого направления отсутствует информация по проходным баллам.</div>'
                             }
                         </div>
 
@@ -2910,14 +3329,13 @@
                                             <span class="matrix-unique-code">${program.код}</span>
                                         </div>
                                         <div class="matrix-unique-list">
-                                            ${items.slice(0, 6).map((item) => `
+                                            ${items.map((item) => `
                                                 <div class="matrix-unique-item">
                                                     <span class="matrix-unique-item-name">${item.name}</span>
                                                     <span class="matrix-unique-item-hours">${item.hours} ч</span>
                                                 </div>
                                             `).join('')}
                                         </div>
-                                        ${items.length > 6 ? `<div class="matrix-unique-more">Ещё ${items.length - 6} предметов в этом блоке</div>` : ''}
                                     </div>
                                 `).join('')}
                             </div>
@@ -2957,7 +3375,7 @@
                     node.style.minHeight = '';
                 });
 
-                if (window.innerWidth <= 1100) {
+                if (window.innerWidth <= 820) {
                     return;
                 }
 
@@ -3007,6 +3425,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            updateHeaderComparePill();
             loadData().catch((error) => {
                 console.error('Не удалось загрузить данные сравнения из API', error);
                 document.getElementById('compareContainer').innerHTML = '<article class="compare-card"><h3 class="card-title">Сравнение временно недоступно</h3><p class="compare-card-description">Проверьте, что локальный сервер запущен, и обновите страницу.</p></article>';
@@ -3035,11 +3454,12 @@
                 });
             }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
 
-            document.querySelectorAll('section, .section-header, .footer').forEach(el => {
+            document.querySelectorAll('section, .section-header, .compare-tools, .footer').forEach(el => {
                 el.classList.add('reveal');
                 revealObserver.observe(el);
             });
         });
+        window.addEventListener('storage', updateHeaderComparePill);
 
     </script>
 </body>

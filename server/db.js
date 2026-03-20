@@ -20,7 +20,7 @@ const BLOCK_TRAIT_WEIGHTS = {
     'Общая инженерная подготовка': { engineering: 1.5, systems: 0.5 },
     'Программирование и разработка ПО': { software: 1.8, data: 0.6, business: 0.4 },
     'Системы, сети, БД и информационная безопасность': { systems: 1.2, infrastructure: 1.3, security: 1.1, data: 0.5 },
-    'Электроника, схемотехника и embedded': { engineering: 1.6, systems: 0.8, infrastructure: 0.4 },
+    'Электроника, схемотехника и встраиваемые системы': { engineering: 1.6, systems: 0.8, infrastructure: 0.4 },
     'Автоматизация, мехатроника и робототехника': { engineering: 1.7, systems: 1.0, infrastructure: 0.5 },
     'Связь, радиосистемы и телеком': { infrastructure: 1.8, systems: 1.1, engineering: 0.7, security: 0.4 },
     'Дизайн и художественно-проектный блок': { business: 1.6, software: 0.4 },
@@ -107,6 +107,14 @@ function normalizeText(value) {
     return String(value || '')
         .replace(/\s+/g, ' ')
         .trim();
+}
+
+function normalizeBlockTitle(value) {
+    const title = normalizeText(value);
+    if (title === 'Электроника, схемотехника и embedded') {
+        return 'Электроника, схемотехника и встраиваемые системы';
+    }
+    return title;
 }
 
 function normalizeImageLookupKey(value) {
@@ -220,15 +228,51 @@ function parseHours(value) {
     return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function normalizeScores(entries) {
-    const budgetOnly = Array.isArray(entries) ? entries : [];
-    return budgetOnly
-        .map((item) => ({
-            'год': Number(item['год']),
-            'бюджет': Number(item['значение']),
-            'платное': null
-        }))
-        .filter((item) => Number.isFinite(item['год']) && Number.isFinite(item['бюджет']))
+function parseOptionalNumber(value) {
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    if (typeof value === 'string') {
+        const normalized = value.replace(',', '.').trim();
+        if (!normalized || normalized === '-') {
+            return null;
+        }
+
+        const parsed = Number(normalized);
+        return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+}
+
+function normalizeScores(budgetEntries, paidEntries) {
+    const timeline = new Map();
+
+    const appendEntries = (entries, key) => {
+        (Array.isArray(entries) ? entries : []).forEach((item) => {
+            const year = Number(item['год']);
+            const value = parseOptionalNumber(item['значение']);
+            if (!Number.isFinite(year)) {
+                return;
+            }
+
+            const current = timeline.get(year) || {
+                'год': year,
+                'бюджет': null,
+                'платное': null
+            };
+            current[key] = value;
+            timeline.set(year, current);
+        });
+    };
+
+    appendEntries(budgetEntries, 'бюджет');
+    appendEntries(paidEntries, 'платное');
+
+    return [...timeline.values()]
+        .filter((item) => Number.isFinite(item['год']) && (item['бюджет'] !== null || item['платное'] !== null))
         .sort((a, b) => a['год'] - b['год']);
 }
 
@@ -236,7 +280,7 @@ function normalizeSubjects(program) {
     return (Array.isArray(program['предметы']) ? program['предметы'] : [])
         .map((subject) => ({
             'предмет': normalizeText(subject['название_предмета']),
-            'блок_предмета': normalizeText(subject['блок']) || 'Без блока',
+            'блок_предмета': normalizeBlockTitle(subject['блок']) || 'Без блока',
             'количество_часов_у_предмета': parseHours(subject['количество_часов']),
             'кафедра_преподающая_предмет': null,
             'ссылка_на_информацию_о_предмете': program['ссылка_на_рабочую_программу'] || program['ссылка_на_учебный_план'] || '#'
@@ -247,7 +291,7 @@ function normalizeSubjects(program) {
 function normalizeBlockDescriptions(program) {
     return (Array.isArray(program['блоки_предметов']) ? program['блоки_предметов'] : [])
         .map((block, index) => ({
-            title: normalizeText(block['название']),
+            title: normalizeBlockTitle(block['название']),
             description: normalizeText(block['описание']),
             sort_order: index + 1
         }))
@@ -461,7 +505,10 @@ function toLegacyProgram(program) {
         'карьерные_роли': careers,
         'количество_бюджетных_мест': Number(program['количество_бюджетных_мест']) || 0,
         'количество_платных_мест': Number(program['количество_платных_мест']) || 0,
-        'проходной_балл_аттестата_по_прошлым_годам': normalizeScores(program['динамика_проходного_бюджет']),
+        'проходной_балл_аттестата_по_прошлым_годам': normalizeScores(
+            program['\u0434\u0438\u043d\u0430\u043c\u0438\u043a\u0430_\u043f\u0440\u043e\u0445\u043e\u0434\u043d\u043e\u0433\u043e_\u0431\u044e\u0434\u0436\u0435\u0442'],
+            program['\u0434\u0438\u043d\u0430\u043c\u0438\u043a\u0430_\u043f\u0440\u043e\u0445\u043e\u0434\u043d\u043e\u0433\u043e_\u043f\u043b\u0430\u0442\u043d\u043e\u0435']
+        ),
         'стоимость_обучения_в_год_руб': Number(program['стоимость_в_год']) || null,
         'кто_это': hero || shortDescription,
         'чему_учат': Array.isArray(program['чему_учат']) ? program['чему_учат'].map((item) => normalizeText(item)).filter(Boolean) : [],

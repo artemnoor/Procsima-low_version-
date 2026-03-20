@@ -806,6 +806,10 @@
         }));
 
         window.localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(compareItems));
+        window.dispatchEvent(new CustomEvent('nps:compare-updated', { detail: { count: compareItems.length } }));
+        if (typeof window.updateHeaderComparePill === 'function') {
+            window.updateHeaderComparePill();
+        }
         return compareItems;
     }
 

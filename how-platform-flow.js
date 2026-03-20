@@ -276,17 +276,17 @@ class HowPlatformFlow extends HTMLElement {
                                     <rect class="bg-rect" x="40" y="110" width="250" height="210" rx="16" fill="white" stroke="rgba(15,23,42,0.08)" />
                                     <!-- Badge & Title -->
                                     <rect x="56" y="126" width="56" height="20" rx="10" fill="#002C5B" />
-                                    <text x="84" y="140" text-anchor="middle" fill="white" font-size="10" font-weight="800">02.03.02</text>
-                                    <text x="56" y="165" fill="#0F172A" font-size="14" font-weight="800">ФИИТ</text>
+                                    <text x="84" y="140" text-anchor="middle" fill="white" font-size="10" font-weight="800">09.02.07/01</text>
+                                    <text x="56" y="165" fill="#0F172A" font-size="13" font-weight="800">Инф. системы и прогр.</text>
                                     
                                     <!-- Mini Data Grid -->
                                     <rect x="56" y="180" width="105" height="42" rx="8" fill="rgba(37,99,235,0.08)" />
                                     <text x="66" y="196" fill="#2563EB" font-size="9" font-weight="700">Бюджет</text>
-                                    <text x="66" y="212" fill="#002C5B" font-size="16" font-weight="800">60</text>
+                                    <text x="66" y="212" fill="#002C5B" font-size="16" font-weight="800">25</text>
 
                                     <rect x="169" y="180" width="105" height="42" rx="8" fill="rgba(15,23,42,0.02)" />
                                     <text x="179" y="196" fill="#526076" font-size="9" font-weight="700">Платно</text>
-                                    <text x="179" y="212" fill="#0F172A" font-size="16" font-weight="800">45</text>
+                                    <text x="179" y="212" fill="#0F172A" font-size="16" font-weight="800">35</text>
                                     
                                     <!-- Mini Matrix/Chart -->
                                     <text x="56" y="240" fill="#0F172A" font-size="11" font-weight="700">Часы по блокам</text>
@@ -305,17 +305,17 @@ class HowPlatformFlow extends HTMLElement {
                                     <rect class="bg-rect" x="310" y="110" width="250" height="210" rx="16" fill="white" stroke="rgba(15,23,42,0.08)" />
                                     <!-- Badge & Title -->
                                     <rect x="326" y="126" width="56" height="20" rx="10" fill="#002C5B" />
-                                    <text x="354" y="140" text-anchor="middle" fill="white" font-size="10" font-weight="800">09.03.04</text>
-                                    <text x="326" y="165" fill="#0F172A" font-size="14" font-weight="800">Программная инж.</text>
+                                    <text x="354" y="140" text-anchor="middle" fill="white" font-size="10" font-weight="800">09.02.06</text>
+                                    <text x="326" y="165" fill="#0F172A" font-size="13" font-weight="800">Сетевое и системное адм.</text>
                                     
                                     <!-- Mini Data Grid -->
                                     <rect x="326" y="180" width="105" height="42" rx="8" fill="rgba(37,99,235,0.08)" />
                                     <text x="336" y="196" fill="#2563EB" font-size="9" font-weight="700">Бюджет</text>
-                                    <text x="336" y="212" fill="#002C5B" font-size="16" font-weight="800">120</text>
+                                    <text x="336" y="212" fill="#002C5B" font-size="16" font-weight="800">10</text>
 
                                     <rect x="439" y="180" width="105" height="42" rx="8" fill="rgba(15,23,42,0.02)" />
                                     <text x="449" y="196" fill="#526076" font-size="9" font-weight="700">Платно</text>
-                                    <text x="449" y="212" fill="#0F172A" font-size="16" font-weight="800">30</text>
+                                    <text x="449" y="212" fill="#0F172A" font-size="16" font-weight="800">10</text>
                                     
                                     <!-- Mini Matrix/Chart -->
                                     <text x="326" y="240" fill="#0F172A" font-size="11" font-weight="700">Часы по блокам</text>
@@ -339,8 +339,8 @@ class HowPlatformFlow extends HTMLElement {
                                     <rect class="bg-rect" x="90" y="130" width="420" height="56" rx="14" fill="white" stroke="rgba(37,99,235,0.4)" stroke-width="2" />
                                     <circle cx="125" cy="158" r="14" fill="rgba(37,99,235,0.1)" />
                                     <path d="M120 158 l4 4 l6 -8" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" />
-                                    <text x="150" y="153" fill="#0F172A" font-size="14" font-weight="800">Программная инженерия</text>
-                                    <text x="150" y="170" fill="#526076" font-size="11" font-weight="600">Архитектура, чистый код, СУБД</text>
+                                    <text x="150" y="153" fill="#0F172A" font-size="14" font-weight="800">Системы радиосвязи</text>
+                                    <text x="150" y="170" fill="#526076" font-size="11" font-weight="600">ТСР, мобильная связь, телерадио</text>
                                     
                                     <!-- Percentage -->
                                     <rect x="430" y="145" width="50" height="26" rx="8" fill="#dcfce7" />
@@ -352,8 +352,8 @@ class HowPlatformFlow extends HTMLElement {
                                     <rect class="bg-rect" x="90" y="200" width="420" height="56" rx="14" fill="white" stroke="rgba(15,23,42,0.06)" />
                                     <circle cx="125" cy="228" r="14" fill="rgba(15,23,42,0.04)" />
                                     <circle cx="125" cy="228" r="4" fill="#526076" />
-                                    <text x="150" y="223" fill="#0F172A" font-size="14" font-weight="800">Информационная безопасность</text>
-                                    <text x="150" y="240" fill="#526076" font-size="11" font-weight="600">Шифрование, аудит сетей</text>
+                                    <text x="150" y="223" fill="#0F172A" font-size="14" font-weight="800">Сетевое и системное адм.</text>
+                                    <text x="150" y="240" fill="#526076" font-size="11" font-weight="600">Сети, Linux, инфраструктура</text>
                                     
                                     <!-- Percentage -->
                                     <rect x="430" y="215" width="50" height="26" rx="8" fill="#fef08a" />
@@ -365,8 +365,8 @@ class HowPlatformFlow extends HTMLElement {
                                     <rect class="bg-rect" x="90" y="270" width="420" height="56" rx="14" fill="white" stroke="rgba(15,23,42,0.06)" />
                                     <circle cx="125" cy="298" r="14" fill="rgba(15,23,42,0.04)" />
                                     <circle cx="125" cy="298" r="4" fill="#526076" />
-                                    <text x="150" y="293" fill="#0F172A" font-size="14" font-weight="800">Вычислительная техника</text>
-                                    <text x="150" y="310" fill="#526076" font-size="11" font-weight="600">Железо, микроконтроллеры</text>
+                                    <text x="150" y="293" fill="#0F172A" font-size="14" font-weight="800">Разработка электронных устр.</text>
+                                    <text x="150" y="310" fill="#526076" font-size="11" font-weight="600">embedded, схемотехника, отладка</text>
                                     
                                     <!-- Percentage -->
                                     <rect x="430" y="285" width="50" height="26" rx="8" fill="#f3f4f6" />
@@ -386,8 +386,8 @@ class HowPlatformFlow extends HTMLElement {
                                     <rect x="260" y="160" width="80" height="24" rx="12" fill="rgba(255,255,255,0.15)" />
                                     <text x="300" y="176" text-anchor="middle" fill="white" font-size="10" font-weight="800">Избранное</text>
                                     
-                                    <text x="300" y="215" text-anchor="middle" fill="white" font-size="24" font-weight="800" font-family="'ALS Sector', 'Outfit', sans-serif">09.03.04</text>
-                                    <text x="300" y="245" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13" font-weight="600">Программная инженерия</text>
+                                    <text x="300" y="215" text-anchor="middle" fill="white" font-size="24" font-weight="800" font-family="'ALS Sector', 'Outfit', sans-serif">11.02.18</text>
+                                    <text x="300" y="245" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13" font-weight="600">ТСР</text>
                                     
                                     <!-- Little star / heart icon -->
                                     <path d="M140 160 L145 160 L145 165 Z" fill="#60A5FA" />
@@ -444,14 +444,16 @@ class HowPlatformFlow extends HTMLElement {
             await sleep(650); // Чуть ускорил перемещение
         };
 
-        const clickCursor = async (x, y) => {
+        const clickCursor = async (x, y, { ripple: withRipple = true } = {}) => {
             cursor.style.transform = `translate(${x}px, ${y}px) scale(0.85)`;
             await sleep(150);
 
-            ripple.setAttribute('transform', `translate(${x}, ${y})`);
-            ripple.classList.remove('is-animating');
-            void ripple.offsetWidth;
-            ripple.classList.add('is-animating');
+            if (withRipple) {
+                ripple.setAttribute('transform', `translate(${x}, ${y})`);
+                ripple.classList.remove('is-animating');
+                void ripple.offsetWidth;
+                ripple.classList.add('is-animating');
+            }
 
             cursor.style.transform = `translate(${x}px, ${y}px) scale(1)`;
             await sleep(150);
@@ -474,7 +476,7 @@ class HowPlatformFlow extends HTMLElement {
 
             // Клик на вариант 2 (Код и архитектура)
             await moveCursor(300, 233);
-            await clickCursor(300, 233);
+            await clickCursor(300, 233, { ripple: false });
             const p1Opt2 = root.querySelector('#p1-opt2');
             const p1Check = root.querySelector('#p1-check');
             if (p1Opt2 && p1Check) {
