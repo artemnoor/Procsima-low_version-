@@ -34,14 +34,14 @@ let cache = null;
 let imageIndexCache = null;
 
 function resolveSchemaPath() {
-    const explicitName = process.env.BMSTU_SCHEMA_FILE || 'bmstu_final_schema_20260320_005704.json';
+    const explicitName = process.env.BMSTU_SCHEMA_FILE || 'new.json';
     const explicitPath = path.join(rootDir, explicitName);
     if (fs.existsSync(explicitPath)) {
         return explicitPath;
     }
 
     const files = fs.readdirSync(rootDir)
-        .filter((name) => /^bmstu_final_schema.*\.json$/i.test(name))
+        .filter((name) => /^new\.json$/i.test(name) || /^bmstu_final_schema.*\.json$/i.test(name))
         .map((name) => {
             const fullPath = path.join(rootDir, name);
             return {
@@ -57,6 +57,17 @@ function resolveSchemaPath() {
     }
 
     return files[0].fullPath;
+}
+
+function parseSchemaFile(filePath) {
+    const rawText = fs.readFileSync(filePath, 'utf8');
+    const sanitized = rawText
+        .replace(/^\uFEFF/, '')
+        .split(/\r?\n/)
+        .filter((line) => !line.trim().startsWith('//'))
+        .join('\n');
+
+    return JSON.parse(sanitized);
 }
 
 function transliterate(value) {
@@ -530,7 +541,7 @@ function loadPrograms() {
         return cache;
     }
 
-    const raw = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+    const raw = parseSchemaFile(dataPath);
     const programs = Array.isArray(raw) ? raw.map(toLegacyProgram) : [];
     const bySlug = new Map();
 
