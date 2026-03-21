@@ -670,11 +670,15 @@ input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; transform: sc
     .compare-pill-copy {
         display: none;
     }
+    .compare-pill-icon {
+        display: none;
+    }
     .compare-pill {
         padding: 6px 6px 6px 8px;
         gap: 8px;
     }
     .compare-pill-count {
+        display: flex;
         min-width: 30px;
         height: 30px;
         padding: 0 8px;

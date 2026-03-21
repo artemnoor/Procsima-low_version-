@@ -1147,12 +1147,17 @@
                 display: none;
             }
 
+            .compare-pill-icon {
+                display: none;
+            }
+
             .compare-pill {
                 padding: 6px 6px 6px 8px;
                 gap: 8px;
             }
 
             .compare-pill-count {
+                display: flex;
                 min-width: 30px;
                 height: 30px;
                 padding: 0 8px;
@@ -1198,7 +1203,7 @@
 
     <header class="topbar" id="topbar">
         <div class="topbar-inner">
-            <a href="index.html" class="brand" aria-label="На главную">
+            <a href="/" class="brand" aria-label="На главную">
                 <div class="brand-logo">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1209,7 +1214,7 @@
             </a>
 
             <nav class="top-nav" aria-label="Главная навигация">
-                <a href="index.html">Главная</a>
+                <a href="/">Главная</a>
                 <a href="catalog.html" aria-current="page">Каталог</a>
                 <a href="proftest/">Профтест</a>
             </nav>
@@ -1230,6 +1235,7 @@
                         <span class="compare-pill-label">Сравнение</span>
                         <span class="compare-pill-value" id="headerCompareText">0 из 3</span>
                     </span>
+                    <span class="compare-pill-count" id="headerCompareCount">0</span>
                 </a>
                 <details class="mobile-nav">
                     <summary aria-label="Открыть меню">
@@ -1240,7 +1246,7 @@
                         </span>
                     </summary>
                     <nav class="mobile-nav-panel" aria-label="Мобильная навигация">
-                        <a href="index.html">Главная</a>
+                        <a href="/">Главная</a>
                         <a href="catalog.html" aria-current="page">Каталог</a>
                         <a href="proftest/">Профтест</a>
                     </nav>
@@ -1472,11 +1478,15 @@
             const count = getHeaderCompareCount();
             const link = document.getElementById('headerCompareLink');
             const textEl = document.getElementById('headerCompareText');
+            const countEl = document.getElementById('headerCompareCount');
             if (!link || !textEl) {
                 return;
             }
 
             textEl.textContent = `${count} из ${MAX_COMPARE_ITEMS}`;
+            if (countEl) {
+                countEl.textContent = String(count);
+            }
             link.classList.toggle('is-active', count > 0);
             link.setAttribute('aria-label', count > 0
                 ? `Сравнение, добавлено ${count} из ${MAX_COMPARE_ITEMS}`

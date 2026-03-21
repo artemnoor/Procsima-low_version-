@@ -16,12 +16,16 @@
     function updateHeaderComparePill() {
         const link = document.getElementById('headerCompareLink');
         const text = document.getElementById('headerCompareText');
+        const countBadge = document.getElementById('headerCompareCount');
         if (!link || !text) {
             return;
         }
 
         const count = getHeaderCompareCount();
         text.textContent = `${count} \u0438\u0437 ${MAX_COMPARE_ITEMS}`;
+        if (countBadge) {
+            countBadge.textContent = String(count);
+        }
         link.classList.toggle('is-active', count > 0);
         link.setAttribute(
             'aria-label',
