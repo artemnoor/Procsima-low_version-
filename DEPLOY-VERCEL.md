@@ -29,6 +29,7 @@
 
 ## Important
 
-- The site reads data from `bmstu_final_schema_20260320_005704.json` in the project root.
-- If you later add a newer file named like `bmstu_final_schema*.json`, the backend will pick the newest one automatically.
+- The site now reads data from `new.json` in the project root first.
+- If `new.json` is missing, the backend falls back to the newest file named like `bmstu_final_schema*.json`.
+- Vercel is configured to include root JSON files in the serverless bundle, so schema updates must be committed and redeployed.
 - Local Express server in `/server/index.js` is only for local development and is not needed on Vercel.

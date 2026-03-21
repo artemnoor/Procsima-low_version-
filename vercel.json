@@ -28,7 +28,7 @@
   "functions": {
     "api/**/*.js": {
       "maxDuration": 10,
-      "includeFiles": "bmstu_final_schema_20260320_005704.json"
+      "includeFiles": "*.json"
     }
   }
 }
