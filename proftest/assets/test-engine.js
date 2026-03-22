@@ -227,6 +227,7 @@
     ]);
 
     let bootstrapCache = null;
+    const BOOTSTRAP_CACHE_KEY = 'proftest-bootstrap-cache-v1';
 
     function clone(value) {
         return JSON.parse(JSON.stringify(value));
@@ -504,17 +505,46 @@
         };
     }
 
+    function getBootstrapFromSessionStorage() {
+        try {
+            const raw = window.sessionStorage.getItem(BOOTSTRAP_CACHE_KEY);
+            if (!raw) {
+                return null;
+            }
+
+            const parsed = JSON.parse(raw);
+            return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (_error) {
+            return null;
+        }
+    }
+
+    function saveBootstrapToSessionStorage(payload) {
+        try {
+            window.sessionStorage.setItem(BOOTSTRAP_CACHE_KEY, JSON.stringify(payload));
+        } catch (_error) {
+            // ignore quota/storage errors
+        }
+    }
+
     async function fetchBootstrapData() {
         if (bootstrapCache) {
             return bootstrapCache;
         }
 
-        const response = await window.fetch('/api/bootstrap', { cache: 'no-store' });
+        const cachedPayload = getBootstrapFromSessionStorage();
+        if (cachedPayload) {
+            bootstrapCache = cachedPayload;
+            return bootstrapCache;
+        }
+
+        const response = await window.fetch('/api/bootstrap', { cache: 'force-cache' });
         if (!response.ok) {
             throw new Error('BOOTSTRAP_FETCH_FAILED');
         }
 
         bootstrapCache = await response.json();
+        saveBootstrapToSessionStorage(bootstrapCache);
         return bootstrapCache;
     }
 
