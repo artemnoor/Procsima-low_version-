@@ -156,7 +156,24 @@ class HowPlatformFlow extends HTMLElement {
                     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
                 }
 
+                @media (prefers-reduced-motion: reduce) {
+                    .flow-step,
+                    .step-dot,
+                    .panel,
+                    .interactive-elem,
+                    .ripple-circle,
+                    #main-cursor {
+                        transition: none !important;
+                        animation: none !important;
+                        transform: none !important;
+                    }
+                }
+
                 @media (max-width: 900px) {
+                    .flow-card,
+                    .flow-step {
+                        backdrop-filter: none;
+                    }
                     .flow-container { grid-template-columns: 1fr; }
                     .flow-steps { 
                         grid-template-columns: repeat(2, minmax(0, 1fr)); 

@@ -239,6 +239,40 @@
             }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .blob,
+            .compare-modal,
+            .compare-sheet,
+            .compare-card {
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .ambient-bg {
+                display: none;
+            }
+
+            .search-field,
+            .topbar.scrolled,
+            .topbar-inner,
+            .compare-card,
+            .compare-modal {
+                backdrop-filter: none;
+            }
+        }
+
         .container {
             width: min(1400px, calc(100% - 40px));
             margin: 0 auto;
@@ -2811,13 +2845,43 @@
             container.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
         }
 
-        async function loadData() {
-            const response = await fetch('/api/bootstrap');
-            if (!response.ok) {
-                throw new Error('Failed to load bootstrap data');
-            }
+        const BOOTSTRAP_CACHE_KEY = 'compare-bootstrap-cache-v1';
 
-            const payload = await response.json();
+        function getCachedBootstrapPayload() {
+            try {
+                const raw = sessionStorage.getItem(BOOTSTRAP_CACHE_KEY);
+                if (!raw) {
+                    return null;
+                }
+
+                const parsed = JSON.parse(raw);
+                return parsed && typeof parsed === 'object' ? parsed : null;
+            } catch (_error) {
+                return null;
+            }
+        }
+
+        function setCachedBootstrapPayload(payload) {
+            try {
+                sessionStorage.setItem(BOOTSTRAP_CACHE_KEY, JSON.stringify(payload));
+            } catch (_error) {
+                // ignore quota/storage errors
+            }
+        }
+
+        async function loadData() {
+            const cachedPayload = getCachedBootstrapPayload();
+            const payload = cachedPayload || await (async () => {
+                const response = await fetch('/api/bootstrap', { cache: 'force-cache' });
+                if (!response.ok) {
+                    throw new Error('Failed to load bootstrap data');
+                }
+
+                const freshPayload = await response.json();
+                setCachedBootstrapPayload(freshPayload);
+                return freshPayload;
+            })();
+
             allProgramsCache = normalizeProgramsForComparison(Array.isArray(payload.programs) ? payload.programs : []);
             PROGRAM_PROFILES = payload.profiles || {};
             TRAIT_LABELS = payload.traitLabels || {};

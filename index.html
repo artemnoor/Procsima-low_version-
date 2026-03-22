@@ -232,6 +232,62 @@
             }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .blob,
+            .marquee-track,
+            .hero-dashboard,
+            .dash-card,
+            .chart-line,
+            .chart-dot {
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .ambient-bg {
+                display: none;
+            }
+
+            .topbar.scrolled,
+            .topbar-inner,
+            .announcement-bar,
+            .dash-card,
+            .feature-card,
+            .section-panel {
+                backdrop-filter: none;
+            }
+
+            .hero-dashboard {
+                transform: none;
+                animation: none;
+            }
+
+            .dash-card {
+                animation: none;
+                filter: none;
+            }
+
+            .marquee-track {
+                animation-duration: 60s;
+            }
+
+            .chart-line {
+                animation: none;
+                stroke-dashoffset: 0;
+            }
+        }
+
         .container {
             width: min(var(--maxw), calc(100% - 40px));
             margin: 0 auto;
