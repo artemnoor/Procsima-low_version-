@@ -1559,6 +1559,58 @@
         /* Scroll Reveal */
         .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.75s ease-out, transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .footer {
+            padding: 28px 0 48px;
+            border-top: 1px solid rgba(15, 23, 42, 0.08);
+            color: var(--text-soft);
+            font-size: 14px;
+        }
+
+        .footer-inner {
+            width: min(var(--maxw), calc(100% - 40px));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 44, 91, 0.1);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--brand-dark);
+            font-weight: 800;
+            line-height: 1;
+            text-decoration: none;
+            transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .footer-link:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 108, 220, 0.2);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 12px 24px rgba(0, 44, 91, 0.08);
+        }
     </style>
 </head>
 
@@ -1629,6 +1681,19 @@
     <main class="container" id="app">
         <!-- Will be rendered by JS -->
     </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-copy">
+                <div>Платформа осознанного выбора НПС</div>
+                <div>Для абитуриентов и тех, кто подбирает направление не вслепую</div>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" href="https://t.me/proximart" target="_blank" rel="noreferrer">Telegram</a>
+                <a class="footer-link" href="https://vk.com/club236804216" target="_blank" rel="noreferrer">VK</a>
+            </div>
+        </div>
+    </footer>
 
     <script>
         const app = document.getElementById('app');
@@ -2112,7 +2177,7 @@
                 });
             }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
 
-            document.querySelectorAll('.bento-card, .section-header, .subject-category, .bento-grid').forEach(el => {
+            document.querySelectorAll('.bento-card, .section-header, .subject-category, .bento-grid, .footer').forEach(el => {
                 el.classList.add('reveal');
                 revealObserver.observe(el);
             });

@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Редактор программ</title>
+    <style>
+        :root {
+            --bg: #eef4fb;
+            --panel: #ffffff;
+            --panel-soft: #f6f9fc;
+            --line: #d8e2ee;
+            --text: #142033;
+            --muted: #617086;
+            --accent: #006cdc;
+            --accent-dark: #0051a6;
+            --danger: #c53838;
+            --ok: #0f8b4c;
+            --shadow: 0 18px 40px rgba(20, 32, 51, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(180deg, #f4f8fc 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        .page {
+            width: min(1440px, calc(100% - 24px));
+            margin: 0 auto;
+            padding: 18px 0 28px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 18px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--shadow);
+        }
+
+        .toolbar-title {
+            display: grid;
+            gap: 6px;
+        }
+
+        .toolbar-title h1 {
+            margin: 0;
+            font-size: 24px;
+            line-height: 1.1;
+        }
+
+        .toolbar-title p,
+        .source-line,
+        .sidebar-meta,
+        .hint,
+        .field-hint {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .toolbar-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: var(--radius);
+            padding: 11px 16px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-secondary {
+            background: #e7eef8;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-danger {
+            background: #f9e6e6;
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .btn-danger-strong {
+            background: #cf4040;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .sidebar,
+        .editor {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar {
+            padding: 16px;
+            display: grid;
+            gap: 14px;
+            align-content: start;
+            position: sticky;
+            top: 16px;
+            max-height: calc(100vh - 32px);
+            overflow: hidden;
+        }
+
+        .sidebar-head {
+            display: grid;
+            gap: 10px;
+        }
+
+        .search {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+
+        .program-list {
+            display: grid;
+            gap: 8px;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .program-item {
+            width: 100%;
+            text-align: left;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+            padding: 12px;
+            cursor: pointer;
+        }
+
+        .program-item.is-active {
+            border-color: rgba(0, 108, 220, 0.45);
+            background: #e8f2ff;
+        }
+
+        .program-item strong,
+        .editor-title {
+            display: block;
+            font-size: 16px;
+            line-height: 1.3;
+        }
+
+        .program-item span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .editor {
+            padding: 18px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .status {
+            display: none;
+            padding: 12px 14px;
+            border-radius: var(--radius);
+            font-weight: 700;
+        }
+
+        .status.is-visible {
+            display: block;
+        }
+
+        .status.is-error {
+            background: #fdecec;
+            color: #8e2323;
+        }
+
+        .status.is-success {
+            background: #e7f7ee;
+            color: #12673d;
+        }
+
+        .editor-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .editor-head-copy {
+            display: grid;
+            gap: 6px;
+        }
+
+        .editor-head-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section {
+            display: grid;
+            gap: 14px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+
+        .section h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .grid.two {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid.three {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .field-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .field label {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+            color: var(--text);
+            padding: 10px 12px;
+        }
+
+        .field textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .field textarea.code {
+            min-height: 180px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13px;
+        }
+
+        .field-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .field-status {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.35;
+            color: var(--muted);
+        }
+
+        .field-status.is-success {
+            color: var(--ok);
+        }
+
+        .field-status.is-error {
+            color: var(--danger);
+        }
+
+        .subjects-wrap {
+            display: grid;
+            gap: 10px;
+        }
+
+        .subjects-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .subjects-table th,
+        .subjects-table td {
+            border-bottom: 1px solid var(--line);
+            padding: 8px;
+            vertical-align: top;
+            background: #fff;
+        }
+
+        .subjects-table th {
+            text-align: left;
+            font-size: 12px;
+            color: var(--muted);
+            background: #f0f5fb;
+        }
+
+        .subjects-table input,
+        .subjects-table select {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--panel-soft);
+            padding: 8px 9px;
+        }
+
+        .subjects-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .muted-box {
+            padding: 12px 14px;
+            border: 1px dashed var(--line);
+            border-radius: var(--radius);
+            background: #f8fbfe;
+            color: var(--muted);
+        }
+
+        .editor.is-disabled {
+            opacity: 0.8;
+        }
+
+        .footer {
+            padding: 24px 0 42px;
+            border-top: 1px solid rgba(20, 32, 51, 0.1);
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .footer-inner {
+            width: min(1440px, calc(100% - 24px));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(0, 81, 166, 0.12);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--accent-dark);
+            font-weight: 800;
+            line-height: 1;
+            text-decoration: none;
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        }
+
+        .footer-link:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 108, 220, 0.22);
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 12px 24px rgba(20, 32, 51, 0.08);
+        }
+
+        @media (max-width: 1100px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .grid.two,
+            .grid.three {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar,
+            .editor-head,
+            .subjects-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-actions,
+            .editor-head-actions {
+                justify-content: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <section class="toolbar">
+            <div class="toolbar-title">
+                <h1>Редактор программ</h1>
+                <p>Простой локальный интерфейс для создания, дополнения и редактирования программ напрямую в JSON.</p>
+                <p class="source-line" id="source-line">Источник JSON: загружается...</p>
+            </div>
+            <div class="toolbar-actions">
+                <button class="btn btn-secondary" type="button" id="new-program-btn">Новая программа</button>
+                <button class="btn btn-primary" type="button" id="save-all-btn">Сохранить в JSON</button>
+            </div>
+        </section>
+
+        <section class="layout">
+            <aside class="sidebar">
+                <div class="sidebar-head">
+                    <input class="search" type="search" id="search-input" placeholder="Поиск по коду, названию, кафедре" />
+                    <p class="sidebar-meta" id="list-meta">Программ: 0</p>
+                    <p class="hint">Сначала выбери программу слева или создай новую. Все изменения сохраняются в один файл.</p>
+                </div>
+                <div class="program-list" id="program-list"></div>
+            </aside>
+
+            <section class="editor">
+                <div class="status" id="status-box"></div>
+
+                <div class="editor-head">
+                    <div class="editor-head-copy">
+                        <strong class="editor-title" id="editor-title">Программа не выбрана</strong>
+                        <p class="hint" id="editor-subtitle">Выбери существующую запись или создай новую.</p>
+                    </div>
+                    <div class="editor-head-actions">
+                        <button class="btn btn-secondary" type="button" id="add-subject-btn">Добавить предмет</button>
+                        <button class="btn btn-danger" type="button" id="clear-subjects-btn">Удалить все предметы</button>
+                        <button class="btn btn-danger-strong" type="button" id="delete-program-btn">Удалить программу</button>
+                        <button class="btn btn-primary" type="button" id="save-all-btn-secondary">Сохранить в JSON</button>
+                    </div>
+                </div>
+
+                <form id="editor-form">
+                    <section class="section">
+                        <h2>Основное</h2>
+                        <div class="grid three">
+                            <div class="field">
+                                <label for="field-code">Код</label>
+                                <input id="field-code" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="field-department">Кафедра</label>
+                                <input id="field-department" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="field-qualification">Квалификация</label>
+                                <input id="field-qualification" type="text" />
+                            </div>
+                        </div>
+                        <div class="grid two">
+                            <div class="field">
+                                <label for="field-title">Название программы</label>
+                                <input id="field-title" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="field-image">Путь к картинке</label>
+                                <input id="field-image" type="text" />
+                            </div>
+                        </div>
+                        <div class="grid two">
+                            <div class="field">
+                                <label for="field-mode">Форма обучения</label>
+                                <input id="field-mode" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="field-duration">Срок обучения</label>
+                                <input id="field-duration" type="text" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2>Описание и ссылки</h2>
+                        <div class="field">
+                            <label for="field-who">Кто это</label>
+                            <textarea id="field-who"></textarea>
+                        </div>
+                        <div class="grid three">
+                            <div class="field">
+                                <label for="field-program-page">Ссылка на страницу направления</label>
+                                <input id="field-program-page" type="url" />
+                            </div>
+                            <div class="field">
+                                <label for="field-plan-link">Ссылка на учебный план</label>
+                                <input id="field-plan-link" type="url" />
+                            </div>
+                            <div class="field">
+                                <label for="field-work-link">Ссылка на рабочую программу</label>
+                                <input id="field-work-link" type="url" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2>Приём и стоимость</h2>
+                        <div class="grid three">
+                            <div class="field">
+                                <label for="field-budget">Бюджетные места</label>
+                                <input id="field-budget" type="number" min="0" step="1" />
+                            </div>
+                            <div class="field">
+                                <label for="field-paid">Платные места</label>
+                                <input id="field-paid" type="number" min="0" step="1" />
+                            </div>
+                            <div class="field">
+                                <label for="field-price">Стоимость в год</label>
+                                <input id="field-price" type="number" min="0" step="1000" />
+                            </div>
+                        </div>
+                        <div class="grid three">
+                            <div class="field">
+                                <label for="field-budget-history">Проходной бюджет</label>
+                                <textarea id="field-budget-history" placeholder="2025|4.9&#10;2024|4.7"></textarea>
+                                <p class="field-hint">Одна строка = год|значение</p>
+                            </div>
+                            <div class="field">
+                                <label for="field-paid-history">Проходной платное</label>
+                                <textarea id="field-paid-history" placeholder="2025|3.6&#10;2024|3.2"></textarea>
+                                <p class="field-hint">Можно оставить пустым</p>
+                            </div>
+                            <div class="field">
+                                <label for="field-paid-min">Минимальный балл платное</label>
+                                <textarea id="field-paid-min" placeholder="2025|3.7&#10;2024|3.5"></textarea>
+                                <p class="field-hint">Можно оставить пустым</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2>Списки</h2>
+                        <div class="grid two">
+                            <div class="field">
+                                <label for="field-learn">Чему учат</label>
+                                <textarea id="field-learn" placeholder="Одна строка = один пункт"></textarea>
+                            </div>
+                            <div class="field">
+                                <label for="field-career">Где можно работать</label>
+                                <textarea id="field-career" placeholder="Одна строка = один пункт"></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="field-missing">Missing fields</label>
+                            <textarea id="field-missing" placeholder="Одна строка = одно значение"></textarea>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <div class="subjects-toolbar">
+                            <div>
+                                <h2>Предметы</h2>
+                                <p class="field-hint">Здесь можно быстро менять часы, блок и название предмета.</p>
+                            </div>
+                            <div class="editor-head-actions">
+                                <button class="btn btn-secondary" type="button" id="add-subject-btn-inline">Добавить предмет</button>
+                                <button class="btn btn-danger" type="button" id="clear-subjects-btn-inline">Удалить все предметы</button>
+                            </div>
+                        </div>
+                        <div class="subjects-wrap">
+                            <table class="subjects-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 48%;">Предмет</th>
+                                        <th style="width: 32%;">Блок</th>
+                                        <th style="width: 12%;">Часы</th>
+                                        <th style="width: 8%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subjects-body"></tbody>
+                            </table>
+                            <div class="muted-box" id="empty-subjects-box">Предметов пока нет. Нажми «Добавить предмет».</div>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2>Сложные данные</h2>
+                        <div class="grid two">
+                            <div class="field">
+                                <div class="field-head">
+                                    <label for="field-blocks-json">Блоки предметов (JSON)</label>
+                                    <button class="btn btn-secondary" type="button" id="hydrate-subjects-btn">Перенести в предметы</button>
+                                </div>
+                                <textarea class="code" id="field-blocks-json"></textarea>
+                                <p class="field-status" id="blocks-json-status"></p>
+                                <p class="field-hint">Если вставишь сюда массив блоков с вложенными предметами, редактор сам сможет развернуть их в таблицу предметов.</p>
+                            </div>
+                            <div class="field">
+                                <label for="field-extra-json">Дополнительные поля (JSON object)</label>
+                                <textarea class="code" id="field-extra-json"></textarea>
+                                <p class="field-hint">Сюда попадает всё, что не вынесено в отдельные поля.</p>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-copy">
+                <div>Платформа осознанного выбора НПС</div>
+                <div>Для абитуриентов и тех, кто подбирает направление не вслепую</div>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" href="https://t.me/proximart" target="_blank" rel="noreferrer">Telegram</a>
+                <a class="footer-link" href="https://vk.com/club236804216" target="_blank" rel="noreferrer">VK</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const BLOCK_OPTIONS = [
+            'Автоматизация, мехатроника и робототехника',
+            'Дизайн и художественно-проектный блок',
+            'Математика и аналитическая база',
+            'Общая инженерная подготовка',
+            'Общеобразовательная база',
+            'Практика, производственные модули и выпуск',
+            'Программирование и разработка ПО',
+            'Связь, радиосистемы и телеком',
+            'Системы, сети, БД и информационная безопасность',
+            'Управление, экономика, право и качество',
+            'Электроника, схемотехника и встраиваемые системы',
+            'Языки и гуманитарный контекст'
+        ];
+
+        const KNOWN_KEYS = new Set([
+            'код',
+            'картинка_для_кафедры',
+            'кафедра',
+            'наименование_специальности',
+            'квалификация',
+            'форма_обучения',
+            'ссылка_на_страницу_направления',
+            'ссылка_на_учебный_план',
+            'ссылка_на_рабочую_программу',
+            'кто_это',
+            'чему_учат',
+            'где_можно_работать',
+            'количество_бюджетных_мест',
+            'количество_платных_мест',
+            'срок_обучения',
+            'стоимость_в_год',
+            'динамика_проходного_бюджет',
+            'динамика_проходного_платное',
+            'динамика_минимального_платное',
+            'предметы',
+            'блоки_предметов',
+            'missing_fields'
+        ]);
+
+        const state = {
+            programs: [],
+            selectedIndex: -1,
+            source: '',
+            search: '',
+            dirty: false,
+            hydrating: false,
+            saving: false
+        };
+
+        const refs = {
+            sourceLine: document.getElementById('source-line'),
+            searchInput: document.getElementById('search-input'),
+            listMeta: document.getElementById('list-meta'),
+            programList: document.getElementById('program-list'),
+            statusBox: document.getElementById('status-box'),
+            editorRoot: document.querySelector('.editor'),
+            editorTitle: document.getElementById('editor-title'),
+            editorSubtitle: document.getElementById('editor-subtitle'),
+            form: document.getElementById('editor-form'),
+            code: document.getElementById('field-code'),
+            department: document.getElementById('field-department'),
+            qualification: document.getElementById('field-qualification'),
+            title: document.getElementById('field-title'),
+            image: document.getElementById('field-image'),
+            mode: document.getElementById('field-mode'),
+            duration: document.getElementById('field-duration'),
+            who: document.getElementById('field-who'),
+            programPage: document.getElementById('field-program-page'),
+            planLink: document.getElementById('field-plan-link'),
+            workLink: document.getElementById('field-work-link'),
+            budget: document.getElementById('field-budget'),
+            paid: document.getElementById('field-paid'),
+            price: document.getElementById('field-price'),
+            budgetHistory: document.getElementById('field-budget-history'),
+            paidHistory: document.getElementById('field-paid-history'),
+            paidMin: document.getElementById('field-paid-min'),
+            learn: document.getElementById('field-learn'),
+            career: document.getElementById('field-career'),
+            missing: document.getElementById('field-missing'),
+            blocksJson: document.getElementById('field-blocks-json'),
+            blocksJsonStatus: document.getElementById('blocks-json-status'),
+            hydrateSubjectsButton: document.getElementById('hydrate-subjects-btn'),
+            extraJson: document.getElementById('field-extra-json'),
+            subjectsBody: document.getElementById('subjects-body'),
+            emptySubjectsBox: document.getElementById('empty-subjects-box'),
+            newButtons: [
+                document.getElementById('new-program-btn')
+            ],
+            addSubjectButtons: [
+                document.getElementById('add-subject-btn'),
+                document.getElementById('add-subject-btn-inline')
+            ],
+            clearSubjectButtons: [
+                document.getElementById('clear-subjects-btn'),
+                document.getElementById('clear-subjects-btn-inline')
+            ],
+            deleteButtons: [
+                document.getElementById('delete-program-btn')
+            ],
+            saveButtons: [
+                document.getElementById('save-all-btn'),
+                document.getElementById('save-all-btn-secondary')
+            ]
+        };
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function createEmptyProgram() {
+            return {
+                'код': '',
+                'картинка_для_кафедры': '',
+                'кафедра': '',
+                'наименование_специальности': '',
+                'квалификация': '',
+                'форма_обучения': 'очная',
+                'ссылка_на_страницу_направления': '',
+                'ссылка_на_учебный_план': '',
+                'ссылка_на_рабочую_программу': '',
+                'кто_это': '',
+                'чему_учат': [],
+                'где_можно_работать': [],
+                'количество_бюджетных_мест': 0,
+                'количество_платных_мест': 0,
+                'срок_обучения': '',
+                'стоимость_в_год': null,
+                'динамика_проходного_бюджет': [],
+                'динамика_проходного_платное': [],
+                'динамика_минимального_платное': [],
+                'предметы': [],
+                'блоки_предметов': [],
+                'missing_fields': []
+            };
+        }
+
+        function getBlankProgram() {
+            return createEmptyProgram();
+        }
+
+        function getSelectedProgram() {
+            return state.programs[state.selectedIndex] || null;
+        }
+
+        function setStatus(message, tone = 'success') {
+            refs.statusBox.textContent = message || '';
+            refs.statusBox.className = 'status';
+            if (message) {
+                refs.statusBox.classList.add('is-visible');
+                refs.statusBox.classList.add(tone === 'error' ? 'is-error' : 'is-success');
+            }
+        }
+
+        function updateDirtyState(nextDirty) {
+            state.dirty = Boolean(nextDirty);
+            const suffix = state.dirty ? ' • есть несохранённые изменения' : '';
+            const baseText = state.selectedIndex >= 0
+                ? (state.source ? 'Источник: ' + state.source : 'Редактирование текущей программы')
+                : 'Список пуст. Создай новую программу или сохрани пустой массив.';
+            refs.editorSubtitle.textContent = `${baseText}${suffix}`;
+        }
+
+        function setEditorEnabled(enabled) {
+            refs.editorRoot.classList.toggle('is-disabled', !enabled);
+            refs.form.querySelectorAll('input, textarea, select').forEach((element) => {
+                element.disabled = !enabled;
+            });
+            refs.hydrateSubjectsButton.disabled = !enabled;
+            refs.addSubjectButtons.forEach((button) => {
+                button.disabled = !enabled;
+            });
+            refs.clearSubjectButtons.forEach((button) => {
+                button.disabled = !enabled;
+            });
+            refs.deleteButtons.forEach((button) => {
+                button.disabled = !enabled;
+            });
+        }
+
+        function formatLines(items) {
+            return (Array.isArray(items) ? items : [])
+                .map((item) => String(item || '').trim())
+                .filter(Boolean)
+                .join('\n');
+        }
+
+        function parseLines(text) {
+            return String(text || '')
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean);
+        }
+
+        function formatTimeline(items) {
+            return (Array.isArray(items) ? items : [])
+                .map((item) => {
+                    const year = item && item['год'] !== undefined ? item['год'] : '';
+                    const value = item && item['значение'] !== undefined ? item['значение'] : '';
+                    return `${year}|${value}`;
+                })
+                .filter((line) => line !== '|')
+                .join('\n');
+        }
+
+        function parseTimeline(text, label) {
+            const lines = String(text || '').split(/\r?\n/);
+            const entries = [];
+
+            lines.forEach((line, index) => {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                    return;
+                }
+
+                const parts = trimmed.split('|');
+                if (parts.length !== 2) {
+                    throw new Error(`${label}: строка ${index + 1} должна быть в формате год|значение`);
+                }
+
+                const year = Number(parts[0].trim());
+                const value = Number(parts[1].trim().replace(',', '.'));
+                if (!Number.isFinite(year) || !Number.isFinite(value)) {
+                    throw new Error(`${label}: строка ${index + 1} содержит некорректный год или значение`);
+                }
+
+                entries.push({
+                    'год': year,
+                    'значение': value
+                });
+            });
+
+            return entries;
+        }
+
+        function formatJson(value, fallback) {
+            return JSON.stringify(value ?? fallback, null, 2);
+        }
+
+        function setBlocksStatus(message, tone = '') {
+            refs.blocksJsonStatus.textContent = message || '';
+            refs.blocksJsonStatus.className = 'field-status';
+            if (tone) {
+                refs.blocksJsonStatus.classList.add(tone);
+            }
+        }
+
+        function normalizeSubjectHours(value) {
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : 0;
+        }
+
+        function flattenSubjectsFromBlocks(blocks) {
+            return (Array.isArray(blocks) ? blocks : []).flatMap((block) => {
+                const blockName = String(block?.['название'] || '').trim();
+                return (Array.isArray(block?.['предметы']) ? block['предметы'] : [])
+                    .map((subject) => {
+                        const name = String(subject?.['название_предмета'] || '').trim();
+                        if (!name) {
+                            return null;
+                        }
+
+                        return {
+                            'название_предмета': name,
+                            'количество_часов': normalizeSubjectHours(subject?.['количество_часов']),
+                            'блок': blockName || BLOCK_OPTIONS[0]
+                        };
+                    })
+                    .filter(Boolean);
+            });
+        }
+
+        function getDerivedSubjectsFromBlocksText() {
+            const blocks = parseJsonArray(refs.blocksJson.value, 'Блоки предметов');
+            return flattenSubjectsFromBlocks(blocks);
+        }
+
+        function updateBlocksPreviewStatus() {
+            const trimmed = refs.blocksJson.value.trim();
+            if (!trimmed) {
+                setBlocksStatus('');
+                return 0;
+            }
+
+            try {
+                const derivedSubjects = getDerivedSubjectsFromBlocksText();
+                if (!derivedSubjects.length) {
+                    setBlocksStatus('JSON прочитан, но вложенных предметов не найдено.', 'is-error');
+                    return 0;
+                }
+
+                setBlocksStatus(`В блоках найдено предметов: ${derivedSubjects.length}.`, 'is-success');
+                return derivedSubjects.length;
+            } catch (error) {
+                setBlocksStatus(error instanceof Error ? `JSON не распознан: ${error.message}` : 'JSON не распознан.', 'is-error');
+                return 0;
+            }
+        }
+
+        function getEditorSubjects(program) {
+            const directSubjects = Array.isArray(program?.['предметы']) ? program['предметы'] : [];
+            if (directSubjects.length) {
+                return directSubjects;
+            }
+
+            return flattenSubjectsFromBlocks(program?.['блоки_предметов']);
+        }
+
+        function parseJsonObject(text, fieldName) {
+            const trimmed = String(text || '').trim();
+            if (!trimmed) {
+                return {};
+            }
+
+            const parsed = JSON.parse(trimmed);
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                throw new Error(`${fieldName} должен быть JSON-объектом`);
+            }
+            return parsed;
+        }
+
+        function parseJsonArray(text, fieldName) {
+            const trimmed = String(text || '').trim();
+            if (!trimmed) {
+                return [];
+            }
+
+            const parsed = JSON.parse(trimmed);
+            if (!Array.isArray(parsed)) {
+                throw new Error(`${fieldName} должен быть JSON-массивом`);
+            }
+            return parsed;
+        }
+
+        function readInt(value, fallback = 0) {
+            if (String(value).trim() === '') {
+                return fallback;
+            }
+
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? Math.round(parsed) : fallback;
+        }
+
+        function readNullableNumber(value) {
+            if (String(value).trim() === '') {
+                return null;
+            }
+
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
+
+        function getUnknownFields(program) {
+            const extra = {};
+            Object.entries(program || {}).forEach(([key, value]) => {
+                if (!KNOWN_KEYS.has(key)) {
+                    extra[key] = value;
+                }
+            });
+            return extra;
+        }
+
+        function createSubjectRow(subject = {}) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" data-role="subject-name" value="${escapeHtml(subject['название_предмета'] || '')}" /></td>
+                <td>
+                    <select data-role="subject-block">
+                        ${BLOCK_OPTIONS.map((block) => `<option value="${escapeHtml(block)}" ${block === subject['блок'] ? 'selected' : ''}>${escapeHtml(block)}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="number" min="0" step="1" data-role="subject-hours" value="${escapeHtml(subject['количество_часов'] ?? '')}" /></td>
+                <td><button class="btn btn-danger" type="button" data-role="remove-subject">Удалить</button></td>
+            `;
+            return row;
+        }
+
+        function renderSubjects(subjects) {
+            refs.subjectsBody.innerHTML = '';
+            const rows = Array.isArray(subjects) ? subjects : [];
+
+            rows.forEach((subject) => {
+                refs.subjectsBody.appendChild(createSubjectRow(subject));
+            });
+
+            refs.emptySubjectsBox.style.display = rows.length ? 'none' : 'block';
+        }
+
+        function readSubjects() {
+            return [...refs.subjectsBody.querySelectorAll('tr')]
+                .map((row) => {
+                    const name = row.querySelector('[data-role="subject-name"]').value.trim();
+                    const block = row.querySelector('[data-role="subject-block"]').value.trim();
+                    const hoursValue = row.querySelector('[data-role="subject-hours"]').value.trim();
+                    const hours = hoursValue === '' ? 0 : Number(hoursValue);
+
+                    if (!name) {
+                        return null;
+                    }
+
+                                return {
+                                    'название_предмета': name,
+                                    'количество_часов': Number.isFinite(hours) ? hours : 0,
+                                    'блок': block || BLOCK_OPTIONS[0]
+                                };
+                            })
+                .filter(Boolean);
+        }
+
+        function tryHydrateSubjectsFromBlocks(options = {}) {
+            const {
+                showStatus = false,
+                force = false,
+                showErrors = false
+            } = options;
+
+            const trimmed = refs.blocksJson.value.trim();
+            if (!trimmed) {
+                if (showErrors) {
+                    setStatus('Поле «Блоки предметов (JSON)» пустое.', 'error');
+                }
+                return false;
+            }
+
+            try {
+                const derivedSubjects = getDerivedSubjectsFromBlocksText();
+                if (!derivedSubjects.length) {
+                    if (showErrors) {
+                        setStatus('В блоках не нашлось вложенных предметов.', 'error');
+                    }
+                    return false;
+                }
+
+                const currentSubjects = readSubjects();
+                if (currentSubjects.length && !force) {
+                    return false;
+                }
+
+                if (currentSubjects.length && force) {
+                    const confirmed = window.confirm('Заменить текущую таблицу предметов предметами из блока JSON?');
+                    if (!confirmed) {
+                        return false;
+                    }
+                }
+
+                renderSubjects(derivedSubjects);
+                if (showStatus) {
+                    setStatus(`Предметы подтянуты из блока JSON: ${derivedSubjects.length} шт.`, 'success');
+                }
+                return true;
+            } catch (error) {
+                if (showErrors) {
+                    setStatus(error instanceof Error ? error.message : 'Не удалось прочитать блоки предметов', 'error');
+                }
+                return false;
+            }
+        }
+
+        function updateEditorHeading() {
+            if (state.selectedIndex < 0) {
+                refs.editorTitle.textContent = 'Программа не выбрана';
+                return;
+            }
+
+            const code = refs.code.value.trim();
+            const title = refs.title.value.trim();
+            refs.editorTitle.textContent = title || code ? `${code ? code + ' — ' : ''}${title || 'Новая программа'}` : 'Новая программа';
+        }
+
+        function renderProgramList() {
+            const query = state.search.trim().toLowerCase();
+            const visiblePrograms = state.programs
+                .map((program, index) => ({ program, index }))
+                .filter(({ program }) => {
+                    if (!query) {
+                        return true;
+                    }
+
+                    const haystack = [
+                        program['код'],
+                        program['наименование_специальности'],
+                        program['кафедра']
+                    ].join(' ').toLowerCase();
+
+                    return haystack.includes(query);
+                });
+
+            refs.listMeta.textContent = `Программ: ${state.programs.length}${query ? ` • найдено: ${visiblePrograms.length}` : ''}`;
+
+            if (!visiblePrograms.length) {
+                refs.programList.innerHTML = `<div class="muted-box">${state.programs.length ? 'Ничего не найдено.' : 'Программ пока нет. Нажми «Новая программа».'}</div>`;
+                return;
+            }
+
+            refs.programList.innerHTML = visiblePrograms.map(({ program, index }) => `
+                <button class="program-item ${index === state.selectedIndex ? 'is-active' : ''}" type="button" data-index="${index}">
+                    <strong>${escapeHtml(program['код'] || 'Без кода')} — ${escapeHtml(program['наименование_специальности'] || 'Без названия')}</strong>
+                    <span>${escapeHtml(program['кафедра'] || 'Кафедра не указана')}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderEditor(program) {
+            state.hydrating = true;
+            const safeProgram = program || getBlankProgram();
+
+            refs.code.value = safeProgram['код'] || '';
+            refs.department.value = safeProgram['кафедра'] || '';
+            refs.qualification.value = safeProgram['квалификация'] || '';
+            refs.title.value = safeProgram['наименование_специальности'] || '';
+            refs.image.value = safeProgram['картинка_для_кафедры'] || '';
+            refs.mode.value = safeProgram['форма_обучения'] || '';
+            refs.duration.value = safeProgram['срок_обучения'] || '';
+            refs.who.value = safeProgram['кто_это'] || '';
+            refs.programPage.value = safeProgram['ссылка_на_страницу_направления'] || '';
+            refs.planLink.value = safeProgram['ссылка_на_учебный_план'] || '';
+            refs.workLink.value = safeProgram['ссылка_на_рабочую_программу'] || '';
+            refs.budget.value = safeProgram['количество_бюджетных_мест'] ?? 0;
+            refs.paid.value = safeProgram['количество_платных_мест'] ?? 0;
+            refs.price.value = safeProgram['стоимость_в_год'] ?? '';
+            refs.budgetHistory.value = formatTimeline(safeProgram['динамика_проходного_бюджет']);
+            refs.paidHistory.value = formatTimeline(safeProgram['динамика_проходного_платное']);
+            refs.paidMin.value = formatTimeline(safeProgram['динамика_минимального_платное']);
+            refs.learn.value = formatLines(safeProgram['чему_учат']);
+            refs.career.value = formatLines(safeProgram['где_можно_работать']);
+            refs.missing.value = formatLines(safeProgram['missing_fields']);
+            refs.blocksJson.value = formatJson(safeProgram['блоки_предметов'], []);
+            refs.extraJson.value = formatJson(getUnknownFields(safeProgram), {});
+            renderSubjects(getEditorSubjects(safeProgram));
+            updateBlocksPreviewStatus();
+            updateEditorHeading();
+            setEditorEnabled(Boolean(program));
+
+            state.hydrating = false;
+        }
+
+        function persistCurrentForm() {
+            if (state.selectedIndex < 0) {
+                return true;
+            }
+
+            try {
+                const extraFields = parseJsonObject(refs.extraJson.value, 'Дополнительные поля');
+                const blocks = parseJsonArray(refs.blocksJson.value, 'Блоки предметов');
+                const tableSubjects = readSubjects();
+                const derivedSubjects = tableSubjects.length ? tableSubjects : flattenSubjectsFromBlocks(blocks);
+                const nextProgram = {
+                    ...extraFields,
+                    'код': refs.code.value.trim(),
+                    'картинка_для_кафедры': refs.image.value.trim(),
+                    'кафедра': refs.department.value.trim(),
+                    'наименование_специальности': refs.title.value.trim(),
+                    'квалификация': refs.qualification.value.trim(),
+                    'форма_обучения': refs.mode.value.trim(),
+                    'ссылка_на_страницу_направления': refs.programPage.value.trim(),
+                    'ссылка_на_учебный_план': refs.planLink.value.trim(),
+                    'ссылка_на_рабочую_программу': refs.workLink.value.trim(),
+                    'кто_это': refs.who.value.trim(),
+                    'чему_учат': parseLines(refs.learn.value),
+                    'где_можно_работать': parseLines(refs.career.value),
+                    'количество_бюджетных_мест': readInt(refs.budget.value, 0),
+                    'количество_платных_мест': readInt(refs.paid.value, 0),
+                    'срок_обучения': refs.duration.value.trim(),
+                    'стоимость_в_год': readNullableNumber(refs.price.value),
+                    'динамика_проходного_бюджет': parseTimeline(refs.budgetHistory.value, 'Проходной бюджет'),
+                    'динамика_проходного_платное': parseTimeline(refs.paidHistory.value, 'Проходной платное'),
+                    'динамика_минимального_платное': parseTimeline(refs.paidMin.value, 'Минимальный балл платное'),
+                    'предметы': derivedSubjects,
+                    'блоки_предметов': blocks,
+                    'missing_fields': parseLines(refs.missing.value)
+                };
+
+                state.programs[state.selectedIndex] = nextProgram;
+                return true;
+            } catch (error) {
+                setStatus(error instanceof Error ? error.message : 'Не удалось прочитать форму', 'error');
+                return false;
+            }
+        }
+
+        function selectProgram(index) {
+            if (index === state.selectedIndex) {
+                return;
+            }
+
+            if (!persistCurrentForm()) {
+                return;
+            }
+
+            state.selectedIndex = index;
+            renderProgramList();
+            renderEditor(getSelectedProgram());
+            setStatus('');
+        }
+
+        function createProgram() {
+            if (!persistCurrentForm()) {
+                return;
+            }
+
+            state.programs.unshift(createEmptyProgram());
+            state.selectedIndex = 0;
+            state.search = '';
+            refs.searchInput.value = '';
+            renderProgramList();
+            renderEditor(getSelectedProgram());
+            updateDirtyState(true);
+            setStatus('Новая программа создана. Теперь можно сразу заполнять поля.', 'success');
+        }
+
+        function deleteCurrentProgram() {
+            const program = getSelectedProgram();
+            if (!program) {
+                return;
+            }
+
+            const title = [program['код'], program['наименование_специальности']].filter(Boolean).join(' — ') || 'эту программу';
+            const confirmed = window.confirm(`Удалить программу целиком?\n\n${title}\n\nЭто удалит всю запись из списка. Чтобы изменение попало в JSON, потом нажми «Сохранить в JSON».`);
+            if (!confirmed) {
+                return;
+            }
+
+            state.programs.splice(state.selectedIndex, 1);
+
+            if (!state.programs.length) {
+                state.selectedIndex = -1;
+                renderProgramList();
+                renderEditor(null);
+            } else {
+                state.selectedIndex = Math.min(state.selectedIndex, state.programs.length - 1);
+                renderProgramList();
+                renderEditor(getSelectedProgram());
+            }
+
+            updateDirtyState(true);
+            setStatus(`Программа удалена из списка. Не забудь нажать «Сохранить в JSON».`, 'success');
+        }
+
+        function clearAllSubjects() {
+            const currentSubjects = readSubjects();
+            if (!currentSubjects.length) {
+                setStatus('Список предметов уже пуст.', 'success');
+                return;
+            }
+
+            const confirmed = window.confirm(`Удалить все предметы из текущей программы?\n\nБудет очищена вся таблица предметов (${currentSubjects.length} шт.). Чтобы изменение попало в JSON, потом нажми «Сохранить в JSON».`);
+            if (!confirmed) {
+                return;
+            }
+
+            renderSubjects([]);
+            updateDirtyState(true);
+            setStatus(`Все предметы удалены из таблицы (${currentSubjects.length} шт.). Не забудь нажать «Сохранить в JSON».`, 'success');
+        }
+
+        async function saveAllPrograms() {
+            if (state.saving) {
+                return;
+            }
+
+            if (!persistCurrentForm()) {
+                return;
+            }
+
+            state.saving = true;
+            refs.saveButtons.forEach((button) => {
+                button.disabled = true;
+            });
+
+            try {
+                const response = await fetch('/api/admin/programs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        programs: state.programs
+                    })
+                });
+
+                const payload = await response.json();
+                if (!response.ok) {
+                    throw new Error(payload?.message || payload?.error || 'Ошибка сохранения');
+                }
+
+                updateDirtyState(false);
+                setStatus(`Сохранено: ${payload.count} программ в ${payload.source}`, 'success');
+                renderProgramList();
+            } catch (error) {
+                setStatus(error instanceof Error ? error.message : 'Не удалось сохранить JSON', 'error');
+            } finally {
+                state.saving = false;
+                refs.saveButtons.forEach((button) => {
+                    button.disabled = false;
+                });
+            }
+        }
+
+        async function loadPrograms() {
+            try {
+                const response = await fetch('/api/admin/programs', { cache: 'no-store' });
+                const payload = await response.json();
+                if (!response.ok) {
+                    throw new Error(payload?.error || 'Не удалось загрузить программы');
+                }
+
+                state.programs = Array.isArray(payload.programs) ? payload.programs : [];
+                state.source = payload.source || '';
+                refs.sourceLine.textContent = `Источник JSON: ${state.source || 'неизвестно'}`;
+
+                state.selectedIndex = state.programs.length ? 0 : -1;
+                renderProgramList();
+                renderEditor(getSelectedProgram());
+                updateDirtyState(false);
+            } catch (error) {
+                setStatus(error instanceof Error ? error.message : 'Не удалось загрузить данные', 'error');
+            }
+        }
+
+        refs.searchInput.addEventListener('input', (event) => {
+            state.search = event.target.value || '';
+            renderProgramList();
+        });
+
+        refs.programList.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-index]');
+            if (!button) {
+                return;
+            }
+            selectProgram(Number(button.dataset.index));
+        });
+
+        refs.newButtons.forEach((button) => {
+            button.addEventListener('click', createProgram);
+        });
+
+        refs.saveButtons.forEach((button) => {
+            button.addEventListener('click', saveAllPrograms);
+        });
+
+        refs.deleteButtons.forEach((button) => {
+            button.addEventListener('click', deleteCurrentProgram);
+        });
+
+        refs.addSubjectButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                refs.subjectsBody.appendChild(createSubjectRow({
+                    'название_предмета': '',
+                    'количество_часов': '',
+                    'блок': BLOCK_OPTIONS[0]
+                }));
+                refs.emptySubjectsBox.style.display = 'none';
+                updateDirtyState(true);
+            });
+        });
+
+        refs.clearSubjectButtons.forEach((button) => {
+            button.addEventListener('click', clearAllSubjects);
+        });
+
+        refs.subjectsBody.addEventListener('click', (event) => {
+            const removeButton = event.target.closest('[data-role="remove-subject"]');
+            if (!removeButton) {
+                return;
+            }
+
+            const row = removeButton.closest('tr');
+            if (row) {
+                row.remove();
+                refs.emptySubjectsBox.style.display = refs.subjectsBody.children.length ? 'none' : 'block';
+                updateDirtyState(true);
+            }
+        });
+
+        refs.hydrateSubjectsButton.addEventListener('click', () => {
+            if (tryHydrateSubjectsFromBlocks({ showStatus: true, force: true, showErrors: true })) {
+                updateDirtyState(true);
+            }
+            updateBlocksPreviewStatus();
+        });
+
+        refs.blocksJson.addEventListener('input', () => {
+            if (state.hydrating) {
+                return;
+            }
+
+            updateBlocksPreviewStatus();
+            if (readSubjects().length === 0 && tryHydrateSubjectsFromBlocks({ showStatus: true })) {
+                updateDirtyState(true);
+            }
+        });
+
+        refs.blocksJson.addEventListener('blur', () => {
+            if (state.hydrating) {
+                return;
+            }
+
+            updateBlocksPreviewStatus();
+            if (tryHydrateSubjectsFromBlocks({ showStatus: true })) {
+                updateDirtyState(true);
+            }
+        });
+
+        refs.form.addEventListener('input', () => {
+            if (state.hydrating) {
+                return;
+            }
+
+            updateDirtyState(true);
+            updateEditorHeading();
+        });
+
+        refs.form.addEventListener('change', () => {
+            if (state.hydrating) {
+                return;
+            }
+
+            updateDirtyState(true);
+        });
+
+        window.addEventListener('beforeunload', (event) => {
+            if (!state.dirty) {
+                return;
+            }
+
+            event.preventDefault();
+            event.returnValue = '';
+        });
+
+        loadPrograms();
+    </script>
+</body>
+
+</html>

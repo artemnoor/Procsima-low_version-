@@ -70,6 +70,29 @@ function parseSchemaFile(filePath) {
     return JSON.parse(sanitized);
 }
 
+function extractPreservedCommentLines(filePath) {
+    return fs.readFileSync(filePath, 'utf8')
+        .replace(/^\uFEFF/, '')
+        .split(/\r?\n/)
+        .filter((line) => line.trim().startsWith('//'));
+}
+
+function formatSchemaFile(programs, commentLines = []) {
+    const baseJson = JSON.stringify(programs, null, 2);
+    if (!commentLines.length) {
+        return `${baseJson}\n`;
+    }
+
+    const trimmed = baseJson.trimEnd();
+    const closeIndex = trimmed.lastIndexOf(']');
+    if (closeIndex === -1) {
+        return `${baseJson}\n`;
+    }
+
+    const beforeClose = trimmed.slice(0, closeIndex).trimEnd();
+    return `${beforeClose}\n${commentLines.join('\n')}\n]\n`;
+}
+
 function transliterate(value) {
     const map = {
         а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y',
@@ -239,6 +262,24 @@ function parseHours(value) {
     return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function getProgramSubjects(program) {
+    const directSubjects = Array.isArray(program['предметы']) ? program['предметы'] : [];
+    if (directSubjects.length) {
+        return directSubjects;
+    }
+
+    return (Array.isArray(program['блоки_предметов']) ? program['блоки_предметов'] : [])
+        .flatMap((block) => {
+            const blockTitle = normalizeBlockTitle(block?.['название']) || 'Без блока';
+            return (Array.isArray(block?.['предметы']) ? block['предметы'] : [])
+                .map((subject) => ({
+                    ...subject,
+                    'блок': normalizeBlockTitle(subject?.['блок']) || blockTitle
+                }));
+        })
+        .filter((subject) => normalizeText(subject?.['название_предмета']));
+}
+
 function parseOptionalNumber(value) {
     if (value === null || value === undefined) {
         return null;
@@ -288,7 +329,7 @@ function normalizeScores(budgetEntries, paidEntries) {
 }
 
 function normalizeSubjects(program) {
-    return (Array.isArray(program['предметы']) ? program['предметы'] : [])
+    return getProgramSubjects(program)
         .map((subject) => ({
             'предмет': normalizeText(subject['название_предмета']),
             'блок_предмета': normalizeBlockTitle(subject['блок']) || 'Без блока',
@@ -403,7 +444,7 @@ function buildProgramProfiles(programs) {
             infrastructure: 1
         };
 
-        const subjects = Array.isArray(program['предметы']) ? program['предметы'] : [];
+        const subjects = getProgramSubjects(program);
         const totalHours = subjects.reduce((sum, item) => sum + parseHours(item['количество_часов']), 0) || 1;
 
         subjects.forEach((subject) => {
@@ -591,9 +632,29 @@ function getBootstrapData() {
     };
 }
 
+function getRawPrograms() {
+    const raw = parseSchemaFile(dataPath);
+    return Array.isArray(raw) ? raw : [];
+}
+
+function saveRawPrograms(programs) {
+    if (!Array.isArray(programs)) {
+        throw new Error('Programs payload must be an array');
+    }
+
+    const preservedCommentLines = fs.existsSync(dataPath)
+        ? extractPreservedCommentLines(dataPath)
+        : [];
+
+    fs.writeFileSync(dataPath, formatSchemaFile(programs, preservedCommentLines), 'utf8');
+    cache = null;
+}
+
 module.exports = {
     dbPath: dataPath,
     getBootstrapData,
+    getRawPrograms,
     getLegacyPrograms,
-    getLegacyProgramBySlug
+    getLegacyProgramBySlug,
+    saveRawPrograms
 };

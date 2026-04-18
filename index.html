@@ -335,9 +335,9 @@
         }
 
         .topbar.scrolled {
-            background: linear-gradient(180deg, rgba(250, 252, 254, 0.92), rgba(250, 252, 254, 0.7));
-            backdrop-filter: blur(18px);
-            box-shadow: 0 8px 32px rgba(0, 44, 91, 0.08);
+            background: transparent;
+            backdrop-filter: none;
+            box-shadow: none;
         }
 
         .topbar-inner {
@@ -364,23 +364,35 @@
         }
 
         .brand-logo {
-            width: 42px;
-            height: 42px;
+            width: 46px;
+            height: 46px;
             flex: 0 0 auto;
             border-radius: 14px;
             display: grid;
             place-items: center;
-            color: #fff;
-            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--accent) 100%);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 10px 24px rgba(0, 44, 91, 0.18);
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: pixelated;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            filter: contrast(1.1) brightness(1.05);
         }
 
         .brand-title {
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            white-space: nowrap;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-title img {
+            height: 22px;
+            width: auto;
+            object-fit: contain;
         }
 
         .top-nav {
@@ -1243,6 +1255,41 @@
             flex-wrap: wrap;
         }
 
+        .footer-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 44, 91, 0.1);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--brand-dark);
+            font-weight: 800;
+            line-height: 1;
+            text-decoration: none;
+            transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .footer-link:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 108, 220, 0.2);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 12px 24px rgba(0, 44, 91, 0.08);
+        }
+
         .sr-only {
             position: absolute;
             width: 1px;
@@ -1327,14 +1374,13 @@
             }
 
             .brand-logo {
-                width: 38px;
-                height: 38px;
-                border-radius: 12px;
+                width: 46px;
+                height: 46px;
+                border-radius: 14px;
             }
 
             .brand-title {
-                font-size: 13px;
-                letter-spacing: 0.08em;
+                display: flex;
             }
 
             .top-nav {
@@ -1492,12 +1538,11 @@
         <div class="topbar-inner">
             <a href="/" class="brand" aria-label="На главную">
                 <div class="brand-logo">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    </svg>
+                    <img src="andromeda-icon.svg?v=4.0" alt="Andromeda Icon">
                 </div>
-                <div class="brand-title">Проксима</div>
+                <div class="brand-title">
+                    <img src="andromeda-text.svg" alt="Андромеда">
+                </div>
             </a>
 
             <nav class="top-nav" aria-label="Главная навигация">
@@ -1940,8 +1985,14 @@
 
     <footer class="footer">
         <div class="footer-inner">
-            <div>Проксима</div>
-            <div>Для абитуриентов и приёмной комиссии</div>
+            <div class="footer-copy">
+                <div>Платформа осознанного выбора НПС</div>
+                <div>Для абитуриентов и тех, кто подбирает направление не вслепую</div>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" href="https://t.me/proximart" target="_blank" rel="noreferrer">Telegram</a>
+                <a class="footer-link" href="https://vk.com/club236804216" target="_blank" rel="noreferrer">VK</a>
+            </div>
         </div>
     </footer>
 

@@ -532,19 +532,18 @@
             return bootstrapCache;
         }
 
-        const cachedPayload = getBootstrapFromSessionStorage();
-        if (cachedPayload) {
-            bootstrapCache = cachedPayload;
-            return bootstrapCache;
+        try {
+            window.sessionStorage.removeItem(BOOTSTRAP_CACHE_KEY);
+        } catch (_error) {
+            // ignore storage errors
         }
 
-        const response = await window.fetch('/api/bootstrap', { cache: 'force-cache' });
+        const response = await window.fetch('/api/bootstrap', { cache: 'no-store' });
         if (!response.ok) {
             throw new Error('BOOTSTRAP_FETCH_FAILED');
         }
 
         bootstrapCache = await response.json();
-        saveBootstrapToSessionStorage(bootstrapCache);
         return bootstrapCache;
     }
 

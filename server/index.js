@@ -1,12 +1,18 @@
 const path = require('path');
 const express = require('express');
-const { dbPath, getBootstrapData, getLegacyPrograms, getLegacyProgramBySlug } = require('./db');
+const { dbPath, getBootstrapData, getLegacyPrograms, getLegacyProgramBySlug, getRawPrograms, saveRawPrograms } = require('./db');
 
 const app = express();
 const rootDir = path.join(__dirname, '..');
 const port = Number(process.env.PORT || 4310);
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use('/api', (_req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+});
 app.get('/favicon.ico', (_req, res) => {
     res.redirect(302, '/favicon.svg');
 });
@@ -52,6 +58,36 @@ app.get('/api/programs/:slug', (req, res) => {
     res.json({
         program
     });
+});
+
+app.get('/api/admin/programs', (_req, res) => {
+    res.json({
+        source: dbPath,
+        programs: getRawPrograms()
+    });
+});
+
+app.post('/api/admin/programs', (req, res) => {
+    if (!Array.isArray(req.body?.programs)) {
+        res.status(400).json({
+            error: 'INVALID_PROGRAMS_PAYLOAD'
+        });
+        return;
+    }
+
+    try {
+        saveRawPrograms(req.body.programs);
+        res.json({
+            ok: true,
+            source: dbPath,
+            count: req.body.programs.length
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'PROGRAM_SAVE_FAILED',
+            message: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
 });
 
 app.get('/', (_req, res) => {

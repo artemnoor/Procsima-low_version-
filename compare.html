@@ -476,9 +476,9 @@
         }
 
         .topbar.scrolled {
-            background: linear-gradient(180deg, rgba(250, 252, 254, 0.92), rgba(250, 252, 254, 0.7));
-            backdrop-filter: blur(18px);
-            box-shadow: 0 8px 32px rgba(0, 44, 91, 0.08);
+            background: transparent;
+            backdrop-filter: none;
+            box-shadow: none;
         }
 
         .topbar-inner {
@@ -505,23 +505,36 @@
         }
 
         .brand-logo {
-            width: 42px;
-            height: 42px;
+            width: 46px;
+            height: 46px;
             flex: 0 0 auto;
             border-radius: 14px;
             display: grid;
             place-items: center;
-            color: #fff;
-            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--accent) 100%);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 10px 24px rgba(0, 44, 91, 0.18);
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: pixelated;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            filter: contrast(1.1) brightness(1.05);
+            filter: contrast(1.1) brightness(1.05);
         }
 
         .brand-title {
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            white-space: nowrap;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-title img {
+            height: 22px;
+            width: auto;
+            object-fit: contain;
         }
 
         .top-nav {
@@ -772,6 +785,49 @@
         .compare-card-placeholder:hover {
             border-color: rgba(0, 108, 220, 0.28);
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 245, 249, 1));
+        }
+
+        .matrix-program-col.is-placeholder .matrix-cell-card {
+            justify-content: center;
+            text-align: center;
+            border-style: dashed;
+            border-color: rgba(0, 108, 220, 0.18);
+            background: rgba(255, 255, 255, 0.62);
+            box-shadow: none;
+        }
+
+        .matrix-placeholder-title {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 18px;
+            line-height: 1.15;
+            font-weight: 850;
+            letter-spacing: -0.02em;
+        }
+
+        .matrix-placeholder-copy {
+            margin: 8px 0 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.45;
+            font-weight: 600;
+        }
+
+        .matrix-placeholder-link {
+            margin-top: 12px;
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            padding: 7px 12px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            font-size: 12px;
+            line-height: 1;
+            font-weight: 800;
         }
 
         .btn,
@@ -1546,6 +1602,245 @@
             line-height: 1.6;
         }
 
+        /* Category Comparison Charts Styles */
+        .category-comparison-section {
+            margin-bottom: 40px;
+            padding: 32px;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .category-chart-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 24px 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .category-chart-canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 180px; /* Smaller as requested */
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .category-chart-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 2.4em;
+            line-height: 1.2;
+        }
+
+        .category-chart-department {
+            font-size: 12px;
+            line-height: 1.35;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.7em;
+        }
+
+        .category-chart-meta {
+            font-size: 11px;
+            color: var(--text-soft);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .custom-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            border-radius: 14px;
+            background: #fff;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-main);
+            cursor: default;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .legend-item:hover {
+            border-color: var(--accent-pale);
+            background: #fafcff;
+        }
+
+        .legend-info-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-bg);
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 4px;
+            border: none;
+        }
+
+        .legend-info-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .legend-item.is-dimmed {
+            opacity: 0.4;
+            filter: grayscale(0.5);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-item.is-active {
+            border-color: var(--accent);
+            background: var(--accent-bg);
+            box-shadow: 0 4px 12px rgba(0, 108, 220, 0.12);
+        }
+
+        /* Block Details Modal Styles */
+        .block-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .block-details-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .block-details-program-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .subject-item {
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .subject-item:hover {
+            background: #fff;
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .subject-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .subject-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+            white-space: normal;
+        }
+
+        .subject-dept {
+            font-size: 11px;
+            color: var(--text-soft);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .subject-hours {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent);
+            background: var(--accent-bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .modal-block-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-block-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 1100px) {
+            .category-charts-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 820px) {
+            .category-charts-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .category-comparison-section {
+                padding: 24px 16px;
+            }
+        }
+
         .compare-modal[hidden] {
             display: none;
         }
@@ -1560,25 +1855,334 @@
             padding: 24px;
             background: rgba(15, 23, 42, 0.45);
             backdrop-filter: blur(10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .compare-modal:not([hidden]) {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Matrix Comparison Layout */
+        .compare-matrix-grid {
+            display: grid;
+            grid-template-columns: 240px repeat(var(--program-count, 3), 1fr);
+            gap: 20px;
+            padding-bottom: 60px;
+        }
+
+        @media (max-width: 1100px) {
+            .compare-matrix-grid {
+                grid-template-columns: minmax(88px, 0.45fr) repeat(3, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .matrix-labels-col {
+                display: flex;
+            }
+
+            .matrix-program-col {
+                min-width: 0;
+            }
+
+            .matrix-cell-card {
+                min-width: 0;
+                overflow: hidden;
+            }
+
+            .matrix-cell-card::before {
+                display: none;
+                content: none;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .compare-matrix-grid {
+                grid-template-columns: minmax(62px, 0.42fr) repeat(3, minmax(0, 1fr));
+            }
+            .matrix-labels-col {
+                display: flex;
+            }
+        }
+
+        .matrix-labels-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .matrix-label-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px 24px;
+            height: var(--row-height, auto);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            letter-spacing: -0.01em;
+        }
+
+        .matrix-program-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .matrix-cell-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px;
+            height: var(--row-height, auto);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .matrix-cell-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: rgba(0, 108, 220, 0.1);
+        }
+
+        .row-header { 
+            --row-height: 160px; 
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .row-description { --row-height: 180px; }
+        .row-degree { --row-height: 110px; }
+        .row-duration { --row-height: 110px; }
+        .row-places { --row-height: 160px; }
+        .row-dynamics { --row-height: 220px; }
+
+        .matrix-cell-card .card-code {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+        }
+
+        .matrix-cell-card .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        .matrix-cell-card .card-department {
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.35;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .matrix-large-val {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.04em;
+            text-align: center;
+            margin: auto 0;
+        }
+
+        .matrix-degree-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: auto 0;
+            text-align: center;
+        }
+        .matrix-desc-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-soft);
+            margin-bottom: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .btn-matrix-more {
+            margin-top: auto;
+            align-self: flex-start;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: var(--accent-bg);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .btn-matrix-more:hover {
+            background: #fff;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 108, 220, 0.12);
+        }
+
+        .btn-matrix-more svg {
+            transition: transform 0.25s ease;
+        }
+
+        .btn-matrix-more:hover svg {
+            transform: translateX(2px);
+        }
+
+        .btn-card-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: #fff;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            color: var(--text-soft);
+            transition: all 0.2s;
+        }
+
+        .btn-card-close:hover {
+            background: #fdf2f2;
+            color: #ef4444;
+            border-color: #fca5a5;
+        }
+
+        .matrix-places-flex {
+            display: flex;
+            gap: 12px;
+            margin: auto 0;
+        }
+
+        .matrix-place-item {
+            flex: 1;
+            background: var(--accent-bg);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .matrix-place-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .matrix-place-num {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .compare-row-info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .compare-row-info-list li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .compare-row-info-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
         }
 
         .compare-modal-dialog {
-            width: min(760px, 100%);
-            max-height: min(80vh, 860px);
-            overflow: auto;
-            background: rgba(255, 255, 255, 0.98);
+            width: min(800px, 95%);
+            max-height: min(85vh, 800px);
+            overflow: hidden;
+            background: #ffffff;
             border: 1px solid rgba(0, 44, 91, 0.08);
-            border-radius: 28px;
-            box-shadow: var(--shadow-lg);
-            padding: 28px;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .compare-modal:not([hidden]) .compare-modal-dialog {
+            transform: translateY(0) scale(1);
         }
 
         .compare-modal-head {
+            padding: 32px 32px 20px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             gap: 20px;
             align-items: flex-start;
-            margin-bottom: 18px;
+            background: #fff;
+            flex-shrink: 0;
+            border-radius: 28px 28px 0 0;
+        }
+
+        .modal-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: auto;
+            padding: 0 32px 32px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) #f1f5f9;
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .modal-scroll-area::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-scroll-area::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .modal-scroll-area::-webkit-scrollbar-thumb {
+            background: var(--accent-pale);
+            border-radius: 10px;
+            border: 2px solid #f1f5f9;
+        }
+        .modal-scroll-area::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
         }
 
         .compare-modal-title {
@@ -1616,9 +2220,13 @@
 
         .compare-modal-body {
             color: var(--text-muted);
-            font-size: 16px;
-            line-height: 1.8;
-            white-space: pre-wrap;
+            font-size: 15px;
+            line-height: 1.6;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
         }
 
         .compare-section-links {
@@ -1651,7 +2259,7 @@
 
         @media (max-width: 1100px) {
             .compare-shell {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
             .compare-card-head,
             .compare-card-intro,
@@ -1666,7 +2274,7 @@
 
         @media (max-width: 820px) {
             .compare-shell {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
             .career-pill-wrap {
                 grid-template-columns: 1fr;
@@ -2090,7 +2698,8 @@
             }
 
             .matrix-table {
-                min-width: 0;
+                width: 100% !important;
+                min-width: 0 !important;
                 table-layout: fixed;
             }
 
@@ -2193,6 +2802,510 @@
             }
         }
 
+        @media (max-width: 820px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            main > .container {
+                width: min(100% - 20px, var(--maxw));
+                padding-top: 18px !important;
+            }
+
+            main > .container > .section-header,
+            .compare-tools {
+                display: none;
+            }
+
+            .category-comparison-section {
+                margin: 10px 0 14px;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                box-shadow: none;
+                backdrop-filter: none;
+            }
+
+            .category-comparison-section > .section-header {
+                display: none;
+            }
+
+            .category-charts-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .category-chart-item {
+                min-width: 0;
+                padding: 10px 7px;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.82);
+            }
+
+            .category-chart-title {
+                min-height: 3.3em;
+                height: auto;
+                font-size: 10px;
+                line-height: 1.1;
+                -webkit-line-clamp: 3;
+            }
+
+            .category-chart-department {
+                min-height: 2.2em;
+                margin-bottom: 6px;
+                font-size: 9px;
+                line-height: 1.15;
+            }
+
+            .category-chart-meta {
+                margin-bottom: 6px;
+                font-size: 9px;
+                letter-spacing: 0.04em;
+            }
+
+            .category-chart-canvas-wrap {
+                height: 76px;
+                margin-bottom: 8px;
+            }
+
+            .custom-legend {
+                display: grid !important;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                justify-content: stretch;
+                gap: 6px;
+                margin-top: 12px;
+                padding: 10px;
+                border: 0;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.78);
+            }
+
+            .legend-item {
+                width: auto;
+                min-width: 0;
+                min-height: 28px;
+                padding: 6px 6px;
+                border-radius: 10px;
+                font-size: 9px;
+                gap: 5px;
+            }
+
+            .legend-item span {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .legend-dot {
+                width: 7px;
+                height: 7px;
+            }
+
+            .legend-info-btn {
+                width: 18px;
+                height: 18px;
+                flex: 0 0 18px;
+                margin-left: 0;
+            }
+
+            .legend-info-btn svg {
+                width: 11px;
+                height: 11px;
+            }
+
+            .compare-matrix-grid {
+                grid-template-columns: minmax(62px, 0.42fr) repeat(3, minmax(0, 1fr));
+                gap: 6px;
+                padding-bottom: 20px;
+            }
+
+            .compare-shell {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .compare-card {
+                min-width: 0;
+                padding: 10px 7px;
+                border-radius: 14px;
+            }
+
+            .matrix-placeholder-title {
+                font-size: 10px;
+                line-height: 1.12;
+            }
+
+            .matrix-placeholder-copy {
+                margin-top: 5px;
+                font-size: 9px;
+                line-height: 1.25;
+            }
+
+            .matrix-placeholder-link {
+                min-height: 24px;
+                margin-top: 7px;
+                padding: 5px 6px;
+                border-radius: 8px;
+                font-size: 9px;
+            }
+
+            .matrix-labels-col {
+                display: flex;
+                min-width: 0;
+                gap: 8px;
+            }
+
+            .matrix-program-col {
+                min-width: 0;
+                gap: 8px;
+            }
+
+            .matrix-label-card {
+                min-width: 0;
+                padding: 10px 6px;
+                border-radius: 14px;
+                overflow: hidden;
+                font-size: 10px;
+                line-height: 1.12;
+                letter-spacing: 0;
+            }
+
+            .matrix-cell-card {
+                min-width: 0;
+                padding: 10px 7px;
+                border-radius: 14px;
+                overflow: hidden;
+            }
+
+            .matrix-cell-card::before {
+                display: none !important;
+                content: none !important;
+            }
+
+            .row-header {
+                --row-height: 132px;
+                position: static;
+                top: auto;
+                z-index: auto;
+            }
+
+            .row-description { --row-height: 112px; }
+            .row-degree { --row-height: 56px; }
+            .row-duration { --row-height: 56px; }
+            .row-places { --row-height: 126px; }
+            .row-dynamics { --row-height: 130px; }
+
+            .btn-card-close {
+                top: 6px;
+                right: 6px;
+                width: 22px;
+                height: 22px;
+                border: 0;
+                background: rgba(255, 255, 255, 0.84);
+            }
+
+            .btn-card-close svg {
+                width: 10px;
+                height: 10px;
+            }
+
+            .matrix-cell-card .card-code {
+                margin-bottom: 4px;
+                padding-right: 16px;
+                font-size: 9px;
+                letter-spacing: 0.04em;
+            }
+
+            .matrix-cell-card .card-title {
+                display: -webkit-box;
+                overflow: hidden;
+                font-size: 10px;
+                line-height: 1.12;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical;
+            }
+
+            .matrix-cell-card .card-department {
+                display: -webkit-box;
+                overflow: hidden;
+                margin-top: 5px;
+                font-size: 9px;
+                line-height: 1.15;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .matrix-desc-text {
+                font-size: 9px;
+                line-height: 1.25;
+                -webkit-line-clamp: 4;
+            }
+
+            .btn-matrix-more {
+                width: 100%;
+                justify-content: center;
+                margin-top: 6px;
+                padding: 5px 6px;
+                border-radius: 10px;
+                font-size: 9px;
+            }
+
+            .matrix-degree-val,
+            .matrix-large-val {
+                font-size: 12px;
+                line-height: 1.15;
+                letter-spacing: 0;
+            }
+
+            .matrix-places-flex {
+                flex-direction: column;
+                gap: 4px;
+                margin: 0;
+            }
+
+            .matrix-place-item {
+                min-height: 0;
+                padding: 5px 4px;
+                border-radius: 10px;
+            }
+
+            .matrix-place-label {
+                margin-bottom: 2px;
+                font-size: 8px;
+                line-height: 1;
+                letter-spacing: 0.04em;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .matrix-place-num,
+            .matrix-place-num[style] {
+                font-size: 12px !important;
+                line-height: 1.1;
+                overflow-wrap: anywhere;
+            }
+
+            .score-chart-container {
+                min-height: 88px !important;
+            }
+
+            .chart-empty {
+                min-height: 72px;
+                padding: 10px 6px;
+                border-radius: 12px;
+                font-size: 10px !important;
+                line-height: 1.25;
+            }
+
+            .compare-modal {
+                align-items: stretch;
+                padding: 8px;
+            }
+
+            .compare-modal-dialog {
+                width: 100%;
+                max-width: none;
+                max-height: calc(100svh - 16px);
+                padding: 0;
+                border-radius: 18px;
+            }
+
+            .compare-modal-head {
+                padding: 14px 12px 10px;
+                gap: 10px;
+                border-radius: 18px 18px 0 0;
+            }
+
+            .compare-modal-title {
+                margin-bottom: 4px;
+                font-size: 18px;
+                line-height: 1.15;
+                overflow-wrap: anywhere;
+            }
+
+            .compare-modal-meta {
+                font-size: 11px;
+                line-height: 1.25;
+            }
+
+            .compare-modal-close {
+                width: 34px;
+                height: 34px;
+            }
+
+            .modal-scroll-area {
+                padding: 0 10px 12px;
+                overflow-x: hidden;
+            }
+
+            .compare-modal-body,
+            .compare-modal-body[style] {
+                padding-top: 12px !important;
+                font-size: 12px !important;
+                line-height: 1.45 !important;
+                overflow: visible;
+            }
+
+            .compare-modal .matrix-table {
+                width: 100% !important;
+                min-width: 0 !important;
+                table-layout: fixed;
+                border-spacing: 0 6px !important;
+            }
+
+            .compare-modal .matrix-table th,
+            .compare-modal .matrix-table td {
+                padding: 7px 3px;
+                width: auto;
+            }
+
+            .compare-modal .matrix-table th:first-child,
+            .compare-modal .matrix-table td:first-child {
+                display: none;
+            }
+
+            .compare-modal .matrix-table th:not(:first-child),
+            .compare-modal .matrix-table td:not(:first-child) {
+                width: calc(100% / var(--mobile-col-count, 3)) !important;
+            }
+
+            .compare-modal .matrix-table th {
+                font-size: 8px;
+                line-height: 1.15;
+                vertical-align: bottom;
+            }
+
+            .compare-modal .matrix-program-code {
+                font-size: 9px;
+                margin-bottom: 2px;
+            }
+
+            .compare-modal .matrix-program-name {
+                display: -webkit-box;
+                overflow: hidden;
+                font-size: 8px;
+                line-height: 1.15;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow-wrap: anywhere;
+            }
+
+            .compare-modal .heat-cell {
+                min-height: 0;
+                padding: 7px 5px;
+                border-radius: 10px;
+            }
+
+            .compare-modal .heat-cell.empty {
+                display: block;
+                padding: 7px 5px;
+            }
+
+            .compare-modal .heat-cell-subject {
+                display: block;
+                margin-bottom: 5px;
+                font-size: 9px;
+                line-height: 1.2;
+                overflow-wrap: anywhere;
+            }
+
+            .compare-modal .heat-cell-val {
+                flex-wrap: wrap;
+                gap: 2px 4px;
+                font-size: 12px;
+                line-height: 1.1;
+            }
+
+            .compare-modal .heat-cell-pct {
+                font-size: 10px !important;
+            }
+
+            .compare-modal .heat-cell-empty-copy {
+                font-size: 9px;
+                line-height: 1.2;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .topbar-inner {
+                width: min(var(--maxw), calc(100% - 16px));
+                padding: 8px 10px;
+                border-radius: 22px;
+            }
+
+            .brand-title {
+                display: none;
+            }
+
+            main > .container {
+                width: min(100% - 16px, var(--maxw));
+            }
+
+            .category-charts-grid,
+            .compare-matrix-grid {
+                gap: 5px;
+            }
+
+            .matrix-cell-card {
+                padding: 9px 6px;
+            }
+        }
+
+        .footer {
+            padding: 28px 0 48px;
+            border-top: 1px solid rgba(15, 23, 42, 0.08);
+            color: var(--text-soft);
+            font-size: 14px;
+        }
+
+        .footer-inner {
+            width: min(var(--maxw), calc(100% - 40px));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 44, 91, 0.1);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--brand-dark);
+            font-weight: 800;
+            line-height: 1;
+            text-decoration: none;
+            transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .footer-link:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 108, 220, 0.2);
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 12px 24px rgba(0, 44, 91, 0.08);
+        }
+
         /* Scroll Reveal */
         .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.75s ease-out, transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -2211,12 +3324,11 @@
         <div class="topbar-inner">
             <a href="/" class="brand" aria-label="На главную">
                 <div class="brand-logo">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    </svg>
+                    <img src="andromeda-icon.svg?v=4.0" alt="Andromeda Logo">
                 </div>
-                <div class="brand-title">Проксима</div>
+                <div class="brand-title">
+                    <img src="andromeda-text.svg" alt="Андромеда">
+                </div>
             </a>
 
             <nav class="top-nav" aria-label="Главная навигация">
@@ -2290,21 +3402,39 @@
 
             <div class="compare-status" id="compareStatus" hidden></div>
 
-            <div class="compare-shell" id="compareContainer">
-                <!-- Cards will be populated here via JS -->
+            <div id="categoryComparisonSection" class="category-comparison-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 24px;">
+                    <h3 style="font-size: 24px; margin-bottom: 8px;">Баланс учебных блоков</h3>
+                    <p style="font-size: 14px;">Сравните, на что делается основной упор в каждом направлении: фундаментальные науки, практика или профессиональные модули.</p>
+                </div>
+                <div id="categoryChartsGrid" class="category-charts-grid">
+                    <!-- Category charts will be injected here -->
+                </div>
+                <div id="categorySharedLegend" class="custom-legend" style="display: none;">
+                    <!-- Shared legend items -->
+                </div>
+            </div>
+
+            <div id="compareContainer">
+                <!-- Data populated via renderCards -->
             </div>
         </section>
 
-        <section class="container matrix-section">
-            <div class="section-header">
-                <h2>Матрица учебных блоков</h2>
-                <p>Подробная таблица распределения часов по учебным блокам и предметам. Чем сильнее заливка, тем больше часов отведено именно на этот блок в рамках всего направления.</p>
-                <div class="compare-section-links" id="matrixHeaderLinks"></div>
-            </div>
-            <div id="matrixContainer"></div>
-        </section>
 
     </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-copy">
+                <div>Платформа осознанного выбора НПС</div>
+                <div>Для абитуриентов и тех, кто подбирает направление не вслепую</div>
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" href="https://t.me/proximart" target="_blank" rel="noreferrer">Telegram</a>
+                <a class="footer-link" href="https://vk.com/club236804216" target="_blank" rel="noreferrer">VK</a>
+            </div>
+        </div>
+    </footer>
 
     <div class="compare-modal" id="compareDescriptionModal" hidden>
         <div class="compare-modal-dialog">
@@ -2314,10 +3444,12 @@
                     <div class="compare-modal-meta" id="compareModalMeta"></div>
                 </div>
                 <button type="button" class="compare-modal-close" onclick="closeDescriptionModal()" aria-label="Закрыть описание">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div class="compare-modal-body" id="compareModalBody"></div>
+            <div class="modal-scroll-area">
+                <div class="compare-modal-body" id="compareModalBody" style="padding-top: 24px; font-size: 16px; line-height: 1.7; color: var(--text-soft);"></div>
+            </div>
         </div>
     </div>
 
@@ -2409,7 +3541,27 @@
         }
 
         function normalizeProgramsForComparison(programs) {
-            return programs;
+            return (Array.isArray(programs) ? programs : []).map((program) => {
+                const directSubjects = Array.isArray(program?.предметы) ? program.предметы : [];
+                const derivedSubjects = directSubjects.length
+                    ? directSubjects
+                    : (Array.isArray(program?.блоки_предметов) ? program.блоки_предметов : []).flatMap((block) => {
+                        const blockTitle = block?.название || 'Остальное';
+                        return (Array.isArray(block?.предметы) ? block.предметы : []).map((subject) => ({
+                            ...subject,
+                            блок: subject?.блок || blockTitle
+                        }));
+                    });
+
+                return {
+                    ...program,
+                    hero_description: program?.hero_description || program?.кто_это || program?.краткое_описание || '',
+                    краткое_описание: program?.краткое_описание || program?.hero_description || program?.кто_это || '',
+                    нормативный_срок_обучения: program?.нормативный_срок_обучения || program?.срок_обучения || '',
+                    стоимость_обучения_в_год_руб: program?.стоимость_обучения_в_год_руб ?? program?.стоимость_в_год ?? null,
+                    предметы: derivedSubjects
+                };
+            });
         }
 
         function normalizeSearchValue(value) {
@@ -2515,12 +3667,31 @@
             };
         }
 
+        function normalizeSelectionItem(item) {
+            if (!item || typeof item !== 'object') {
+                return null;
+            }
+
+            return {
+                ...item,
+                code: item.code || item.код || '',
+                title: item.title || item.наименование_специальности || '',
+                department: item.department || item.кафедра || '',
+                shortDescription: item.shortDescription || item.description || item.summary || '',
+                detailUrl: item.detailUrl || item.detail_url || item.url || '#'
+            };
+        }
+
         function readCompareSelection() {
             try {
                 const raw = localStorage.getItem(COMPARE_STORAGE_KEY);
                 const parsed = raw ? JSON.parse(raw) : [];
                 return Array.isArray(parsed)
-                    ? parsed.slice(0, MAX_COMPARE_ITEMS).map(hydrateSelectionItem)
+                    ? parsed
+                        .slice(0, MAX_COMPARE_ITEMS)
+                        .map(normalizeSelectionItem)
+                        .filter((item) => item && item.code)
+                        .map(hydrateSelectionItem)
                     : [];
             } catch (error) {
                 console.warn('Не удалось прочитать выбранные направления для сравнения', error);
@@ -2818,6 +3989,144 @@
             renderComparison();
         }
 
+        // Global access for modal
+        window.openBlockSubjectsModal = function(blockName, singleProgramCode = null) {
+            const modal = document.getElementById('compareDescriptionModal');
+            const body = document.getElementById('compareModalBody');
+            const title = document.getElementById('compareModalTitle');
+            const meta = document.getElementById('compareModalMeta');
+            
+            if (!modal || !body) return;
+
+            // Use global currentRenderedPrograms
+            const targetPrograms = singleProgramCode 
+                ? currentRenderedPrograms.filter(p => p.код === singleProgramCode)
+                : currentRenderedPrograms;
+
+            if (!targetPrograms.length) return;
+
+            title.innerText = blockName;
+            meta.innerText = "Сравнительный анализ предметов блока";
+
+            // 1. Collect all unique subjects across all selected programs for this block
+            const subjectStats = {}; // { subjectName: { progIdx: hours } }
+            const programsList = targetPrograms;
+            
+            programsList.forEach((prog, pIdx) => {
+                const blocks = extractBlocks(prog.предметы || []);
+                const normalizedSearchName = blockName.trim().toLowerCase();
+                const thisBlock = blocks.find(b => b.name.trim().toLowerCase() === normalizedSearchName);
+                if (thisBlock) {
+                    thisBlock.subjects.forEach(s => {
+                        if (!subjectStats[s.name]) subjectStats[s.name] = {};
+                        subjectStats[s.name][pIdx] = s.hours;
+                    });
+                }
+            });
+
+            const sortedSubjectNames = Object.keys(subjectStats).sort((a,b) => {
+                const sumA = Object.values(subjectStats[a]).reduce((s,v) => s+v, 0);
+                const sumB = Object.values(subjectStats[b]).reduce((s,v) => s+v, 0);
+                return sumB - sumA;
+            });
+
+            // 2. Build Matrix Table HTML
+            let html = `
+                <table class="matrix-table" style="--col-count: ${programsList.length + 1}; --mobile-col-count: ${Math.min(3, Math.max(1, programsList.length))}; border-collapse: separate; border-spacing: 0; min-width: 600px; width: 100%;">
+                    <thead style="position: sticky; top: -1px; z-index: 100;">
+                        <tr>
+                            <th style="background: #fff; border-bottom: 2px solid var(--border); box-shadow: 0 2px 2px -1px rgba(0,0,0,0.05); width: 200px;">Предмет</th>
+                            ${programsList.map(p => `
+                                <th style="background: #fff; border-bottom: 2px solid var(--border); box-shadow: 0 2px 2px -1px rgba(0,0,0,0.05);">
+                                    <div class="matrix-program-code">${p.код}</div>
+                                    <span class="matrix-program-name" style="white-space: normal;">${p.наименование_специальности}</span>
+                                </th>
+                            `).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            sortedSubjectNames.forEach(subjName => {
+                const presence = subjectStats[subjName];
+                const hoursArr = Object.values(presence);
+                const isUniversal = Object.keys(presence).length === programsList.length;
+                const hoursSet = new Set(hoursArr);
+                const hasDiff = hoursSet.size > 1;
+
+                let diffLevel = 3;
+                let diffText = 'Уникальный набор';
+
+                if (isUniversal) {
+                    if (!hasDiff) {
+                        diffLevel = 0;
+                        diffText = 'Одинаково у всех';
+                    } else {
+                        diffLevel = 2;
+                        diffText = 'Отличаются часы';
+                    }
+                } else if (Object.keys(presence).length > 1) {
+                    diffLevel = 1;
+                    diffText = 'Есть не у всех';
+                }
+
+                html += `
+                    <tr>
+                        <td>
+                            <div class="matrix-label">${subjName}</div>
+                            <div class="diff-badge diff-${diffLevel}">${diffText}</div>
+                        </td>
+                        ${programsList.map((_, pIdx) => {
+                            const hours = presence[pIdx];
+                            if (hours === undefined) {
+                                return `
+                                    <td>
+                                        <div class="heat-cell empty">
+                                            <div class="heat-cell-subject">${subjName}</div>
+                                            <span class="heat-cell-empty-copy">нет предмета</span>
+                                        </div>
+                                    </td>
+                                `;
+                            }
+                            
+                            // For percentage calculation in the context of this block
+                            const blockTotal = programsList[pIdx].предметы 
+                                ? programsList[pIdx].предметы.filter(s => (s.блок || s.блок_предмета) === blockName)
+                                    .reduce((acc, s) => acc + (Number(s.количество_часов || s.количество_часов_у_предмета) || 0), 0)
+                                : 1;
+                            
+                            const pct = Math.round((hours / blockTotal) * 100) || 0;
+                            const blockColor = getBlockColor(blockName);
+
+                            return `
+                                <td>
+                                    <div class="heat-cell" style="--fill: ${pct}%; --color: ${blockColor}">
+                                        <div class="heat-cell-bg"></div>
+                                        <div class="heat-cell-content">
+                                            <div class="heat-cell-subject">${subjName}</div>
+                                            <div class="heat-cell-val">
+                                                <span style="font-weight: 800; color: var(--accent);">${hours} ч</span>
+                                                <span class="heat-cell-pct" style="margin-left: 4px; opacity: 0.7;">${pct}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            `;
+                        }).join('')}
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            body.innerHTML = html;
+            modal.hidden = false;
+            document.body.style.overflow = 'hidden';
+        };
+
         function removeProgramFromCompare(code) {
             const next = readCompareSelection().filter((item) => item.code !== code);
             writeCompareSelection(next);
@@ -2829,7 +4138,380 @@
             updateHeaderComparePill();
             updateCompareSearchMeta(prepared.selection);
             renderCompareStatus(prepared.selection, prepared.programs, prepared.missingCount);
+            renderCategoryComparisonCharts(prepared.programs);
             renderCards(prepared.programs, allProgramsCache, prepared.selection);
+        }
+
+        function renderCategoryComparisonCharts(programs) {
+            const section = document.getElementById('categoryComparisonSection');
+            const grid = document.getElementById('categoryChartsGrid');
+            const legendContainer = document.getElementById('categorySharedLegend');
+            
+            // Clear previous charts
+            Object.values(activeCharts).forEach(chart => chart.destroy());
+            activeCharts = {};
+
+            if (!programs.length || programs.every(p => p.__partial)) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            grid.innerHTML = '';
+            
+            // Collect all unique categories across all programs for a shared legend
+            const allBlocksSet = new Set();
+            programs.forEach(p => {
+                const blocks = extractBlocks(p.предметы || []);
+                blocks.forEach(b => allBlocksSet.add(b.name));
+            });
+            const allSortedBlocks = Array.from(allBlocksSet).sort();
+
+            // Global hover state for synchronization
+            let hoverBlockName = null;
+
+            // Center text plugin
+            const centerTextPlugin = {
+                id: 'centerText',
+                beforeDraw: function(chart) {
+                    if (chart.config.type !== 'doughnut') return;
+                    
+                    const { ctx, chartArea: { width, height } } = chart;
+                    ctx.save();
+                    
+                    let text = "";
+                    let subtext = "часов всего";
+                    let color = '#0F172A'; // Default text color
+                    
+                    // Check active elements (hovered in this specific chart)
+                    const activeIndices = chart.getActiveElements();
+                    
+                    // Use shared hover state or local hover state
+                    const activeBlock = hoverBlockName || (activeIndices.length > 0 ? chart.data.labels[activeIndices[0].index] : null);
+                    
+                    if (activeBlock) {
+                        const blockIndex = chart.data.labels.indexOf(activeBlock);
+                        if (blockIndex !== -1) {
+                            text = chart.data.datasets[0].data[blockIndex];
+                            subtext = activeBlock;
+                            color = getBlockColor(activeBlock);
+                        } else {
+                            // Program doesn't have this block
+                            text = "0";
+                            subtext = activeBlock;
+                            color = 'rgba(15, 23, 42, 0.2)';
+                        }
+                    } else {
+                        text = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    }
+
+                    const boxSize = Math.min(width, height);
+                    const compactChart = boxSize < 150;
+                    const mainText = String(text);
+                    const maxMainWidth = Math.max(26, boxSize * (compactChart ? 0.38 : 0.42));
+                    let mainFontSize = Math.max(9, Math.min(compactChart ? 11 : 24, Math.floor(boxSize * 0.13)));
+                    while (mainFontSize > 8) {
+                        ctx.font = `bold ${mainFontSize}px Outfit`;
+                        if (ctx.measureText(mainText).width <= maxMainWidth) break;
+                        mainFontSize -= 1;
+                    }
+                    const subFontSize = Math.max(6, Math.min(compactChart ? 6 : 9, Math.floor(boxSize * 0.045)));
+                    const showSubtext = boxSize >= 95;
+                    const mainOffset = showSubtext ? -Math.max(1, Math.round(mainFontSize * 0.18)) : 0;
+                    const subOffset = Math.max(8, Math.round(mainFontSize * 0.72));
+
+                    // Main number
+                    ctx.font = `bold ${mainFontSize}px Outfit`;
+                    ctx.fillStyle = color;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(mainText, width / 2, height / 2 + mainOffset);
+                    
+                    // Subtext
+                    if (showSubtext) {
+                        ctx.font = `600 ${subFontSize}px Outfit`;
+                        ctx.fillStyle = 'rgba(15, 23, 42, 0.4)';
+                        const maxSubLength = compactChart ? 8 : 20;
+                        const displaySub = subtext.length > maxSubLength ? subtext.substring(0, maxSubLength - 3) + '...' : subtext;
+                        ctx.fillText(displaySub, width / 2, height / 2 + subOffset);
+                    }
+                    
+                    ctx.restore();
+                }
+            };
+
+
+            programs.forEach((prog, index) => {
+                const canvasId = `category-chart-canvas-${index}`;
+                const blocks = extractBlocks(prog.предметы || []);
+                const departmentTitle = prog.__selectionDepartment || prog.кафедра || 'Кафедра уточняется';
+                
+                if (blocks.length === 0) return;
+
+                const item = document.createElement('div');
+                item.className = 'category-chart-item';
+                item.innerHTML = `
+                    <div style="display:flex; justify-content: space-between; align-items: flex-start; width: 100%; margin-bottom: 4px;">
+                        <div class="category-chart-meta">${prog.код}</div>
+                        ${prog["ссылка_на_учебный_план"] && prog["ссылка_на_учебный_план"] !== '#'
+                             ? `<a href="${prog["ссылка_на_учебный_план"]}" target="_blank" title="Открыть учебный план" style="color: var(--accent); transition: opacity 0.2s;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                </a>`
+                             : ''
+                        }
+                    </div>
+                    <div class="category-chart-title">${prog.наименование_специальности}</div>
+                    <div class="category-chart-department">${departmentTitle}</div>
+                    <div class="category-chart-canvas-wrap">
+                        <canvas id="${canvasId}"></canvas>
+                    </div>
+                `;
+                grid.appendChild(item);
+
+                const labels = blocks.map(b => b.name);
+                const data = blocks.map(b => b.hours);
+                const backgroundColors = blocks.map(b => getBlockColor(b.name));
+
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                activeCharts[canvasId] = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff',
+                            hoverOffset: 8
+                        }]
+                    },
+                    plugins: [centerTextPlugin],
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true,
+                            duration: 500
+                        },
+                        onHover: (event, elements) => {
+                            if (elements.length) {
+                                event.native.target.style.cursor = 'pointer';
+                                const index = elements[0].index;
+                                const label = activeCharts[canvasId].data.labels[index];
+                                if (hoverBlockName !== label) {
+                                    handleGlobalHighlight(label);
+                                }
+                            } else {
+                                event.native.target.style.cursor = 'default';
+                                if (hoverBlockName !== null) {
+                                    handleGlobalHighlight(null);
+                                }
+                            }
+                        },
+                        onClick: (event, elements, chart) => {
+                            if (elements && elements.length > 0) {
+                                const index = elements[0].index;
+                                const label = chart.data.labels[index];
+                                window.openBlockSubjectsModal(label, prog.код);
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Master highlight function
+            function handleGlobalHighlight(blockName) {
+                hoverBlockName = blockName;
+                
+                // Update Legend
+                document.querySelectorAll('.legend-item').forEach(li => {
+                    const span = li.querySelector('span');
+                    if (!span) return;
+                    const labelText = span.innerText.trim();
+                    li.classList.remove('is-active', 'is-dimmed');
+                    if (blockName) {
+                        if (labelText === blockName) li.classList.add('is-active');
+                        else li.classList.add('is-dimmed');
+                    }
+                });
+
+                // Update All Charts
+                Object.values(activeCharts).forEach(chart => {
+                    if (!blockName) {
+                        chart.data.datasets[0].backgroundColor = chart.data.labels.map(l => getBlockColor(l));
+                    } else {
+                        chart.data.datasets[0].backgroundColor = chart.data.labels.map(l => 
+                            l === blockName ? getBlockColor(l) : 'rgba(200, 200, 200, 0.15)'
+                        );
+                    }
+                    chart.update('none'); // No animation for performance
+                });
+            }
+
+            // Render shared legend
+            legendContainer.innerHTML = '';
+            legendContainer.style.display = 'flex';
+            
+            allSortedBlocks.forEach(blockName => {
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                legendItem.innerHTML = `
+                    <div class="legend-dot" style="background: ${getBlockColor(blockName)}"></div>
+                    <span style="font-weight: 600;">${blockName}</span>
+                    <button class="legend-info-btn" title="Посмотреть состав блока">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </button>
+                `;
+                
+                legendItem.addEventListener('mouseenter', () => handleGlobalHighlight(blockName));
+                legendItem.addEventListener('mouseleave', () => handleGlobalHighlight(null));
+                
+                const btn = legendItem.querySelector('.legend-info-btn');
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.openBlockSubjectsModal(blockName);
+                    return false;
+                };
+
+                legendContainer.appendChild(legendItem);
+            });
+        }
+
+        function renderCards(programs, allPrograms, selection) {
+            const container = document.getElementById('compareContainer');
+            currentRenderedPrograms = programs;
+
+            if (!programs.length) {
+                container.innerHTML = `
+                    <article class="compare-empty-card">
+                        <h3 class="card-title">Пока здесь пусто</h3>
+                        <p class="compare-empty-copy">Добавьте первое направление из каталога, чтобы начать сравнение.</p>
+                        <a href="catalog.html" class="btn" style="margin-top: 20px;">Перейти в каталог</a>
+                    </article>
+                `;
+                return;
+            }
+
+            container.style.display = 'block'; 
+            const visibleSlotCount = 3;
+            const displayPrograms = programs.slice(0, visibleSlotCount);
+            const placeholderCount = Math.max(0, visibleSlotCount - displayPrograms.length);
+            const placeholderColumnsHtml = Array.from({ length: placeholderCount }, () => `
+                <div class="matrix-program-col is-placeholder">
+                    <div class="matrix-cell-card row-header">
+                        <h3 class="matrix-placeholder-title">Свободный слот</h3>
+                        <p class="matrix-placeholder-copy">Добавьте программу для сравнения.</p>
+                    </div>
+                    <div class="matrix-cell-card row-description">
+                        <p class="matrix-placeholder-copy">Выберите ещё одну программу в каталоге.</p>
+                        <a href="catalog.html" class="matrix-placeholder-link">Каталог</a>
+                    </div>
+                    <div class="matrix-cell-card row-degree"><div class="matrix-large-val">—</div></div>
+                    <div class="matrix-cell-card row-duration"><div class="matrix-large-val">—</div></div>
+                    <div class="matrix-cell-card row-places">
+                        <div class="matrix-places-flex">
+                            <div class="matrix-place-item"><div class="matrix-place-label">Бюджет</div><div class="matrix-place-num">—</div></div>
+                            <div class="matrix-place-item" style="background: #fff; border: 1px solid var(--border);"><div class="matrix-place-label">Платно</div><div class="matrix-place-num" style="color: var(--text-main)">—</div></div>
+                        </div>
+                    </div>
+                    <div class="matrix-cell-card row-dynamics"><div class="chart-empty">Добавьте программу</div></div>
+                </div>
+            `).join('');
+            container.style.setProperty('--program-count', visibleSlotCount);
+            
+            let html = `
+                <div class="compare-matrix-grid">
+                    <!-- Column 1: Labels -->
+                    <div class="matrix-labels-col">
+                        <div class="matrix-label-card row-header">Специализации</div>
+                        <div class="matrix-label-card row-description">Краткое описание</div>
+                        <div class="matrix-label-card row-degree">Тип обучения</div>
+                        <div class="matrix-label-card row-duration">Срок обучения</div>
+                        <div class="matrix-label-card row-places">Кол-во мест</div>
+                        <div class="matrix-label-card row-exams">Экзамены</div>
+                    </div>
+
+                    <!-- Columns 2..N: Programs -->
+                    ${displayPrograms.map((prog, index) => {
+                        const description = prog.hero_description || prog.краткое_описание || 'Описание наполняется...';
+                        const department = prog.__selectionDepartment || prog.кафедра || 'Кафедра уточняется';
+                        const degree = prog["форма_обучения"] || (prog.код && prog.код.startsWith('24') ? 'Специалист' : 'Бакалавр');
+                        const duration = prog["нормативный_срок_обучения"] || '4 года';
+                        const budget = prog["количество_бюджетных_мест"] ?? '—';
+                        const paid = prog["количество_платных_мест"] ?? '—';
+                        
+                        // Exams processing
+                        const exams = Array.isArray(prog.предметы_для_поступления) 
+                            ? prog.предметы_для_поступления 
+                            : (Array.isArray(prog.exams) ? prog.exams : ['информация уточняется']);
+
+                        return `
+                        <div class="matrix-program-col">
+                            <!-- Header Row -->
+                            <div class="matrix-cell-card row-header">
+                                <button class="btn-card-close" onclick="removeProgramFromCompare('${prog.код}')" title="Убрать из сравнения">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                                </button>
+                                <div class="card-code">${prog.код}</div>
+                                <h3 class="card-title">${prog.наименование_специальности}</h3>
+                                <div class="card-department">${department}</div>
+                            </div>
+
+                            <!-- Description Row -->
+                            <div class="matrix-cell-card row-description">
+                                <div class="matrix-desc-text">${description}</div>
+                                <a href="javascript:void(0)" onclick="openDescriptionModal('${prog.код}')" style="font-size: 11px; font-weight: 800; color: var(--accent); margin-top: auto; text-decoration: none;">Показать описание</a>
+                            </div>
+
+                            <!-- Degree Row -->
+                            <div class="matrix-cell-card row-degree">
+                                <div class="matrix-degree-val">${degree}</div>
+                            </div>
+
+                            <!-- Duration Row -->
+                            <div class="matrix-cell-card row-duration">
+                                <div class="matrix-large-val">${duration}</div>
+                            </div>
+
+                            <!-- Places Row -->
+                            <div class="matrix-cell-card row-places">
+                                <div class="matrix-places-flex">
+                                    <div class="matrix-place-item">
+                                        <div class="matrix-place-label">Бюджет</div>
+                                        <div class="matrix-place-num">${budget}</div>
+                                    </div>
+                                    <div class="matrix-place-item" style="background: #fff; border: 1px solid var(--border);">
+                                        <div class="matrix-place-label">С прошлых лет</div>
+                                        <div class="matrix-place-num" style="color: var(--text-main); font-size: 14px; text-align: center; margin-top: 4px;">информация уточняется</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Exams Row -->
+                            <div class="matrix-cell-card row-exams">
+                                <ul class="compare-row-info-list" style="margin-top: auto; margin-bottom: auto;">
+                                    ${exams.map(ex => `<li>${ex}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                        `;
+                    }).join('')}
+                    ${placeholderColumnsHtml}
+                </div>
+            `;
+
+            container.innerHTML = html;
         }
 
         function syncCompareGridColumns(container, count) {
@@ -2870,17 +4552,33 @@
         }
 
         async function loadData() {
-            const cachedPayload = getCachedBootstrapPayload();
-            const payload = cachedPayload || await (async () => {
-                const response = await fetch('/api/bootstrap', { cache: 'force-cache' });
-                if (!response.ok) {
-                    throw new Error('Failed to load bootstrap data');
-                }
+            let payload;
 
-                const freshPayload = await response.json();
-                setCachedBootstrapPayload(freshPayload);
-                return freshPayload;
-            })();
+            try {
+                sessionStorage.removeItem(BOOTSTRAP_CACHE_KEY);
+            } catch (_error) {
+                // ignore storage errors
+            }
+
+            try {
+                const response = await fetch('/api/bootstrap', { cache: 'no-store' });
+                if (!response.ok) throw new Error('API not available');
+                payload = await response.json();
+            } catch (e) {
+                console.warn('API /api/bootstrap not found, falling back to new.json');
+                // Fallback for local python server without API routing
+                const fallbackResponse = await fetch('new.json', { cache: 'no-store' });
+                if (!fallbackResponse.ok) {
+                    throw new Error('Failed to load any data source');
+                }
+                const rawData = await fallbackResponse.json();
+                // Mock bootstrap payload structure
+                payload = {
+                    programs: rawData,
+                    profiles: {}, 
+                    traitLabels: {}
+                };
+            }
 
             allProgramsCache = normalizeProgramsForComparison(Array.isArray(payload.programs) ? payload.programs : []);
             PROGRAM_PROFILES = payload.profiles || {};
@@ -2893,11 +4591,14 @@
         function extractBlocks(subjects) {
             const blocksMap = {};
             subjects.forEach(subject => {
-                const block = subject.блок_предмета;
-                const hours = subject.количество_часов_у_предмета;
-                const name = subject.предмет;
-                const department = subject.кафедра_преподающая_предмет || 'Не указана';
+                // Adaptive keys for different schema versions
+                const block = subject.блок || subject.блок_предмета || 'Остальное';
+                const hours = Number(subject.количество_часов || subject.количество_часов_у_предмета) || 0;
+                const name = subject.название_предмета || subject.предмет || 'Без названия';
+                const department = subject.кафедра_преподающая_предмет || subject.кафедра || 'Не указана';
                 const link = subject.ссылка_на_информацию_о_предмете || '#';
+                
+                if (hours === 0) return; // Skip zero hours subjects
                 
                 if (!blocksMap[block]) blocksMap[block] = { hours: 0, subjects: [] };
                 blocksMap[block].hours += hours;
@@ -2952,7 +4653,9 @@
                 });
             }
             
-            const ctx = document.getElementById(`score-chart-${cardId}`).getContext('2d');
+            const canvas = document.getElementById(cardId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -3004,423 +4707,161 @@
 
         function renderCards(programs, allPrograms, selection) {
             const container = document.getElementById('compareContainer');
-            let html = '';
             currentRenderedPrograms = programs;
 
             if (!programs.length) {
                 container.innerHTML = `
                     <article class="compare-empty-card">
                         <h3 class="card-title">Пока здесь пусто</h3>
-                        <p class="compare-empty-copy">Добавьте первое направление из каталога, и здесь сразу появится карточка с метриками, учебными блоками и всем, что потом можно сопоставить с другими вариантами.</p>
+                        <p class="compare-empty-copy">Добавьте первое направление из каталога, чтобы начать сравнение.</p>
+                        <a href="catalog.html" class="btn" style="margin-top: 20px;">Перейти в каталог</a>
                     </article>
                 `;
-                syncCompareGridColumns(container, 1);
-                renderMatrix(programs);
                 return;
             }
 
-            programs.forEach((prog, index) => {
-                const cardId = `prog-${index}`;
-                const blocks = extractBlocks(prog.предметы || []);
-                const totalHours = blocks.reduce((acc, b) => acc + b.hours, 0);
-                const department = prog.кафедра || prog.__selectionDepartment || 'Кафедра уточняется';
-                const description = prog.hero_description || prog.краткое_описание || prog.__selectionDescription || 'Подробное описание направления будет добавлено позже.';
-                const detailUrl = prog.__detailUrl && prog.__detailUrl !== '#' ? prog.__detailUrl : null;
-                const scoreData = prog.проходной_балл_аттестата_по_прошлым_годам || [];
-                const hasScoreData = scoreData.length > 0;
-                const careers = (prog.карьерные_роли || []).slice(0, 4);
-                const getSectionByKey = (key) => (Array.isArray(prog.detail_sections) ? prog.detail_sections.find((section) => section.section_key === key) : null) || null;
-                const textItemsFromSection = (key) => {
-                    const section = getSectionByKey(key);
-                    if (!section || !Array.isArray(section.items)) {
-                        return [];
-                    }
-
-                    return section.items
-                        .map((item) => item.description || item.title || '')
-                        .map((item) => String(item).trim())
-                        .filter(Boolean);
-                };
-                const learnItems = (Array.isArray(prog["чему_учат"]) ? prog["чему_учат"].filter(Boolean) : []).length
-                    ? prog["чему_учат"].filter(Boolean)
-                    : textItemsFromSection('skills_intro');
-                const workItems = (Array.isArray(prog["где_можно_работать"]) ? prog["где_можно_работать"].filter(Boolean) : []).length
-                    ? prog["где_можно_работать"].filter(Boolean)
-                    : textItemsFromSection('career_intro');
-                const metricRowsHtml = [
-                    {
-                        label: 'Бюджетных мест',
-                        value: typeof prog["количество_бюджетных_мест"] === 'number'
-                            ? `<span class="compare-metric-number compare-metric-number-accent">${prog["количество_бюджетных_мест"]}</span>`
-                            : '<span class="compare-metric-empty">Данные уточняются</span>',
-                        featured: true
-                    },
-                    {
-                        label: 'Платных мест',
-                        value: typeof prog["количество_платных_мест"] === 'number'
-                            ? `<span class="compare-metric-number">${prog["количество_платных_мест"]}</span>`
-                            : '<span class="compare-metric-empty">Данные уточняются</span>'
-                    },
-                    {
-                        label: 'Стоимость (в год)',
-                        value: typeof prog["стоимость_обучения_в_год_руб"] === 'number'
-                            ? `<span class="compare-metric-text">${new Intl.NumberFormat('ru-RU').format(prog["стоимость_обучения_в_год_руб"])} ₽</span>`
-                            : '<span class="compare-metric-empty">Данные уточняются</span>'
-                    },
-                    {
-                        label: 'Срок обучения',
-                        value: prog["нормативный_срок_обучения"]
-                            ? `<span class="compare-metric-text">${prog["нормативный_срок_обучения"]}</span>`
-                            : '<span class="compare-metric-empty">Данные уточняются</span>'
-                    }
-                ].map((metric) => `
-                    <div class="compare-metric-row${metric.featured ? ' compare-metric-row-featured' : ''}">
-                        <div class="compare-metric-label">${metric.label}</div>
-                        <div class="compare-metric-value">${metric.value}</div>
+            container.style.display = 'block'; 
+            const visibleSlotCount = 3;
+            const displayPrograms = programs.slice(0, visibleSlotCount);
+            const placeholderCount = Math.max(0, visibleSlotCount - displayPrograms.length);
+            const placeholderColumnsHtml = Array.from({ length: placeholderCount }, () => `
+                <div class="matrix-program-col is-placeholder">
+                    <div class="matrix-cell-card row-header">
+                        <h3 class="matrix-placeholder-title">Свободный слот</h3>
+                        <p class="matrix-placeholder-copy">Добавьте программу для сравнения.</p>
                     </div>
-                `).join('');
-                const renderInfoSection = (title, items) => {
-                    if (!items.length) {
+                    <div class="matrix-cell-card row-description">
+                        <p class="matrix-placeholder-copy">Выберите ещё одну программу в каталоге.</p>
+                        <a href="catalog.html" class="matrix-placeholder-link">Каталог</a>
+                    </div>
+                    <div class="matrix-cell-card row-degree"><div class="matrix-large-val">—</div></div>
+                    <div class="matrix-cell-card row-duration"><div class="matrix-large-val">—</div></div>
+                    <div class="matrix-cell-card row-places">
+                        <div class="matrix-places-flex">
+                            <div class="matrix-place-item"><div class="matrix-place-label">Бюджет</div><div class="matrix-place-num">—</div></div>
+                            <div class="matrix-place-item" style="background: #fff; border: 1px solid var(--border);"><div class="matrix-place-label">Платно</div><div class="matrix-place-num" style="color: var(--text-main)">—</div></div>
+                        </div>
+                    </div>
+                    <div class="matrix-cell-card row-dynamics"><div class="chart-empty">Добавьте программу</div></div>
+                </div>
+            `).join('');
+            container.style.setProperty('--program-count', visibleSlotCount);
+            
+            let html = `
+                <div class="compare-matrix-grid">
+                    <!-- Column 1: Labels -->
+                    <div class="matrix-labels-col">
+                        <div class="matrix-label-card row-header">Программа</div>
+                        <div class="matrix-label-card row-description">Краткое описание</div>
+                        <div class="matrix-label-card row-degree">Тип обучения</div>
+                        <div class="matrix-label-card row-duration">Срок обучения</div>
+                        <div class="matrix-label-card row-places">Кол-во мест</div>
+                        <div class="matrix-label-card row-dynamics">Динамика баллов</div>
+                    </div>
+
+                    <!-- Columns 2..N: Programs -->
+                    ${displayPrograms.map((prog, index) => {
+                        const description = prog.hero_description || prog.краткое_описание || 'Описание наполняется...';
+                        const department = prog.__selectionDepartment || prog.кафедра || 'Кафедра уточняется';
+                        const degree = prog["форма_обучения"] || (prog.код && prog.код.startsWith('24') ? 'Специалист' : 'Бакалавр');
+                        const duration = prog["нормативный_срок_обучения"] || '4 года';
+                        
+                        // Fix for paid places - checking multiple possible keys
+                        const budgetValue = prog["количество_бюджетных_мест"];
+                        const paidValue = prog["количество_платных_мест"] !== undefined ? prog["количество_платных_мест"] : (prog["количество_платных_мест_"] || prog["платные_места"]);
+                        
+                        const budget = (budgetValue !== undefined && budgetValue !== null) ? budgetValue : '—';
+                        const paid = (paidValue !== undefined && paidValue !== null) ? paidValue : '—';
+                        
+                        const scoreData = prog.проходной_балл_аттестата_по_прошлым_годам || prog.динамика_проходного_бюджет || [];
+                        const hasScoreData = scoreData.length > 0;
+
                         return `
-                            <div class="compare-card-info" data-section="${title === 'Чему учат' ? 'learn' : 'work'}">
-                                <div class="compare-card-info-title">${title}</div>
-                                <div class="data-empty">Раздел наполняется</div>
-                            </div>
-                        `;
-                    }
-
-                    return `
-                        <div class="compare-card-info" data-section="${title === 'Чему учат' ? 'learn' : 'work'}">
-                            <div class="compare-card-info-title">${title}</div>
-                            <div class="compare-card-info-scroll">
-                                ${items.map((item, itemIndex) => `
-                                    <div class="compare-card-info-item">
-                                        <div class="compare-card-info-row">
-                                            <span class="compare-card-info-badge">${itemIndex + 1}</span>
-                                            <div class="compare-card-info-text">${item}</div>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
-                };
-
-                let blocksHtml = blocks.map((b) => {
-                    let color = getBlockColor(b.name);
-                    let pct = totalHours ? Math.round((b.hours / totalHours) * 100) : 0;
-                    return `
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 8px;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></span>
-                                    <span style="font-weight: 700; color: var(--text-main)">${b.name}</span>
-                                </div>
-                                <div style="color: var(--text-muted); font-weight: 500;">
-                                    <span style="color: var(--text-main); font-weight: 700;">${b.hours}</span> ч. <span style="opacity:0.5; font-size: 11px;">(${pct}%)</span>
-                                </div>
-                            </div>
-                            <div style="height: 6px; background: rgba(0,0,0,0.06); border-radius: 999px; overflow: hidden;">
-                                <div style="height: 100%; width: ${pct}%; background: ${color}; border-radius: 999px;"></div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                html += `
-                    <article class="compare-card" style="background: var(--surface-solid); border: 1px solid var(--border); overflow: hidden; justify-content: flex-start;">
-                        <div class="compare-card-head">
-                            <h3 class="card-title compare-card-title" style="margin: 0; font-size: 22px; line-height: 1.15; flex: 1;">${prog.наименование_специальности}</h3>
-                            <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
-                                <div class="badge" style="margin: 0; background: var(--brand-dark); color: #fff; border: none; font-size: 11px; flex-shrink: 0;">${prog.код}</div>
-                                <button type="button" class="compare-remove" aria-label="Убрать из сравнения" title="Убрать из сравнения" onclick="removeProgramFromCompare('${prog.код}')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                        <div class="matrix-program-col">
+                            <!-- Header Row -->
+                            <div class="matrix-cell-card row-header">
+                                <button class="btn-card-close" onclick="removeProgramFromCompare('${prog.код}')" title="Убрать из сравнения">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"></path></svg>
                                 </button>
+                                <div class="card-code">${prog.код}</div>
+                                <h3 class="card-title">${prog.наименование_специальности}</h3>
+                                <div class="card-department">${department}</div>
                             </div>
-                        </div>
 
-                        <div class="compare-card-intro">
-                            <div style="color: var(--accent); font-size: 13px; font-weight: 700; margin-bottom: 10px;">${department}</div>
-                            <p class="compare-card-description">${description}</p>
-                            <button type="button" class="compare-card-expand" onclick="openDescriptionModal('${prog.код.replace(/'/g, "\\'")}')">Читать полностью</button>
-                            ${prog.__partial ? '<div class="soft-note" style="margin-top: 14px;">Пока для этого направления в сравнении доступна карточка из каталога. Подробные данные по предметам и проходным баллам добавятся позже.</div>' : ''}
-                            ${detailUrl ? `<div class="compare-card-link"><a href="${detailUrl}" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color: var(--accent); font-size: 14px; font-weight: 700;">Подробнее <span aria-hidden="true">→</span></a></div>` : ''}
-                        </div>
-
-                        <div class="compare-card-metrics">
-                            <div class="compare-metric-list">
-                                ${metricRowsHtml}
+                            <!-- Description Row -->
+                            <div class="matrix-cell-card row-description">
+                                <div class="matrix-desc-text">${description}</div>
+                                <a href="javascript:void(0)" class="btn-matrix-more" onclick="openDescriptionModal('${prog.код}')">
+                                    Подробнее 
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                </a>
                             </div>
-                        </div>
 
-                        ${renderInfoSection('Чему учат', learnItems)}
-
-                        ${renderInfoSection('Где можно работать', workItems)}
-
-                        <div class="compare-card-careers">
-                            <div style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.01em;">Карьерные роли</div>
-                            <div class="career-pill-wrap">
-                                ${careers.length
-                                    ? careers.map((role) => `<div class="career-pill">${role}</div>`).join('')
-                                    : '<div class="data-empty">Карьерные роли добавляются</div>'
-                                }
+                            <!-- Degree Row -->
+                            <div class="matrix-cell-card row-degree">
+                                <div class="matrix-degree-val">${degree}</div>
                             </div>
-                        </div>
 
-                        <div class="compare-card-score">
-                            <div class="compare-card-section-head">
-                                <div style="font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em;">Динамика проходного балла</div>
+                            <!-- Duration Row -->
+                            <div class="matrix-cell-card row-duration">
+                                <div class="matrix-large-val">${duration}</div>
                             </div>
-                            ${hasScoreData
-                                ? `<div class="score-chart-container" style="background: transparent; border: none; padding: 0; box-shadow: none; margin: 0; min-height: 160px;">
-                                        <canvas id="score-chart-${cardId}"></canvas>
-                                   </div>`
-                                : '<div class="chart-empty">Для этого направления отсутствует информация по проходным баллам.</div>'
-                            }
-                        </div>
 
-                        <div class="compare-card-blocks" style="flex: 1; display: flex; flex-direction: column;">
-                            <div class="compare-card-section-head">
-                                <div style="font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em;">Распределение часов по блокам</div>
-                                ${prog["ссылка_на_учебный_план"] && prog["ссылка_на_учебный_план"] !== '#'
-                                    ? `<a href="${prog["ссылка_на_учебный_план"]}" target="_blank" class="compare-section-link" style="padding:8px 12px; font-size:12px; flex-shrink:0;">Учебный план</a>`
-                                    : ''
-                                }
-                            </div>
-                            <div class="blocks-list" style="background: #FAFCFE; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px;">
-                                ${blocks.length > 0 ? blocksHtml : '<div style="text-align:center; color: var(--text-muted); padding: 20px 0;">Данные о блоках отсутствуют</div>'}
-                            </div>
-                        </div>
-                    </article>
-                `;
-            });
-
-            container.innerHTML = html;
-            syncCompareGridColumns(container, programs.length);
-            syncCompareSectionHeights();
-
-            // Initialize Score line charts after DOM insertion
-            programs.forEach((prog, index) => {
-                initScoreChart(`prog-${index}`, prog.проходной_балл_аттестата_по_прошлым_годам);
-            });
-            requestAnimationFrame(() => {
-                syncCompareSectionHeights();
-            });
-            setTimeout(() => {
-                syncCompareSectionHeights();
-            }, 180);
-
-            renderMatrix(programs);
-        }
-
-        function renderMatrix(programs) {
-            const container = document.getElementById('matrixContainer');
-            const headerLinks = document.getElementById('matrixHeaderLinks');
-            if (!programs || programs.length === 0) {
-                if (headerLinks) {
-                    headerLinks.innerHTML = '';
-                }
-                container.innerHTML = `
-                    <div class="matrix-shell">
-                        <div style="padding: 30px 32px; color: var(--text-soft); font-size: 15px; line-height: 1.7;">
-                            Матрица учебных блоков появится, как только вы добавите в сравнение хотя бы одно направление.
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-            if (!programs.some((program) => Array.isArray(program.предметы) && program.предметы.length > 0)) {
-                if (headerLinks) {
-                    headerLinks.innerHTML = programs
-                        .filter((program) => program["описание_основной_профессиональной_образовательной_программы"] && program["описание_основной_профессиональной_образовательной_программы"] !== '#')
-                        .map((program) => `<a href="${program["описание_основной_профессиональной_образовательной_программы"]}" target="_blank" class="compare-section-link">Рабочая программа · ${program.код}</a>`)
-                        .join('');
-                }
-                container.innerHTML = `
-                    <div class="matrix-shell">
-                        <div style="padding: 30px 32px; color: var(--text-soft); font-size: 15px; line-height: 1.7;">
-                            Подробная матрица учебных блоков появится после того, как для выбранных направлений будут добавлены предметы и распределение часов.
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            if (headerLinks) {
-                headerLinks.innerHTML = programs
-                    .filter((program) => program["описание_основной_профессиональной_образовательной_программы"] && program["описание_основной_профессиональной_образовательной_программы"] !== '#')
-                    .map((program) => `<a href="${program["описание_основной_профессиональной_образовательной_программы"]}" target="_blank" class="compare-section-link">Рабочая программа · ${program.код}</a>`)
-                    .join('');
-            }
-
-            const blocksData = {};
-            const blockTotals = {};
-
-            programs.forEach((prog, progIdx) => {
-                if (prog.предметы) {
-                    prog.предметы.forEach((sub) => {
-                        const block = sub.блок_предмета;
-                        const subjName = sub.предмет;
-
-                        if (!blocksData[block]) blocksData[block] = {};
-                        if (!blocksData[block][subjName]) blocksData[block][subjName] = {};
-
-                        if (!blockTotals[block]) blockTotals[block] = {};
-                        if (!blockTotals[block][progIdx]) blockTotals[block][progIdx] = 0;
-                        blockTotals[block][progIdx] += sub.количество_часов_у_предмета;
-
-                        blocksData[block][subjName][progIdx] = {
-                            hours: sub.количество_часов_у_предмета,
-                            link: sub.ссылка_на_информацию_о_предмете || '#'
-                        };
-                    });
-                }
-            });
-
-            const uniqueBlocks = Object.keys(blocksData).sort();
-            let html = '';
-
-            uniqueBlocks.forEach((block, blockIndex) => {
-                const blockColor = getBlockColor(block);
-                const subjMap = blocksData[block];
-                const subjNames = Object.keys(subjMap);
-
-                const subjectsArr = subjNames.map((subjName) => {
-                    const presence = subjMap[subjName];
-                    const progIndices = Object.keys(presence);
-                    const hoursSet = new Set(progIndices.map((idx) => presence[idx].hours));
-                    let diffLevel = 3;
-                    let diffText = 'Уникальный предмет';
-                    let diffHours = false;
-
-                    if (progIndices.length > 1) {
-                        diffHours = hoursSet.size > 1;
-
-                        if (progIndices.length === programs.length && !diffHours) {
-                            diffLevel = 0;
-                            diffText = 'Одинаково у всех';
-                        } else if (!diffHours) {
-                            diffLevel = 1;
-                            diffText = 'Есть не у всех';
-                        } else {
-                            diffLevel = 2;
-                            diffText = progIndices.length === programs.length ? 'Отличаются часы' : 'Часть программ отличается';
-                        }
-                    }
-
-                    return { subjName, presence, progIndices, diffLevel, diffText, diffHours };
-                }).sort((a, b) => a.diffLevel - b.diffLevel);
-
-                const comparableSubjects = subjectsArr.filter((subj) => subj.progIndices.length > 1);
-                const uniqueSubjects = subjectsArr.filter((subj) => subj.progIndices.length === 1);
-                const uniqueByProgram = programs.map((program, idx) => ({
-                    program,
-                    items: uniqueSubjects
-                        .filter((subj) => subj.presence[idx])
-                        .map((subj) => ({
-                            name: subj.subjName,
-                            hours: subj.presence[idx].hours,
-                            link: subj.presence[idx].link
-                        }))
-                        .sort((a, b) => b.hours - a.hours)
-                })).filter(({ items }) => items.length);
-
-                html += `
-                <details class="matrix-shell" style="margin-bottom: 40px;">
-                    <summary class="matrix-block-head">
-                        <div class="matrix-block-title">
-                            <div style="width: 14px; height: 14px; border-radius: 50%; background: ${blockColor};"></div>
-                            <span>Блок: ${block}</span>
-                        </div>
-                        <span class="matrix-block-toggle" aria-hidden="true">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        </span>
-                    </summary>
-                `;
-
-                if (comparableSubjects.length) {
-                    html += `
-                    <table class="matrix-table" style="--col-count: ${programs.length + 1}; --mobile-col-count: ${Math.max(programs.length, 1)}">
-                        <thead>
-                            <tr>
-                                <th>Предмет</th>
-                                ${programs.map((p) => `<th><div class="matrix-program-code">${p.код}</div><span class="matrix-program-name">${p.наименование_специальности}</span></th>`).join('')}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${comparableSubjects.map((subj) => `
-                                <tr>
-                                    <td>
-                                        <div class="matrix-label">${subj.subjName}</div>
-                                        <div class="diff-badge diff-${subj.diffLevel}">${subj.diffText}</div>
-                                    </td>
-                                    ${programs.map((prog, idx) => {
-                                        const data = subj.presence[idx];
-                                        if (!data) {
-                                            return `
-                                                <td>
-                                                    <div class="heat-cell empty">
-                                                        <div class="heat-cell-subject">${subj.subjName}</div>
-                                                        <span class="heat-cell-empty-copy">нет предмета</span>
-                                                    </div>
-                                                </td>
-                                            `;
-                                        }
-
-                                        const blockTotal = blockTotals[block][idx];
-                                        const pct = Math.round((data.hours / blockTotal) * 100) || 0;
-                                        const hoursCls = subj.diffHours ? 'diff-hl' : '';
-                                        const hoursStyleBase = subj.diffHours ? '' : 'color: inherit;';
-
-                                        return `
-                                            <td>
-                                                <div class="heat-cell" style="--fill: ${pct}%; --color: ${blockColor}">
-                                                    <div class="heat-cell-bg"></div>
-                                                    <div class="heat-cell-content">
-                                                        <div class="heat-cell-subject">${subj.subjName}</div>
-                                                        <div class="heat-cell-val"><a href="${data.link}" target="_blank" class="${hoursCls}" style="text-decoration:none; display: inline-block; ${hoursStyleBase}">${data.hours} ч</a> <span class="heat-cell-pct" style="font-size: 14px; opacity: 0.7;">${pct}%</span></div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        `;
-                                    }).join('')}
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                    `;
-                }
-
-                if (uniqueSubjects.length) {
-                    html += `
-                        <div class="matrix-unique-shell">
-                            <h3 class="matrix-unique-title">Уникальные предметы блока</h3>
-                            <div class="matrix-unique-grid">
-                                ${uniqueByProgram.map(({ program, items }) => `
-                                    <div class="matrix-unique-card">
-                                        <div class="matrix-unique-card-head">
-                                            <span class="matrix-unique-program">${program.наименование_специальности}</span>
-                                            <span class="matrix-unique-code">${program.код}</span>
-                                        </div>
-                                        <div class="matrix-unique-list">
-                                            ${items.map((item) => `
-                                                <div class="matrix-unique-item">
-                                                    <span class="matrix-unique-item-name">${item.name}</span>
-                                                    <span class="matrix-unique-item-hours">${item.hours} ч</span>
-                                                </div>
-                                            `).join('')}
-                                        </div>
+                            <!-- Places Row -->
+                            <div class="matrix-cell-card row-places">
+                                <div class="matrix-places-flex">
+                                    <div class="matrix-place-item">
+                                        <div class="matrix-place-label">Бюджет</div>
+                                        <div class="matrix-place-num">${budget}</div>
                                     </div>
-                                `).join('')}
+                                    <div class="matrix-place-item" style="background: #fff; border: 1px solid var(--border);">
+                                        <div class="matrix-place-label">Платно</div>
+                                        <div class="matrix-place-num" style="color: var(--text-main)">${paid}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamics Row -->
+                            <div class="matrix-cell-card row-dynamics">
+                                ${hasScoreData 
+                                    ? `<div class="score-chart-container" style="background:transparent; border:none; padding:0; box-shadow:none; margin:0; min-height:160px; height:100%;">
+                                         <canvas id="matrix-score-chart-${index}"></canvas>
+                                       </div>`
+                                    : '<div class="chart-empty" style="font-size:11px; text-align:center; color:var(--text-soft); margin:auto;">Данные о баллах отсутствуют</div>'
+                                }
                             </div>
                         </div>
-                    `;
-                }
-
-                html += `</details>`;
-            });
+                        `;
+                    }).join('')}
+                    ${placeholderColumnsHtml}
+                </div>
+            `;
 
             container.innerHTML = html;
+
+            // Initialize charts with merged data (budget + paid)
+            displayPrograms.forEach((prog, index) => {
+                const bArray = prog.проходной_балл_аттестата_по_прошлым_годам || prog.динамика_проходного_бюджет || [];
+                const pArray = prog.динамика_минимального_платное || [];
+                
+                if (bArray.length > 0 || pArray.length > 0) {
+                    const scoreMap = {};
+                    bArray.forEach(s => {
+                        scoreMap[s.год] = { год: s.год, бюджет: s.бюджет !== undefined ? s.бюджет : s.значение, платное: s.платное !== undefined ? s.платное : null };
+                    });
+                    pArray.forEach(s => {
+                        const val = s.платное !== undefined ? s.платное : s.значение;
+                        if (!scoreMap[s.год]) {
+                            scoreMap[s.год] = { год: s.год, бюджет: null, платное: val };
+                        } else {
+                            scoreMap[s.год].платное = val;
+                        }
+                    });
+                    
+                    const mergedScores = Object.values(scoreMap).sort((a,b) => a.год - b.год);
+                    initScoreChart(`matrix-score-chart-${index}`, mergedScores);
+                }
+            });
         }
 
         function syncCompareSectionHeights() {
@@ -3469,7 +4910,7 @@
             const modal = document.getElementById('compareDescriptionModal');
             document.getElementById('compareModalTitle').textContent = program.наименование_специальности || 'Описание направления';
             document.getElementById('compareModalMeta').textContent = `${program.код || ''}${program.кафедра ? ' • ' + program.кафедра : ''}`;
-            document.getElementById('compareModalBody').textContent = program.hero_description || program.краткое_описание || 'Описание направления пока отсутствует.';
+            document.getElementById('compareModalBody').innerHTML = program.hero_description || program.краткое_описание || 'Описание направления пока отсутствует.';
             modal.hidden = false;
             document.body.style.overflow = 'hidden';
         }
@@ -3533,7 +4974,22 @@
                 revealObserver.observe(el);
             });
         });
-        window.addEventListener('storage', updateHeaderComparePill);
+        window.addEventListener('storage', (event) => {
+            updateHeaderComparePill();
+            if (!event.key || event.key === COMPARE_STORAGE_KEY) {
+                loadData().catch((error) => {
+                    console.warn('Не удалось обновить сравнение после изменения localStorage', error);
+                    renderComparison();
+                });
+            }
+        });
+        window.addEventListener('nps:compare-updated', () => {
+            updateHeaderComparePill();
+            loadData().catch((error) => {
+                console.warn('Не удалось обновить сравнение после события compare-updated', error);
+                renderComparison();
+            });
+        });
 
     </script>
 </body>
