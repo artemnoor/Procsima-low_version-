@@ -1694,7 +1694,8 @@
             border: 1px solid var(--border);
             font-size: 13px;
             color: var(--text-main);
-            cursor: default;
+            cursor: pointer;
+            touch-action: manipulation;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
         }
@@ -2883,8 +2884,8 @@
             .legend-item {
                 width: auto;
                 min-width: 0;
-                min-height: 28px;
-                padding: 6px 6px;
+                min-height: 34px;
+                padding: 7px 6px;
                 border-radius: 10px;
                 font-size: 9px;
                 gap: 5px;
@@ -2903,9 +2904,9 @@
             }
 
             .legend-info-btn {
-                width: 18px;
-                height: 18px;
-                flex: 0 0 18px;
+                width: 20px;
+                height: 20px;
+                flex: 0 0 20px;
                 margin-left: 0;
             }
 
@@ -4169,6 +4170,7 @@
 
             // Global hover state for synchronization
             let hoverBlockName = null;
+            let lockedBlockName = null;
 
             // Center text plugin
             const centerTextPlugin = {
@@ -4300,15 +4302,21 @@
                             duration: 500
                         },
                         onHover: (event, elements) => {
+                            const target = event.native?.target;
+                            if (target) {
+                                target.style.cursor = elements.length ? 'pointer' : 'default';
+                            }
+                            if (lockedBlockName) {
+                                return;
+                            }
+
                             if (elements.length) {
-                                event.native.target.style.cursor = 'pointer';
                                 const index = elements[0].index;
                                 const label = activeCharts[canvasId].data.labels[index];
                                 if (hoverBlockName !== label) {
                                     handleGlobalHighlight(label);
                                 }
                             } else {
-                                event.native.target.style.cursor = 'default';
                                 if (hoverBlockName !== null) {
                                     handleGlobalHighlight(null);
                                 }
@@ -4326,15 +4334,19 @@
             });
 
             // Master highlight function
-            function handleGlobalHighlight(blockName) {
+            function handleGlobalHighlight(blockName, options = {}) {
+                if (options.lock) {
+                    lockedBlockName = blockName;
+                }
                 hoverBlockName = blockName;
                 
                 // Update Legend
-                document.querySelectorAll('.legend-item').forEach(li => {
+                legendContainer.querySelectorAll('.legend-item').forEach(li => {
                     const span = li.querySelector('span');
                     if (!span) return;
                     const labelText = span.innerText.trim();
                     li.classList.remove('is-active', 'is-dimmed');
+                    li.setAttribute('aria-pressed', String(Boolean(blockName && labelText === blockName)));
                     if (blockName) {
                         if (labelText === blockName) li.classList.add('is-active');
                         else li.classList.add('is-dimmed');
@@ -4343,6 +4355,7 @@
 
                 // Update All Charts
                 Object.values(activeCharts).forEach(chart => {
+                    const blockIndex = blockName ? chart.data.labels.indexOf(blockName) : -1;
                     if (!blockName) {
                         chart.data.datasets[0].backgroundColor = chart.data.labels.map(l => getBlockColor(l));
                     } else {
@@ -4350,6 +4363,7 @@
                             l === blockName ? getBlockColor(l) : 'rgba(200, 200, 200, 0.15)'
                         );
                     }
+                    chart.setActiveElements(blockIndex >= 0 ? [{ datasetIndex: 0, index: blockIndex }] : []);
                     chart.update('none'); // No animation for performance
                 });
             }
@@ -4361,6 +4375,9 @@
             allSortedBlocks.forEach(blockName => {
                 const legendItem = document.createElement('div');
                 legendItem.className = 'legend-item';
+                legendItem.tabIndex = 0;
+                legendItem.setAttribute('role', 'button');
+                legendItem.setAttribute('aria-pressed', 'false');
                 legendItem.innerHTML = `
                     <div class="legend-dot" style="background: ${getBlockColor(blockName)}"></div>
                     <span style="font-weight: 600;">${blockName}</span>
@@ -4373,8 +4390,35 @@
                     </button>
                 `;
                 
-                legendItem.addEventListener('mouseenter', () => handleGlobalHighlight(blockName));
-                legendItem.addEventListener('mouseleave', () => handleGlobalHighlight(null));
+                const toggleLegendSelection = () => {
+                    const nextBlock = lockedBlockName === blockName ? null : blockName;
+                    handleGlobalHighlight(nextBlock, { lock: true });
+                };
+
+                legendItem.addEventListener('mouseenter', () => {
+                    if (!lockedBlockName) {
+                        handleGlobalHighlight(blockName);
+                    }
+                });
+                legendItem.addEventListener('mouseleave', () => {
+                    if (!lockedBlockName) {
+                        handleGlobalHighlight(null);
+                    }
+                });
+                legendItem.addEventListener('click', (event) => {
+                    if (event.target.closest('.legend-info-btn')) {
+                        return;
+                    }
+                    event.preventDefault();
+                    toggleLegendSelection();
+                });
+                legendItem.addEventListener('keydown', (event) => {
+                    if (event.key !== 'Enter' && event.key !== ' ') {
+                        return;
+                    }
+                    event.preventDefault();
+                    toggleLegendSelection();
+                });
                 
                 const btn = legendItem.querySelector('.legend-info-btn');
                 btn.onclick = (e) => {
