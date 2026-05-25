@@ -161,11 +161,14 @@ class HowPlatformFlow extends HTMLElement {
                     .step-dot,
                     .panel,
                     .interactive-elem,
-                    .ripple-circle,
-                    #main-cursor {
+                    .ripple-circle {
                         transition: none !important;
                         animation: none !important;
                         transform: none !important;
+                    }
+                    #main-cursor {
+                        transition: none !important;
+                        animation: none !important;
                     }
                 }
 
@@ -455,15 +458,47 @@ class HowPlatformFlow extends HTMLElement {
         const steps = root.querySelectorAll('.flow-step');
 
         const sleep = ms => new Promise(res => setTimeout(res, ms));
+        const easeInOut = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        let cursorState = { x: 300, y: 420, scale: 1 };
+        const placeCursor = (x, y, scale = 1) => {
+            cursorState = { x, y, scale };
+            cursor.setAttribute('transform', `translate(${x}, ${y}) scale(${scale})`);
+        };
+        const animateCursor = (x, y, scale = 1, duration = 720) => new Promise((resolve) => {
+            const from = { ...cursorState };
+            const start = performance.now();
+
+            const tick = (now) => {
+                if (!this.isPlaying) {
+                    resolve();
+                    return;
+                }
+
+                const progress = Math.min(1, (now - start) / duration);
+                const eased = easeInOut(progress);
+                const nextX = from.x + (x - from.x) * eased;
+                const nextY = from.y + (y - from.y) * eased;
+                const nextScale = from.scale + (scale - from.scale) * eased;
+                cursor.setAttribute('transform', `translate(${nextX.toFixed(1)}, ${nextY.toFixed(1)}) scale(${nextScale.toFixed(3)})`);
+
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                    return;
+                }
+
+                cursorState = { x, y, scale };
+                resolve();
+            };
+
+            requestAnimationFrame(tick);
+        });
 
         const moveCursor = async (x, y) => {
-            cursor.style.transform = `translate(${x}px, ${y}px)`;
-            await sleep(650); // Чуть ускорил перемещение
+            await animateCursor(x, y, 1, 820);
         };
 
         const clickCursor = async (x, y, { ripple: withRipple = true } = {}) => {
-            cursor.style.transform = `translate(${x}px, ${y}px) scale(0.85)`;
-            await sleep(150);
+            await animateCursor(x, y, 0.88, 120);
 
             if (withRipple) {
                 ripple.setAttribute('transform', `translate(${x}, ${y})`);
@@ -472,7 +507,7 @@ class HowPlatformFlow extends HTMLElement {
                 ripple.classList.add('is-animating');
             }
 
-            cursor.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+            await animateCursor(x, y, 1, 160);
             await sleep(150);
         };
 
@@ -483,7 +518,7 @@ class HowPlatformFlow extends HTMLElement {
 
         while (this.isPlaying) {
             cursor.style.transition = 'none';
-            cursor.style.transform = `translate(300px, 420px)`;
+            placeCursor(300, 420);
             await sleep(50);
             cursor.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
 

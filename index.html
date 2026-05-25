@@ -244,13 +244,48 @@
             }
 
             .blob,
-            .marquee-track,
-            .hero-dashboard,
-            .dash-card,
-            .chart-line,
-            .chart-dot {
+            .hero-dashboard {
                 animation: none !important;
                 transform: none !important;
+            }
+
+            .marquee-track {
+                animation: marquee 42s linear infinite !important;
+            }
+
+            .hero-dashboard {
+                animation: floatDashboard 7s ease-in-out infinite alternate !important;
+                transform: perspective(1200px) rotateX(8deg) rotateY(-12deg) rotateZ(1.5deg) !important;
+            }
+
+            .dash-card.main-chart {
+                animation: heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+            }
+
+            .dash-card.compare-blocks {
+                animation:
+                    heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards,
+                    floatBubble 5s ease-in-out infinite alternate 1s !important;
+            }
+
+            .dash-card.code-snippet {
+                animation:
+                    heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards,
+                    floatBubble 7s ease-in-out infinite alternate 2.5s !important;
+            }
+
+            .dash-card.match-card {
+                animation:
+                    heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards,
+                    floatBubble 6s ease-in-out infinite alternate 0.5s !important;
+            }
+
+            .chart-line {
+                animation: drawLine 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s !important;
+            }
+
+            .chart-dot {
+                animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
             }
         }
 
@@ -874,6 +909,9 @@
             backdrop-filter: blur(28px);
             padding: 22px;
             transform-style: preserve-3d;
+            opacity: 0;
+            animation: heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            --hero-card-opacity: 1;
         }
 
         .dash-card.main-chart {
@@ -889,7 +927,9 @@
             top: 38%;
             right: 4%;
             z-index: 3;
-            animation: floatBubble 5s ease-in-out infinite alternate 1s;
+            animation:
+                heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards,
+                floatBubble 5s ease-in-out infinite alternate 1s;
         }
 
         .dash-card.code-snippet {
@@ -898,9 +938,11 @@
             right: 8%;
             z-index: 1;
             padding: 18px;
-            opacity: 0.5;
             filter: blur(2px);
-            animation: floatBubble 7s ease-in-out infinite alternate 2.5s;
+            --hero-card-opacity: 0.5;
+            animation:
+                heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards,
+                floatBubble 7s ease-in-out infinite alternate 2.5s;
             background: rgba(255, 255, 255, 0.35);
             border-color: rgba(255, 255, 255, 0.25);
         }
@@ -910,7 +952,20 @@
             bottom: 10%;
             left: 0%;
             z-index: 4;
-            animation: floatBubble 6s ease-in-out infinite alternate 0.5s;
+            animation:
+                heroCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards,
+                floatBubble 6s ease-in-out infinite alternate 0.5s;
+        }
+
+        @keyframes heroCardIn {
+            from {
+                opacity: 0;
+                filter: blur(12px);
+            }
+
+            to {
+                opacity: var(--hero-card-opacity, 1);
+            }
         }
 
         @keyframes floatBubble {
@@ -1507,6 +1562,109 @@
             }
         }
 
+        .bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 820px) {
+            body {
+                padding-bottom: calc(92px + env(safe-area-inset-bottom));
+            }
+
+            .compare-pill {
+                max-width: 168px;
+                padding: 6px 7px 6px 8px;
+                gap: 7px;
+            }
+
+            .compare-pill-icon {
+                display: grid;
+                width: 30px;
+                height: 30px;
+            }
+
+            .compare-pill-copy {
+                display: grid;
+                min-width: 0;
+            }
+
+            .compare-pill-label {
+                font-size: 10px;
+            }
+
+            .compare-pill-value {
+                font-size: 12px;
+            }
+
+            .compare-pill-count {
+                min-width: 28px;
+                height: 28px;
+                padding: 0 7px;
+            }
+
+            .mobile-nav {
+                display: none;
+            }
+
+            .bottom-nav {
+                position: fixed;
+                left: 10px;
+                right: 10px;
+                bottom: calc(10px + env(safe-area-inset-bottom));
+                z-index: 90;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 4px;
+                padding: 6px;
+                border-radius: 24px;
+                border: 1px solid rgba(0, 44, 91, 0.1);
+                background: rgba(255, 255, 255, 0.92);
+                box-shadow: 0 18px 46px rgba(0, 44, 91, 0.18);
+                backdrop-filter: blur(22px);
+            }
+
+            .bottom-nav-item {
+                position: relative;
+                min-width: 0;
+                min-height: 58px;
+                display: grid;
+                place-items: center;
+                gap: 3px;
+                padding: 7px 4px 6px;
+                border-radius: 18px;
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 11px;
+                font-weight: 800;
+                line-height: 1.1;
+                transition: color var(--transition), background var(--transition), box-shadow var(--transition), transform var(--transition);
+            }
+
+            .bottom-nav-item svg {
+                width: 21px;
+                height: 21px;
+                stroke-width: 1.9;
+            }
+
+            .bottom-nav-item:hover,
+            .bottom-nav-item[aria-current="page"] {
+                color: var(--brand-dark);
+                background: var(--accent-soft);
+            }
+
+            .bottom-nav-item[aria-current="page"] {
+                box-shadow: inset 0 0 0 1px rgba(0, 108, 220, 0.12);
+            }
+
+            .bottom-nav-label {
+                overflow: hidden;
+                max-width: 100%;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+        }
+
         @media (max-width: 640px) {
             .hero {
                 padding: 42px 0 56px;
@@ -1587,6 +1745,33 @@
 
         </div>
     </header>
+
+    <nav class="bottom-nav" aria-label="Мобильная навигация">
+        <a href="/" class="bottom-nav-item" aria-current="page" aria-label="Главная">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 10.5 12 3l9 7.5"></path>
+                <path d="M5 9.5V21h14V9.5"></path>
+                <path d="M9 21v-6h6v6"></path>
+            </svg>
+            <span class="bottom-nav-label">Главная</span>
+        </a>
+        <a href="catalog.html" class="bottom-nav-item" aria-label="Каталог">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 5h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 19h16"></path>
+            </svg>
+            <span class="bottom-nav-label">Каталог</span>
+        </a>
+        <a href="proftest/" class="bottom-nav-item" aria-label="Профтест">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 11l2 2 4-5"></path>
+                <path d="M5 4h14v16H5z"></path>
+                <path d="M8 17h8"></path>
+            </svg>
+            <span class="bottom-nav-label">Профтест</span>
+        </a>
+    </nav>
 
 
 
@@ -1996,7 +2181,7 @@
         </div>
     </footer>
 
-    <script src="how-platform-flow.js"></script>
+    <script src="how-platform-flow.js?v=20260525-flow-smooth"></script>
     <script>
         const COMPARE_STORAGE_KEY = 'nps-compare-programs';
         const MAX_COMPARE_ITEMS = 3;
